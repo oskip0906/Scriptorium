@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id          Int            @id @default(autoincrement())
+  userName    String         @unique
+  firstName   String
+  lastName    String
+  email       String         @unique
+  avatar      String?
+  phoneNumber String
+  password    String
+  role        String         @default("user")
+  templates   CodeTemplate[]
+  blogPosts   BlogPost[]
+  comments    Comment[]
+  reports     Report[]
+  userRatings Rating[]
+}
+
+model CodeTemplate {
+  id              Int            @id @default(autoincrement())
+  title           String
+  explanation     String?
+  code            String
+  language        String
+  tags            Tag[]
+  createdUserId   Int
+  createdBy       User           @relation(fields: [createdUserId], references: [id], onDelete: Cascade)
+  blogPosts       BlogPost[]
+  forkedFromID    Int?
+  forkedFrom      CodeTemplate?  @relation("ForkRelation", fields: [forkedFromID], references: [id])
+  forkedTemplates CodeTemplate[] @relation("ForkRelation")
+}
+
+model BlogPost {
+  id            Int            @id @default(autoincrement())
+  title         String
+  description   String
+  content       String
+  tags          Tag[]
+  codeTemplates CodeTemplate[]
+  createdUserId Int
+  createdBy     User           @relation(fields: [createdUserId], references: [id], onDelete: Cascade)
+  comments      Comment[]
+  rating        Int            @default(0)
+  userRatings   Rating[]
+  reportcount   Int            @default(0)
+  reports       Report[]
+  inappropriate Boolean        @default(false)
+}
+
+model Tag {
+  id           Int            @id @default(autoincrement())
+  name         String         @unique
+  BlogPost     BlogPost[]
+  CodeTemplate CodeTemplate[]
+}
+
+model Comment {
+  id            Int       @id @default(autoincrement())
+  content       String
+  createdUserId Int
+  createdBy     User      @relation(fields: [createdUserId], references: [id], onDelete: Cascade)
+  blogPostId    Int?
+  blogPost      BlogPost? @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
+  repliedToId   Int?
+  repliedTo     Comment?  @relation("RepliedToRelation", fields: [repliedToId], references: [id])
+  replies       Comment[] @relation("RepliedToRelation")
+  rating        Int       @default(0)
+  userRatings   Rating[]
+  reportcount   Int       @default(0)
+  reports       Report[]
+  inappropriate Boolean   @default(false)
+}
+
+model Report {
+  id            Int       @id @default(autoincrement())
+  reason        String
+  createdUserId Int
+  createdBy     User      @relation(fields: [createdUserId], references: [id], onDelete: Cascade)
+  blogPostId    Int?
+  blogPost      BlogPost? @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
+  commentId     Int?
+  comment       Comment?  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+}
+
+model Rating {
+  id            Int       @id @default(autoincrement())
+  value         Int
+  createdUserId Int
+  createdBy     User      @relation(fields: [createdUserId], references: [id], onDelete: Cascade)
+  blogPostId    Int?
+  blogPost      BlogPost? @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
+  commentId     Int?
+  comment       Comment?  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+}
