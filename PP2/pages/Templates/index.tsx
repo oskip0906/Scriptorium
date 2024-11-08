@@ -13,40 +13,64 @@ interface CodeTemplate {
 
 const codeTemplatesList = () => {
 
+  const router = useRouter();
   const pageSize = 3;
 
+  const [token, setToken] = useState('');
   const [templates, setTemplates] = useState<CodeTemplate[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const router = useRouter();
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken') || '';
+    setToken(accessToken);
+  }, []);
 
   useEffect(() => {
-    fetchTemplates(currentPage, pageSize, localStorage.getItem('accessToken') || '');
-  }, [currentPage]);
+    fetchTemplates(currentPage, pageSize);
+  }, [currentPage, token]);
 
-  const fetchTemplates = async (page: number, pageSize: number, token: string) => {
+  const fetchTemplates = async (page: number, pageSize: number) => {
     try {
         const response = await fetch(`/api/CodeTemplates?page=${page}&pageSize=${pageSize}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
+          headers: {
+              'Content-Type': 'application/json',
+          },
         });
-
-        if (!response.ok) {
-            if (response.status === 401) {
-                console.error('Unauthorized. Redirecting to login.');
-                router.push('/Login');
-            }
-            throw new Error('Failed to fetch templates');
-        }
-
         const data = await response.json();
         setTemplates(data.codeTemplates);
         setTotalPages(data.totalPages);
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('Error fetching templates:', error);
+    }
+  };
+
+  const handleFork = async (templateId: number) => {
+    if (!token) {
+      console.error('No authentication token found');
+      setTimeout(() => {
+        router.push('/login');
+      }, 1000);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/CodeTemplates/Fork`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: templateId }),
+      });
+
+      if (response.ok) {
+        console.log('Template forked successfully');
+      } 
+    } 
+    catch (error) {
+      console.error('Error forking template:', error);
     }
   };
 
@@ -89,6 +113,12 @@ const codeTemplatesList = () => {
                 </span>
               ))}
             </div>
+
+            <button
+              onClick={() => handleFork(template.id)}
+              className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+              Fork Template
+            </button>
           </div>
         ))}
       </div>

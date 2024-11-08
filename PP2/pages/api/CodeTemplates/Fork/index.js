@@ -22,6 +22,18 @@ async function handler(req, res) {
                 return res.status(404).json({ error: "Original template not found" });
             }
 
+            // Check if the user already forked the original template
+            const existingFork = await prisma.codeTemplate.findFirst({
+                where: {
+                    createdUserId: req.user.id,
+                    forkedFromID: originalTemplate.id
+                }
+            });
+
+            if (existingFork) {
+                return res.status(400).json({ error: "User already forked this template" });
+            }
+
             // Create new forked template
             const newTemplate = await prisma.codeTemplate.create({
                 data: {
