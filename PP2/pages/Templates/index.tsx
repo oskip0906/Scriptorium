@@ -155,7 +155,7 @@ const codeTemplatesList = () => {
 
         <div className="flex items-center border p-2 rounded w-1/5 min-w-[150px]">
           {searchTags.map((tag) => (
-            <span key={tag} className="flex items-center bg-blue-200 text-blue-800 px-2 py-1 rounded">
+            <span key={tag} className="flex items-center bg-blue-200 text-blue-800 px-2 py-1 rounded mr-1">
               {tag}
               <button
                   onClick={() => {
