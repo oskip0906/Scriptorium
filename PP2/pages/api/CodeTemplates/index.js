@@ -77,11 +77,20 @@ async function handler(req, res) {
                 take: parseInt(pageSize)
             });
 
+            const totalTemplates = await prisma.CodeTemplate.count({
+                where: { AND: searchFilters }
+            });
+
+            const paginatedResponse = {
+                totalPages: Math.ceil(totalTemplates / parseInt(pageSize)),
+                codeTemplates: codeTemplates
+            };
+
             if (codeTemplates.length === 0) {
                 return res.status(404).json({ error: "No code templates found" });
             }
 
-            return res.status(200).json(codeTemplates);
+            return res.status(200).json(paginatedResponse);
         }
 
         catch (error) {
