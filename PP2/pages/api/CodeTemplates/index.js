@@ -43,7 +43,7 @@ async function handler(req, res) {
     else if (req.method === "GET") {
 
         try {
-            const { title, explanation, language, tags, createdUserId, page, pageSize } = req.query;
+            const { title, explanation, language, tags, createdUser, page, pageSize } = req.query;
 
             if (!page || !pageSize) {
                 return res.status(400).json({ error: "Page or page size missing"});
@@ -58,7 +58,7 @@ async function handler(req, res) {
                 searchFilters.push({ explanation: { contains: explanation } });
             }
             if (language) {
-                searchFilters.push({ language: { contains: language } });
+                searchFilters.push({ language: language });
             }
             if (tags) {
                 const tagsList = tags.split(",");
@@ -66,22 +66,43 @@ async function handler(req, res) {
                     searchFilters.push({ tags: { some: { name: tag } } });
                 });
             }
-            if (createdUserId) {
-                searchFilters.push({ createdUserId: parseInt(createdUserId) });
+            if (createdUser) {
+                const users = await prisma.user.findMany({
+                    where: {
+                        OR: [
+                            { userName: { contains: createdUser } },
+                            { firstName: { contains: createdUser } },
+                            { lastName: { contains: createdUser } }
+                        ]
+                    }
+                });
+                if (users.length == 0) {
+                    return res.status(404).json({ error: "User not found" });
+                }
+                searchFilters.push({ createdUserId: { in: users.map(user => user.id) } });
             }
 
             const codeTemplates = await prisma.CodeTemplate.findMany({
                 where: { AND: searchFilters },
-                include: { tags: true },
+                include: { tags: true, createdBy: true },
                 skip: (parseInt(page) - 1) * parseInt(pageSize),
                 take: parseInt(pageSize)
             });
+
+            const totalTemplates = await prisma.CodeTemplate.count({
+                where: { AND: searchFilters }
+            });
+
+            const paginatedResponse = {
+                totalPages: Math.ceil(totalTemplates / parseInt(pageSize)),
+                codeTemplates: codeTemplates
+            };
 
             if (codeTemplates.length === 0) {
                 return res.status(404).json({ error: "No code templates found" });
             }
 
-            return res.status(200).json(codeTemplates);
+            return res.status(200).json(paginatedResponse);
         }
 
         catch (error) {

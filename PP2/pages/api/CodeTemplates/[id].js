@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import verifyUser from '@/lib/CodeTemplates/VerifyUser';
+import verifyUser from '@/lib/CodeTemplates/verifyUser';
 
 async function handler(req, res) {
 
