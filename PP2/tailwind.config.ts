@@ -1,3 +1,4 @@
+import { text } from "stream/consumers";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -9,8 +10,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: "rgba(var(--background))",
+        border: "rgba(var(--border))",
+        "main-text": "rgba(var(--main-text))",
+        "cta-background": "rgba(var(--cta-background))",
+        "cta-primary": "rgba(var(--cta-primary))",
+        "cta-secondary": "rgba(var(--cta-secondary))",
+        "cta-border": "rgba(var(--cta-border))",
       },
     },
   },
