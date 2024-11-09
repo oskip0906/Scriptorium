@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Editor from '@monaco-editor/react';
 
@@ -37,13 +37,18 @@ const codeTemplatesList = () => {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      fetchTemplates(currentPage, pageSize);
+      setCurrentPage(1);
+      fetchTemplates(1, pageSize);
     }, 500);
   
     return () => {
       clearTimeout(handler);
     };
-  }, [searchUser, searchTitle, searchLanguage, searchExplanation, searchTags, currentPage, token]);
+  }, [searchUser, searchTitle, searchLanguage, searchExplanation, searchTags]);
+  
+  useEffect(() => {
+    fetchTemplates(currentPage, pageSize);
+  }, [currentPage]);
 
   const fetchTemplates = async (page: number, pageSize: number) => {
     try {
@@ -211,6 +216,7 @@ const codeTemplatesList = () => {
 
         <button
           onClick={() => {
+            setSearchUser('');
             setSearchTitle('');
             setSearchLanguage('');
             setSearchExplanation('');
@@ -231,7 +237,7 @@ const codeTemplatesList = () => {
               <h2 className="text-xl font-semibold">{template.title}</h2>
               
               <div className="text-gray-500">
-                <span className="font-semibold">Created by:</span> {template.createdBy.userName}
+                <span className="font-semibold">Created by: {template.createdBy.userName}</span>
               </div>
             </div>
             
@@ -248,6 +254,10 @@ const codeTemplatesList = () => {
               }}
               className="my-4"
             />
+
+            <div className="my-2">
+              <p>{template.explanation}</p>
+            </div>
             
             <p className="text-gray-500">Language: {template.language}</p>
             <div className="flex space-x-2 mt-2">
