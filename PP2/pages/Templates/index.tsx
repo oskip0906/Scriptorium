@@ -8,7 +8,8 @@ interface CodeTemplate {
   code: string;
   explanation: string;
   language: string;
-  tags: { name: string }[];
+  tags: { name: string }[],
+  createdBy: { userName: string };
 }
 
 const codeTemplatesList = () => {
@@ -21,6 +22,7 @@ const codeTemplatesList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const [searchUser, setSearchUser] = useState('');
   const [searchTitle, setSearchTitle] = useState('');
   const [searchLanguage, setSearchLanguage] = useState('');
   const [searchExplanation, setSearchExplanation] = useState('');
@@ -41,13 +43,14 @@ const codeTemplatesList = () => {
     return () => {
       clearTimeout(handler);
     };
-  }, [searchTitle, searchLanguage, searchExplanation, searchTags, currentPage, token]);
+  }, [searchUser, searchTitle, searchLanguage, searchExplanation, searchTags, currentPage, token]);
 
   const fetchTemplates = async (page: number, pageSize: number) => {
     try {
       const query = new URLSearchParams({
         page: String(page),
         pageSize: String(pageSize),
+        createdUser: searchUser,
         title: searchTitle,
         language: searchLanguage,
         explanation: searchExplanation,
@@ -70,6 +73,8 @@ const codeTemplatesList = () => {
       }
 
       const data = await response.json();
+
+      console.log(data);
 
       setTemplates(data.codeTemplates);
       setTotalPages(data.totalPages);
@@ -154,7 +159,7 @@ const codeTemplatesList = () => {
         </select>
 
         <input 
-          type="text" 
+          type="text"   
           placeholder="Search by title" 
           value={searchTitle} 
           onChange={(e) => setSearchTitle(e.target.value)} 
@@ -166,7 +171,15 @@ const codeTemplatesList = () => {
           placeholder="Search by explanation" 
           value={searchExplanation} 
           onChange={(e) => setSearchExplanation(e.target.value)} 
-          className="border p-2 rounded w-1/4" 
+          className="border p-2 rounded w-1/6" 
+        />
+
+        <input 
+          type="text" 
+          placeholder="Search by username" 
+          value={searchUser} 
+          onChange={(e) => setSearchUser(e.target.value)} 
+          className="border p-2 rounded w-1/6"
         />
 
         <div className="flex items-center border p-2 w-1/4 rounded h-10">
@@ -205,7 +218,7 @@ const codeTemplatesList = () => {
             setTagInput('');
             setPlaceholder('Add tags (press Enter)');
           }}
-          className="bg-blue-500 text-white px-8 py-2 rounded hover:bg-blue-600">
+          className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
           Clear
         </button>
 
@@ -214,19 +227,24 @@ const codeTemplatesList = () => {
       <div className="space-y-4">
         {templates.map((template) => (
           <div key={template.id} className="p-4 border rounded shadow">
-            <h2 className="text-xl font-semibold">{template.title}</h2>
-            <p className="text-gray-700">{template.explanation}</p>
-
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold">{template.title}</h2>
+              
+              <div className="text-gray-500">
+                <span className="font-semibold">Created by:</span> {template.createdBy.userName}
+              </div>
+            </div>
+            
             <Editor
               height="150px"
-              language={template.language}
+              language={template.language === 'c++' ? 'cpp' : template.language === 'c#' ? 'csharp' : template.language}
               value={template.code}
               options={{
-                readOnly: true,
-                minimap: { enabled: false },
-                scrollbar: { vertical: 'auto', horizontal: 'auto' },
-                fontSize: 14,
-                theme: 'vs-light',
+              readOnly: true,
+              minimap: { enabled: false },
+              scrollbar: { vertical: 'auto', horizontal: 'auto' },
+              fontSize: 14,
+              theme: 'vs-light',
               }}
               className="my-4"
             />
@@ -240,11 +258,19 @@ const codeTemplatesList = () => {
               ))}
             </div>
 
-            <button
-              onClick={() => handleFork(template.id)}
-              className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-              Fork Template
-            </button>
+            <div className="flex justify-between mt-4">
+              <button
+                onClick={() => handleFork(template.id)}
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                Fork Template
+              </button>
+
+              <button
+                onClick={() => router.push(`/`)}
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                Try or Edit
+              </button>
+            </div>
           </div>
         ))}
       </div>
