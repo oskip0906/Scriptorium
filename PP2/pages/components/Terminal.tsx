@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from 'react'
-import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
+import Editor from '@monaco-editor/react';
 import { AppContext } from '@/pages/components/AppVars';
 
 interface TerminalProps {
@@ -15,13 +15,8 @@ const Terminal: React.FC<TerminalProps> = ({ lang }) => {
 
   const theme = context?.theme;
 
-
-  
   
   const editorRef = useRef(null);
-
-
-
 
 
   function onMount(editor: any) {

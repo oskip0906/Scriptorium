@@ -16,7 +16,7 @@ import Navbar from '@/pages/components/Navbar'
     <div className='bg-cta-background'>
       <Navbar />
       <div className="flex items-center justify-between bg-cta-primary text-main-text">
-          <div className="text-main-text font-semibold">Code Execution</div>
+          <div className="text-main-text font-semibold ">Code Execution</div>
           <div className="flex items-center space-x-4">
             <select 
               value={language}
@@ -29,7 +29,7 @@ import Navbar from '@/pages/components/Navbar'
                 </option>
               ))}
             </select>
-            <button className="bg-blue-500 hover:bg-blue-700 text-main-text font-bold py-2 px-4 rounded">
+            <button className="bg-cta-button text-main-text font-bold py-2 px-4 rounded">
               Submit
             </button>
           </div>

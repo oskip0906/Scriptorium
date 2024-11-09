@@ -21,15 +21,19 @@ body {
 } */
 
 .dark {
-  --main-text: 238, 238, 238; /* Light Grey for main text */
-  --cta-background: 26, 26, 26; /* Black for CTA background */
-  --cta-primary: 45, 45, 45; /* Dark Grey for primary button or CTA */
-  --cta-secondary: 238, 238, 238; /* Light Grey for secondary button or CTA */
-  --cta-border: 238, 238, 238; /* Light Grey for border */
+  --main-text: 238, 238, 238; 
+  --cta-background: 26, 26, 26; 
+  --cta-primary: 45, 45, 45; 
+  --cta-secondary: 238, 238, 238; 
+  --cta-border: 238, 238, 238;
+  --cta-button: 255, 161, 22; 
 }
 
-.light{
-  --background: 0, 255, 0;
-  --main-text: 0, 200, 0;
-  --cta-background: 0, 255, 0;
+.light {
+  --main-text: 26, 26, 26;           
+  --cta-background: 238, 238, 238;  
+  --cta-primary: 255, 255, 255;    
+  --cta-secondary: 45, 45, 45;        
+  --cta-border: 200, 200, 200;       
+  --cta-button: 0, 123, 255;          
 }

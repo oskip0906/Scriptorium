@@ -17,6 +17,7 @@ const config: Config = {
         "cta-primary": "rgba(var(--cta-primary))",
         "cta-secondary": "rgba(var(--cta-secondary))",
         "cta-border": "rgba(var(--cta-border))",
+        "cta-button": "rgba(var(--cta-button))",
       },
     },
   },

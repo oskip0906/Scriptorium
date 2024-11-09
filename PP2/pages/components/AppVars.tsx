@@ -7,7 +7,6 @@ interface GlobalContextType {
 
 export const AppContext = createContext<GlobalContextType | undefined>(undefined);
 
-// Provider component
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState('light');
 
