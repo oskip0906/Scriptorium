@@ -58,7 +58,7 @@ async function handler(req, res) {
                 searchFilters.push({ explanation: { contains: explanation } });
             }
             if (language) {
-                searchFilters.push({ language: { contains: language } });
+                searchFilters.push({ language: language });
             }
             if (tags) {
                 const tagsList = tags.split(",");

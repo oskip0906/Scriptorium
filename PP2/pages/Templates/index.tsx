@@ -34,8 +34,14 @@ const codeTemplatesList = () => {
   }, []);
 
   useEffect(() => {
-    fetchTemplates(currentPage, pageSize);
-  }, [currentPage, token]);
+    const handler = setTimeout(() => {
+      fetchTemplates(currentPage, pageSize);
+    }, 500);
+  
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTitle, searchLanguage, searchExplanation, searchTags, currentPage, token]);
 
   const fetchTemplates = async (page: number, pageSize: number) => {
     try {
@@ -77,8 +83,8 @@ const codeTemplatesList = () => {
     if (!token) {
       console.error('No authentication token found');
       setTimeout(() => {
-        router.push('/login');
-      }, 1000);
+        router.push('/Login');
+      }, 500);
       return;
     }
 
@@ -129,20 +135,30 @@ const codeTemplatesList = () => {
       <h1 className="text-2xl font-bold mb-4">Code Templates</h1>
 
       <div className="mb-4 flex flex-wrap gap-2 items-center">
+
+        <select 
+          value={searchLanguage} 
+          onChange={(e) => setSearchLanguage(e.target.value)} 
+          className="border p-2 rounded w-1/6">
+            <option value="">Select language</option>
+            <option value="c">C</option>
+            <option value="c++">C++</option>
+            <option value="java">Java</option>
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="c#">C#</option>
+            <option value="rust">Rust</option>
+            <option value="swift">Swift</option>
+            <option value="go">Go</option>
+            <option value="r">R</option>
+        </select>
+
         <input 
           type="text" 
           placeholder="Search by title" 
           value={searchTitle} 
           onChange={(e) => setSearchTitle(e.target.value)} 
-          className="border p-2 rounded w-1/5 min-w-[150px]" 
-        />
-
-        <input 
-          type="text" 
-          placeholder="Search by language" 
-          value={searchLanguage} 
-          onChange={(e) => setSearchLanguage(e.target.value)} 
-          className="border p-2 rounded w-1/5 min-w-[150px]" 
+          className="border p-2 rounded w-1/6" 
         />
 
         <input 
@@ -150,22 +166,22 @@ const codeTemplatesList = () => {
           placeholder="Search by explanation" 
           value={searchExplanation} 
           onChange={(e) => setSearchExplanation(e.target.value)} 
-          className="border p-2 rounded w-1/5 min-w-[150px]" 
+          className="border p-2 rounded w-1/4" 
         />
 
-        <div className="flex items-center border p-2 rounded w-1/5 min-w-[150px]">
+        <div className="flex items-center border p-2 w-1/4 rounded h-10">
           {searchTags.map((tag) => (
             <span key={tag} className="flex items-center bg-blue-200 text-blue-800 px-2 py-1 rounded mr-1">
               {tag}
               <button
-                  onClick={() => {
-                    handleRemoveTag(tag);
-                    if (searchTags.length === 1) {
-                      setPlaceholder('Add tags (press Enter)');
-                    }
-                  }}
-                  className="ml-1 font-bold">
-                  &times;
+                onClick={() => {
+                  handleRemoveTag(tag);
+                  if (searchTags.length === 1) {
+                    setPlaceholder('Add tags (press Enter)');
+                  }
+                }}
+                className="ml-1 font-bold">
+                &times;
               </button>
             </span>
           ))}
@@ -176,15 +192,23 @@ const codeTemplatesList = () => {
             value={tagInput}
             onChange={(e) => { setTagInput(e.target.value); setPlaceholder(''); }}
             onKeyDown={handleAddTag}
-            className="border-none outline-none flex-grow"
+            className="border-none outline-none flex-grow h-full"
           />
         </div>
 
-        <button 
-          onClick={() => fetchTemplates(currentPage, pageSize)} 
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-          Search
+        <button
+          onClick={() => {
+            setSearchTitle('');
+            setSearchLanguage('');
+            setSearchExplanation('');
+            setSearchTags([]);
+            setTagInput('');
+            setPlaceholder('Add tags (press Enter)');
+          }}
+          className="bg-blue-500 text-white px-8 py-2 rounded hover:bg-blue-600">
+          Clear
         </button>
+
       </div>
 
       <div className="space-y-4">
@@ -194,8 +218,8 @@ const codeTemplatesList = () => {
             <p className="text-gray-700">{template.explanation}</p>
 
             <Editor
-              height="200px"
-              language={template.language || 'javascript'}
+              height="150px"
+              language={template.language}
               value={template.code}
               options={{
                 readOnly: true,
@@ -204,7 +228,7 @@ const codeTemplatesList = () => {
                 fontSize: 14,
                 theme: 'vs-light',
               }}
-              className="mt-8"
+              className="my-4"
             />
             
             <p className="text-gray-500">Language: {template.language}</p>
@@ -228,7 +252,7 @@ const codeTemplatesList = () => {
       <div className="flex justify-between items-center mt-6">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
-          className="px-4 py-2 bg-gray-200 rounded"
+          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
           disabled={currentPage === 1}>
           Previous
         </button>
@@ -239,11 +263,12 @@ const codeTemplatesList = () => {
 
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          className="px-4 py-2 bg-gray-200 rounded"
+          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
           disabled={currentPage === totalPages}>
           Next
         </button>
       </div>
+
     </div>
   );
 }
