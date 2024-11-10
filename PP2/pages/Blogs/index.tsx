@@ -1,29 +1,30 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Editor from '@monaco-editor/react';
 
-interface CodeTemplate {
+interface BlogPost {
   id: number;
   title: string;
-  code: string;
-  language: string;
-  tags: { name: string }[],
+  description: string;
+  content: string;
+  tags: { name: string }[];
+  codeTemplates: { id: number }[];
   createdBy: { userName: string };
 }
 
-const codeTemplatesList = () => {
+const BlogPostsList = () => {
 
   const router = useRouter();
-  const pageSize = 5;
-  
-  const [templates, setTemplates] = useState<CodeTemplate[]>([]);
+  const pageSize = 3;
+
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const [order, setOrder] = useState('desc');
   const [searchUser, setSearchUser] = useState('');
   const [searchTitle, setSearchTitle] = useState('');
-  const [searchLanguage, setSearchLanguage] = useState('');
-  const [searchExplanation, setSearchExplanation] = useState('');
+  const [searchDescription, setSearchDescription] = useState('');
+  const [searchContent, setSearchContent] = useState('');
   const [searchTags, setSearchTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [tagsPlaceHolder, setPlaceholder] = useState('Add tags (press Enter)');
@@ -31,41 +32,42 @@ const codeTemplatesList = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setCurrentPage(1);
-      fetchTemplates();
+      fetchPosts();
     }, 500);
   
     return () => {
       clearTimeout(handler);
     };
-  }, [searchUser, searchTitle, searchLanguage, searchExplanation, searchTags]);
+  }, [searchUser, searchTitle, searchDescription, searchContent, searchTags, order]);
   
   useEffect(() => {
-    fetchTemplates();
+    fetchPosts();
   }, [currentPage]);
 
-  const fetchTemplates = async () => {
+  const fetchPosts = async () => {
     try {
       const query = new URLSearchParams({
         page: String(currentPage),
         pageSize: String(pageSize),
+        order: order,
+        description: searchDescription,
+        content: searchContent,
         createdUser: searchUser,
         title: searchTitle,
-        language: searchLanguage,
-        explanation: searchExplanation,
         tags: searchTags.join(','),
       }).toString();
 
       console.log(query);
 
-      const response = await fetch(`/api/CodeTemplates?${query}`, {
+      const response = await fetch(`/api/BlogPosts?${query}`, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
       if (!response.ok) {
-        console.error('Error fetching templates');
-        setTemplates([]);
+        console.error('Error fetching blog posts');
+        setBlogPosts([]);
         setTotalPages(1);
         return;
       }
@@ -74,11 +76,11 @@ const codeTemplatesList = () => {
 
       console.log(data);
 
-      setTemplates(data.codeTemplates);
+      setBlogPosts(data.posts);
       setTotalPages(data.totalPages);
     } 
     catch (error) {
-      console.error('Error fetching templates');
+      console.error('Error fetching blog posts');
     }
   };
 
@@ -104,25 +106,15 @@ const codeTemplatesList = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Code Templates</h1>
+      <h1 className="text-2xl font-bold mb-4">Blog Posts</h1>
 
       <div className="mb-4 flex flex-wrap gap-2 items-center">
-
         <select 
-          value={searchLanguage} 
-          onChange={(e) => setSearchLanguage(e.target.value)} 
-          className="border p-2 rounded w-1/6">
-            <option value="">Select language</option>
-            <option value="c">C</option>
-            <option value="c++">C++</option>
-            <option value="java">Java</option>
-            <option value="python">Python</option>
-            <option value="javascript">JavaScript</option>
-            <option value="c#">C#</option>
-            <option value="rust">Rust</option>
-            <option value="swift">Swift</option>
-            <option value="go">Go</option>
-            <option value="r">R</option>
+          value={order} 
+          onChange={(e) => setOrder(e.target.value)} 
+          className="border p-2 rounded pr-8">
+          <option value="desc">Most Valued</option>
+          <option value="asc">Most Controversial</option>
         </select>
 
         <input 
@@ -130,15 +122,23 @@ const codeTemplatesList = () => {
           placeholder="Search by title" 
           value={searchTitle} 
           onChange={(e) => setSearchTitle(e.target.value)} 
-          className="border p-2 rounded w-1/6" 
+          className="border p-2 rounded w-1/8" 
+        />
+        
+        <input 
+          type="text" 
+          placeholder="Search by description" 
+          value={searchDescription} 
+          onChange={(e) => setSearchDescription(e.target.value)} 
+          className="border p-2 rounded w-1/8" 
         />
 
         <input 
           type="text" 
-          placeholder="Search by explanation" 
-          value={searchExplanation} 
-          onChange={(e) => setSearchExplanation(e.target.value)} 
-          className="border p-2 rounded w-1/6" 
+          placeholder="Search by content" 
+          value={searchContent} 
+          onChange={(e) => setSearchContent(e.target.value)} 
+          className="border p-2 rounded w-1/8" 
         />
 
         <input 
@@ -146,7 +146,7 @@ const codeTemplatesList = () => {
           placeholder="Search by username" 
           value={searchUser} 
           onChange={(e) => setSearchUser(e.target.value)} 
-          className="border p-2 rounded w-1/6"
+          className="border p-2 rounded w-1/8"
         />
 
         <div className="flex items-center border p-2 w-1/4 rounded h-10">
@@ -180,11 +180,12 @@ const codeTemplatesList = () => {
           onClick={() => {
             setSearchUser('');
             setSearchTitle('');
-            setSearchLanguage('');
-            setSearchExplanation('');
+            setSearchDescription('');
+            setSearchContent('');
             setSearchTags([]);
             setTagInput('');
             setPlaceholder('Add tags (press Enter)');
+            setOrder('desc');
           }}
           className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
           Clear
@@ -193,31 +194,33 @@ const codeTemplatesList = () => {
       </div>
 
       <div className="space-y-4">
-        {templates.map((template) => (
-          <div key={template.id} className="p-4 border rounded shadow">
+        {blogPosts.map((post) => (
+          <div key={post.id} className="p-4 border rounded shadow">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">{template.title}</h2>
+              <h2 className="text-xl font-semibold">{post.title}</h2>
               
               <div className="text-gray-500">
-                <span className="font-semibold">Created by: {template.createdBy.userName}</span>
+                <span className="font-semibold">Created by: {post.createdBy.userName}</span>
               </div>
             </div>
+
+            <p className="my-2">{post.description}</p>
             
-            <p className="text-gray-500">Language: {template.language}</p>
             <div className="flex space-x-2 mt-2">
-              {template.tags.map((tag) => (
+              {post.tags.map((tag) => (
                 <span key={tag.name} className="px-2 py-1 bg-blue-200 rounded">
                   {tag.name}
                 </span>
               ))}
             </div>
 
-            <button
-              onClick={() => router.push(`Templates/detailedView?id=${template.id}`)}
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-              Read More
-            </button>
-          
+            <div className="flex justify-between mt-4">
+              <button
+                onClick={() => router.push(`/blog/${post.id}`)}
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                Read More
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -246,4 +249,4 @@ const codeTemplatesList = () => {
   );
 }
 
-export default codeTemplatesList;
+export default BlogPostsList;
