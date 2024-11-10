@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import NavBar from '@/pages/components/Navbar';
 
 interface BlogPost {
   id: number;
@@ -106,13 +107,15 @@ const BlogPostsList = () => {
 
   return (
     <div className="container mx-auto p-4">
+      <NavBar />
+      
       <h1 className="text-2xl font-bold mb-4">Blog Posts</h1>
 
       <div className="mb-4 flex flex-wrap gap-2 items-center">
         <select 
           value={order} 
           onChange={(e) => setOrder(e.target.value)} 
-          className="border p-2 rounded pr-8">
+          className="border p-2 rounded pr-8 focus:outline-none">
           <option value="desc">Most Valued</option>
           <option value="asc">Most Controversial</option>
         </select>
@@ -122,7 +125,7 @@ const BlogPostsList = () => {
           placeholder="Search by title" 
           value={searchTitle} 
           onChange={(e) => setSearchTitle(e.target.value)} 
-          className="border p-2 rounded w-1/8" 
+          className="p-2 rounded w-1/4 focus:outline-none" 
         />
         
         <input 
@@ -130,7 +133,7 @@ const BlogPostsList = () => {
           placeholder="Search by description" 
           value={searchDescription} 
           onChange={(e) => setSearchDescription(e.target.value)} 
-          className="border p-2 rounded w-1/8" 
+          className="p-2 rounded w-1/4 focus:outline-none" 
         />
 
         <input 
@@ -138,7 +141,7 @@ const BlogPostsList = () => {
           placeholder="Search by content" 
           value={searchContent} 
           onChange={(e) => setSearchContent(e.target.value)} 
-          className="border p-2 rounded w-1/8" 
+          className="p-2 rounded w-1/4 focus:outline-none" 
         />
 
         <input 
@@ -146,23 +149,23 @@ const BlogPostsList = () => {
           placeholder="Search by username" 
           value={searchUser} 
           onChange={(e) => setSearchUser(e.target.value)} 
-          className="border p-2 rounded w-1/8"
+          className="p-2 rounded w-1/4"
         />
 
-        <div className="flex items-center border p-2 w-1/4 rounded h-10">
+        <div className="flex items-center w-1/2 rounded h-10" id="tagSelect">
           {searchTags.map((tag) => (
-            <span key={tag} className="flex items-center bg-blue-200 text-blue-800 px-2 py-1 rounded mr-1">
+            <span className="flex items-center px-2 py-1 rounded mr-1" id="tag">
               {tag}
-              <button
-                onClick={() => {
-                  handleRemoveTag(tag);
-                  if (searchTags.length === 1) {
+                <button
+                  onClick={() => {
+                    handleRemoveTag(tag);
+                    if (searchTags.length === 1) {
                     setPlaceholder('Add tags (press Enter)');
-                  }
-                }}
-                className="ml-1 font-bold">
-                &times;
-              </button>
+                    }
+                  }}
+                  className="ml-1 font-bold bg-transparent text-gray-500">
+                  &times;
+                </button>
             </span>
           ))}
 
@@ -172,7 +175,7 @@ const BlogPostsList = () => {
             value={tagInput}
             onChange={(e) => { setTagInput(e.target.value); setPlaceholder(''); }}
             onKeyDown={handleAddTag}
-            className="border-none outline-none flex-grow h-full"
+            className="border-none outline-none flex-grow h-full p-2"
           />
         </div>
 
@@ -187,10 +190,9 @@ const BlogPostsList = () => {
             setPlaceholder('Add tags (press Enter)');
             setOrder('desc');
           }}
-          className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+          className="px-6 py-2 rounded">
           Clear
         </button>
-
       </div>
 
       <div className="space-y-4">
@@ -199,28 +201,26 @@ const BlogPostsList = () => {
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">{post.title}</h2>
               
-              <div className="text-gray-500">
+              <div>
                 <span className="font-semibold">Created by: {post.createdBy.userName}</span>
               </div>
             </div>
 
             <p className="my-2">{post.description}</p>
-            
+
             <div className="flex space-x-2 mt-2">
               {post.tags.map((tag) => (
-                <span key={tag.name} className="px-2 py-1 bg-blue-200 rounded">
+                <span key={tag.name} className="px-2 py-1 rounded" id="tag">
                   {tag.name}
                 </span>
               ))}
             </div>
 
-            <div className="flex justify-between mt-4">
-              <button
-                onClick={() => router.push(`/blog/${post.id}`)}
-                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-                Read More
-              </button>
-            </div>
+            <button
+              onClick={() => router.push(`Blogs/detailedView?id=${post.id}`)}
+              className="mt-4 px-4 py-2 rounded">
+              Read More
+            </button>
           </div>
         ))}
       </div>
@@ -228,7 +228,7 @@ const BlogPostsList = () => {
       <div className="flex justify-between items-center mt-6">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          className="px-4 py-2 rounded"
           disabled={currentPage === 1}>
           Previous
         </button>
@@ -239,7 +239,7 @@ const BlogPostsList = () => {
 
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          className="px-4 py-2 rounded"
           disabled={currentPage === totalPages}>
           Next
         </button>

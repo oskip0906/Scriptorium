@@ -3,7 +3,7 @@ import { useContext } from 'react'
 import { AppContext } from '@/pages/components/AppVars'
 
 
-function navbar() {
+function NavBar() {
 
 
   const context = useContext(AppContext);
@@ -13,6 +13,7 @@ function navbar() {
   }
 
   useEffect(() => {
+    console.log("Theme changed to: ", context?.theme);
     document.body.classList.remove('light', 'dark');
     document.body.classList.add(context?.theme === 'light' ? 'light' : 'dark');
   }, [context?.theme]);
@@ -23,10 +24,8 @@ function navbar() {
     <button
     onClick={setTheme}
     >Theme</button>        
-
-
     </div>
   )
 }
 
-export default navbar
+export default NavBar;

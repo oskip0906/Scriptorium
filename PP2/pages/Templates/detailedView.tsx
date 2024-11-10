@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useContext } from 'react'
+import { AppContext } from '@/pages/components/AppVars'
 import Editor from '@monaco-editor/react';
+import NavBar from '@/pages/components/Navbar';
 
 interface CodeTemplate {
   id: number;
@@ -14,6 +17,7 @@ interface CodeTemplate {
 
 const DetailedView = () => {
 
+  const context = useContext(AppContext);
   const router = useRouter();
   const { id } = router.query;
   const [token, setToken] = useState('');
@@ -66,11 +70,11 @@ const DetailedView = () => {
       });
 
       if (!response.ok) {
-        console.error('Error forking template');
+        alert('Error forking template!');
         return;
       } 
 
-      console.log('Code template forked successfully');
+      alert('Code template forked successfully');
     } 
     catch (error) {
       console.error('Error forking code template');
@@ -82,65 +86,68 @@ const DetailedView = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="fade-in container mx-auto p-4 ">
+      <NavBar />
+    
+      <div className="flex justify-center">
+        <button
+          onClick={() => router.push('/Templates')}
+          className="text-primary py-2 px-4 rounded">
+          Back to Templates
+        </button>
+      </div>
 
-        <div className="flex justify-center">
-            <button
-            onClick={() => router.push('/Templates')}
-            className="text-blue-500 border border-gray-500 py-2 px-4 rounded hover:bg-blue-100">
-            Back to Templates
-            </button>
-        </div>
-
-        <div className="flex justify-between items-center mt-8">
-            <h2 className="text-xl font-semibold">{template.title}</h2>
-            
-            <div className="text-gray-500">
-                <span className="font-semibold">Created by: {template.createdBy.userName}</span>
-            </div>
-        </div>
+      <div className="flex justify-between items-center mt-8">
+        <h2 className="text-xl font-semibold">{template.title}</h2>
         
+        <div className="text-secondary">
+          <span className="font-semibold">Created by: {template.createdBy.userName}</span>
+        </div>
+      </div>
+      
+      {context && (
         <Editor
-            height="300px"
-            language={template.language === 'c++' ? 'cpp' : template.language === 'c#' ? 'csharp' : template.language}
-            value={template.code}
-            options={{
-                readOnly: true,
-                minimap: { enabled: false },
-                scrollbar: { vertical: 'auto', horizontal: 'auto' },
-                fontSize: 14,
-                theme: 'vs-light',
-            }}
-            className="my-4 border border-blue-300 rounded"
+          height="300px"
+          language={template.language === 'c++' ? 'cpp' : template.language === 'c#' ? 'csharp' : template.language}
+          value={template.code}
+          options={{
+            readOnly: true,
+            minimap: { enabled: false },
+            scrollbar: { vertical: 'auto', horizontal: 'auto' },
+            fontSize: 14,
+            theme: context.theme === 'light' ? 'vs-light' : 'vs-dark',
+          }}
+          className="my-4 border border-accent rounded"
         />
+      )}
 
-        <div className="mt-4">
-            <p>{template.explanation}</p>
-        </div>
-        
-        <p className="text-gray-500 mt-4">Language: {template.language}</p>
+      <div className="mt-4">
+        <p>{template.explanation}</p>
+      </div>
+      
+      <p className="mt-4">Language: {template.language}</p>
 
-        <div className="flex space-x-2 mt-4">
-            {template.tags.map((tag) => (
-            <span key={tag.name} className="px-2 py-1 bg-blue-200 rounded">
-                {tag.name}
-            </span>
-            ))}
-        </div>
+      <div className="flex space-x-2 mt-4">
+        {template.tags.map((tag) => (
+          <span key={tag.name} className="px-2 py-1 rounded" id="tag">
+            {tag.name}
+          </span>
+        ))}
+      </div>
 
-        <div className="flex justify-between mt-8">
-            <button
-            onClick={() => handleFork(template.id)}
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-            Fork Template
-            </button>
+      <div className="flex justify-between mt-8">
+        <button
+          onClick={() => handleFork(template.id)}
+          className="bg-button text-button-text py-2 px-4 rounded">
+          Fork Template
+        </button>
 
-            <button
-            onClick={() => router.push(`/`)}
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-            Try or Edit
-            </button>
-        </div>
+        <button
+          onClick={() => router.push(`/`)}
+          className="bg-button text-button-text py-2 px-4 rounded">
+          Try or Edit
+        </button>
+      </div>
 
     </div>
   );

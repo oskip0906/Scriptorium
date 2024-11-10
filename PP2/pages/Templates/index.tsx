@@ -1,6 +1,6 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Editor from '@monaco-editor/react';
+import NavBar from '@/pages/components/Navbar';
 
 interface CodeTemplate {
   id: number;
@@ -11,7 +11,7 @@ interface CodeTemplate {
   createdBy: { userName: string };
 }
 
-const codeTemplatesList = () => {
+const CodeTemplatesList = () => {
 
   const router = useRouter();
   const pageSize = 5;
@@ -103,7 +103,9 @@ const codeTemplatesList = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="fade-in container mx-auto p-4">
+      <NavBar/>
+
       <h1 className="text-2xl font-bold mb-4">Code Templates</h1>
 
       <div className="mb-4 flex flex-wrap gap-2 items-center">
@@ -111,7 +113,7 @@ const codeTemplatesList = () => {
         <select 
           value={searchLanguage} 
           onChange={(e) => setSearchLanguage(e.target.value)} 
-          className="border p-2 rounded w-1/6">
+          className="border p-2 rounded pr-8 focus:outline-none">
             <option value="">Select language</option>
             <option value="c">C</option>
             <option value="c++">C++</option>
@@ -130,7 +132,7 @@ const codeTemplatesList = () => {
           placeholder="Search by title" 
           value={searchTitle} 
           onChange={(e) => setSearchTitle(e.target.value)} 
-          className="border p-2 rounded w-1/6" 
+          className="p-2 rounded w-1/4 focus:outline-none" 
         />
 
         <input 
@@ -138,7 +140,7 @@ const codeTemplatesList = () => {
           placeholder="Search by explanation" 
           value={searchExplanation} 
           onChange={(e) => setSearchExplanation(e.target.value)} 
-          className="border p-2 rounded w-1/6" 
+          className="p-2 rounded w-1/4 focus:outline-none" 
         />
 
         <input 
@@ -146,23 +148,23 @@ const codeTemplatesList = () => {
           placeholder="Search by username" 
           value={searchUser} 
           onChange={(e) => setSearchUser(e.target.value)} 
-          className="border p-2 rounded w-1/6"
+          className="p-2 rounded w-1/4 focus:outline-none"
         />
 
-        <div className="flex items-center border p-2 w-1/4 rounded h-10">
+        <div className="flex items-center w-1/2 rounded h-10" id="tagSelect">
           {searchTags.map((tag) => (
-            <span key={tag} className="flex items-center bg-blue-200 text-blue-800 px-2 py-1 rounded mr-1">
+            <span className="flex items-center px-2 py-1 rounded mr-1" id="tag">
               {tag}
-              <button
-                onClick={() => {
-                  handleRemoveTag(tag);
-                  if (searchTags.length === 1) {
+                <button
+                  onClick={() => {
+                    handleRemoveTag(tag);
+                    if (searchTags.length === 1) {
                     setPlaceholder('Add tags (press Enter)');
-                  }
-                }}
-                className="ml-1 font-bold">
-                &times;
-              </button>
+                    }
+                  }}
+                  className="ml-1 font-bold bg-transparent text-gray-500">
+                  &times;
+                </button>
             </span>
           ))}
 
@@ -172,7 +174,7 @@ const codeTemplatesList = () => {
             value={tagInput}
             onChange={(e) => { setTagInput(e.target.value); setPlaceholder(''); }}
             onKeyDown={handleAddTag}
-            className="border-none outline-none flex-grow h-full"
+            className="border-none outline-none flex-grow h-full p-2"
           />
         </div>
 
@@ -186,7 +188,7 @@ const codeTemplatesList = () => {
             setTagInput('');
             setPlaceholder('Add tags (press Enter)');
           }}
-          className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+          className="px-6 py-2 rounded">
           Clear
         </button>
 
@@ -203,10 +205,11 @@ const codeTemplatesList = () => {
               </div>
             </div>
             
-            <p className="text-gray-500">Language: {template.language}</p>
+            <p className="mt-2">Language: {template.language}</p>
+
             <div className="flex space-x-2 mt-2">
               {template.tags.map((tag) => (
-                <span key={tag.name} className="px-2 py-1 bg-blue-200 rounded">
+                <span key={tag.name} className="px-2 py-1 rounded" id="tag">
                   {tag.name}
                 </span>
               ))}
@@ -214,10 +217,9 @@ const codeTemplatesList = () => {
 
             <button
               onClick={() => router.push(`Templates/detailedView?id=${template.id}`)}
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+              className="mt-4 px-4 py-2 rounded">
               Read More
             </button>
-          
           </div>
         ))}
       </div>
@@ -225,7 +227,7 @@ const codeTemplatesList = () => {
       <div className="flex justify-between items-center mt-6">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          className="px-4 py-2 rounded"
           disabled={currentPage === 1}>
           Previous
         </button>
@@ -236,7 +238,7 @@ const codeTemplatesList = () => {
 
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          className="px-4 py-2 rounded"
           disabled={currentPage === totalPages}>
           Next
         </button>
@@ -246,4 +248,4 @@ const codeTemplatesList = () => {
   );
 }
 
-export default codeTemplatesList;
+export default CodeTemplatesList;

@@ -21,19 +21,65 @@ body {
 } */
 
 .dark {
-  --main-text: 238, 238, 238; 
+  --main-text: 228, 228, 228; 
   --cta-background: 26, 26, 26; 
   --cta-primary: 45, 45, 45; 
-  --cta-secondary: 238, 238, 238; 
+  --cta-secondary: 225, 225, 225;
   --cta-border: 238, 238, 238;
   --cta-button: 255, 161, 22; 
 }
 
 .light {
   --main-text: 26, 26, 26;           
-  --cta-background: 238, 238, 238;  
-  --cta-primary: 255, 255, 255;    
+  --cta-background: 248, 248, 248;  
+  --cta-primary: 225, 225, 225;    
   --cta-secondary: 45, 45, 45;        
-  --cta-border: 200, 200, 200;       
+  --cta-border: 100, 100, 100;       
   --cta-button: 0, 123, 255;          
+}
+
+:root {
+  --transition-speed: 0.5s;
+}
+
+body {
+  color: rgb(var(--main-text));
+  background-color: rgb(var(--cta-background));
+  transition: color var(--transition-speed), background-color var(--transition-speed);
+}
+
+button {
+  background-color: rgb(var(--cta-button));
+  color: rgb(var(--cta-primary));
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.container {
+  color: rgb(var(--main-text));
+  background-color: rgb(var(--cta-background));
+  transition: background-color var(--transition-speed);
+}
+
+.card, input, select, #tagSelect {
+  background-color: rgb(var(--cta-background));
+  color: rgb(var(--main-text));
+  border: 1px solid rgba(var(--cta-border), 0.1);
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+#tag {
+  background-color: rgb(var(--cta-primary));
+  color: rgb(var(--main-text));
+}
+
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 1.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
