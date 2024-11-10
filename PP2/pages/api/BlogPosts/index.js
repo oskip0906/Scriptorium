@@ -62,7 +62,7 @@ async function handler(req, res) {
     else if (req.method === "GET") {
 
         try {
-            const { title, description, content, tags, codeTemplates, createdUserId, order, page, pageSize} = req.query;
+            const { title, description, content, tags, codeTemplates, createdUser, order, page, pageSize} = req.query;
 
             if (!page || !pageSize) {
                 return res.status(400).json({ error: "Page or page size missing"});
@@ -95,9 +95,22 @@ async function handler(req, res) {
                     searchFilters.push({ codeTemplates: { some: { id: parseInt(template) } } });
                 });
             }
-            if (createdUserId) {
-                searchFilters.push({ createdUserId: parseInt(createdUserId) });
+            if (createdUser) {
+                const users = await prisma.user.findMany({
+                    where: {
+                        OR: [
+                            { userName: { contains: createdUser } },
+                            { firstName: { contains: createdUser } },
+                            { lastName: { contains: createdUser } }
+                        ]
+                    }
+                });
+                if (users.length == 0) {
+                    return res.status(404).json({ error: "User not found" });
+                }
+                searchFilters.push({ createdUserId: { in: users.map(user => user.id) } });
             }
+
             if (req.user && req.user.id) {
                 searchFilters.push({
                     OR: [
@@ -116,17 +129,30 @@ async function handler(req, res) {
                     codeTemplates: {
                         select: { id: true }
                     },
+                    createdBy: true
                 },
                 skip: (parseInt(page) - 1) * parseInt(pageSize),
                 take: parseInt(pageSize),
-                orderBy: { rating: order }
+                orderBy: [
+                    { rating: order },
+                    { id: 'desc' }
+                ]
             });
+
+            const totalPosts = await prisma.BlogPost.count({
+                where: { AND: searchFilters }
+            });
+
+            const paginatedResponse = {
+                totalPages: Math.ceil(totalPosts / parseInt(pageSize)),
+                posts: blogPosts
+            };
 
             if (blogPosts.length === 0) {
                 return res.status(404).json({ error: "No blog posts found" });
             }
             
-            return res.status(200).json(blogPosts);
+            return res.status(200).json(paginatedResponse);
         }
 
         catch (error) {
