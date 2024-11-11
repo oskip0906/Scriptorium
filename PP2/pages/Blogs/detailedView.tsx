@@ -32,25 +32,20 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
   }, []);
 
   const fetchReplies = async (page: number) => {
-    try {
-      const response = await fetch(`/api/Comments?repliedToId=${comment.id}&page=${page}&pageSize=${pageSize}&order=desc`);
+    const response = await fetch(`/api/Comments?repliedToId=${comment.id}&page=${page}&pageSize=${pageSize}&order=desc`);
 
-      if (!response.ok) {
-        console.error(`Error fetching replies for comment ${comment.id}`);
-        setHasMoreReplies(false);
-        return;
-      }
-
-      const data = await response.json();
-
-      console.log(data);
-
-      setReplies((prevReplies) => (page === 1 ? data : [...prevReplies, ...data]));
-      setHasMoreReplies(true);
-    } 
-    catch (error) {
+    if (!response.ok) {
       console.error(`Error fetching replies for comment ${comment.id}`);
+      setHasMoreReplies(false);
+      return;
     }
+
+    const data = await response.json();
+
+    console.log(data);
+
+    setReplies((prevReplies) => (page === 1 ? data : [...prevReplies, ...data]));
+    setHasMoreReplies(true);
   };
 
   const toggleExpand = () => {
@@ -137,49 +132,37 @@ const DetailedPostView = () => {
   }, [post, page]);
 
   const fetchBlogPostDetails = async () => {
-    try {
-      const response = await fetch(`/api/BlogPosts?id=${id}`);
+    const response = await fetch(`/api/BlogPosts?id=${id}`);
 
-      if (!response.ok) {
-        console.error('Error fetching blog post details');
-        return;
-      }
-
-      const data = await response.json();
-
-      console.log(data);
-      setPost(data);
-    } 
-    catch (error) {
-      console.error('Error fetching blog post details', error);
+    if (!response.ok) {
+      console.error('Error fetching blog post details');
+      return;
     }
+
+    const data = await response.json();
+
+    console.log(data);
+    setPost(data);
   };
 
   const fetchComments = async (page: number) => {
-
     if (!post) {
       return;
     }
 
-    try {
-      const response = await fetch(`/api/Comments?blogPostId=${post.id}&page=${page}&pageSize=${pageSize}&order=desc`);
-      
-      if (!response.ok) {
-        console.error('Error fetching comments');
-        return;
-      }
-
-      const data = await response.json();
-
-      console.log(data);
-
-      setComments(data);
-      setHasMore(data.length === pageSize);
-    } 
-    catch (error) {
-      console.error('Error fetching comments', error);
+    const response = await fetch(`/api/Comments?blogPostId=${post.id}&page=${page}&pageSize=${pageSize}&order=desc`);
+    
+    if (!response.ok) {
+      console.error('Error fetching comments');
+      return;
     }
 
+    const data = await response.json();
+
+    console.log(data);
+
+    setComments(data);
+    setHasMore(data.length === pageSize);
   };
 
   const handleNextPage = () => {

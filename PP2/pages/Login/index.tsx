@@ -18,16 +18,19 @@ const LoginPage = () => {
                 body: JSON.stringify({ userName, password })
             });
 
-            if (response.ok) {
-                const { accessToken, refreshToken } = await response.json();
-                localStorage.setItem('accessToken', accessToken);
-                localStorage.setItem('refreshToken', refreshToken);
-                console.log('Login successful');
-                router.push('/');
+            if (!response.ok) {
+                alert('Login failed');
             }
+
+            const { accessToken, refreshToken } = await response.json();
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+            console.log('Login successful');
+            router.push('/');
+
         } 
-        catch (err) {
-            console.log('Login failed:', err);
+        catch (error) {
+            alert('Login failed');
         }
     };
 
@@ -37,7 +40,7 @@ const LoginPage = () => {
 
             <form onSubmit={handleLogin} className="space-y-4">
                 <div>
-                    <label htmlFor="userName" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="userName" className="block text-sm font-medium">
                         Username
                     </label>
                     <input
@@ -45,12 +48,12 @@ const LoginPage = () => {
                         id="userName"
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border sm:text-sm"
                     />
                 </div>
 
                 <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="password" className="block text-sm font-medium">
                         Password
                     </label>
                     <input
@@ -58,13 +61,13 @@ const LoginPage = () => {
                         id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border sm:text-sm"
                     />
                 </div>
 
                 <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    className="w-full py-2 px-4 rounded-md shadow focus:outline-none">
                     Log In
                 </button>
             </form>

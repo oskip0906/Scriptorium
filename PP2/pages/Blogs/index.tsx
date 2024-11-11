@@ -44,43 +44,40 @@ const BlogPostsList = () => {
   }, [currentPage]);
 
   const fetchPosts = async () => {
-    try {
-      const query = new URLSearchParams({
-        page: String(currentPage),
-        pageSize: String(pageSize),
-        order: order,
-        description: searchDescription,
-        content: searchContent,
-        createdUser: searchUser,
-        title: searchTitle,
-        tags: searchTags.join(','),
-      }).toString();
 
-      console.log(query);
+    const query = new URLSearchParams({
+      page: String(currentPage),
+      pageSize: String(pageSize),
+      order: order,
+      description: searchDescription,
+      content: searchContent,
+      createdUser: searchUser,
+      title: searchTitle,
+      tags: searchTags.join(','),
+    }).toString();
 
-      const response = await fetch(`/api/BlogPosts?${query}`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    console.log(query);
 
-      if (!response.ok) {
-        console.error('Error fetching blog posts');
-        setBlogPosts([]);
-        setTotalPages(1);
-        return;
-      }
+    const response = await fetch(`/api/BlogPosts?${query}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-      const data = await response.json();
-
-      console.log(data);
-
-      setBlogPosts(data.posts);
-      setTotalPages(data.totalPages);
-    } 
-    catch (error) {
+    if (!response.ok) {
       console.error('Error fetching blog posts');
+      setBlogPosts([]);
+      setTotalPages(1);
+      return;
     }
+
+    const data = await response.json();
+
+    console.log(data);
+
+    setBlogPosts(data.posts);
+    setTotalPages(data.totalPages);
+    
   };
 
   const handlePageChange = (newPage: number) => {

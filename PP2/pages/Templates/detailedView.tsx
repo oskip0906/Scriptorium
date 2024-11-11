@@ -36,18 +36,15 @@ const DetailedTemplateView = () => {
   }, [templateId]);
 
   const fetchTemplateDetails = async () => {
-    try {
-      const response = await fetch(`/api/CodeTemplates?id=${templateId}`);
-      if (!response.ok) {
-        console.error('Error fetching template details');
-        return;
-      }
-      const data = await response.json();
-      setTemplate(data);
-    } 
-    catch (error) {
-      console.error('Error fetching template details', error);
+    const response = await fetch(`/api/CodeTemplates?id=${templateId}`);
+
+    if (!response.ok) {
+      console.error('Error fetching template details');
+      return;
     }
+
+    const data = await response.json();
+    setTemplate(data);
   };
 
   
@@ -59,27 +56,22 @@ const DetailedTemplateView = () => {
       }, 500);
       return;
     }
+    
+    const response = await fetch(`/api/CodeTemplates/Fork`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: templateId }),
+    });
 
-    try {
-      const response = await fetch(`/api/CodeTemplates/Fork`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: templateId }),
-      });
-
-      if (!response.ok) {
-        alert('Error forking template!');
-        return;
-      } 
-
-      alert('Code template forked successfully');
+    if (!response.ok) {
+      alert('Error forking template!');
+      return;
     } 
-    catch (error) {
-      console.error('Error forking code template');
-    }
+
+    alert('Code template forked successfully');
   };
 
   if (!template) {
@@ -87,7 +79,7 @@ const DetailedTemplateView = () => {
   }
 
   return (
-    <div className="fade-in container mx-auto p-4 ">
+    <div className="fade-in container mx-auto p-4 mb-4">
       <NavBar />
     
       <div className="border rounded p-10">
@@ -122,8 +114,8 @@ const DetailedTemplateView = () => {
               minimap: { enabled: false },
               scrollbar: { vertical: 'auto', horizontal: 'auto' },
               fontSize: 14,
-              theme: context.theme === 'light' ? 'vs-light' : 'vs-dark',
             }}
+            theme={context.theme === 'light' ? 'vs-light' : 'vs-dark'}
             className="my-4 border border-accent rounded"
           />
         )}

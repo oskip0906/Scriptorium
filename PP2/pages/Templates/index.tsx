@@ -43,42 +43,38 @@ const CodeTemplatesList = () => {
   }, [currentPage]);
 
   const fetchTemplates = async () => {
-    try {
-      const query = new URLSearchParams({
-        page: String(currentPage),
-        pageSize: String(pageSize),
-        createdUser: searchUser,
-        title: searchTitle,
-        language: searchLanguage,
-        explanation: searchExplanation,
-        tags: searchTags.join(','),
-      }).toString();
+    
+    const query = new URLSearchParams({
+      page: String(currentPage),
+      pageSize: String(pageSize),
+      createdUser: searchUser,
+      title: searchTitle,
+      language: searchLanguage,
+      explanation: searchExplanation,
+      tags: searchTags.join(','),
+    }).toString();
 
-      console.log(query);
+    console.log(query);
 
-      const response = await fetch(`/api/CodeTemplates?${query}`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    const response = await fetch(`/api/CodeTemplates?${query}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-      if (!response.ok) {
-        console.error('Error fetching templates');
-        setTemplates([]);
-        setTotalPages(1);
-        return;
-      }
-
-      const data = await response.json();
-
-      console.log(data);
-
-      setTemplates(data.codeTemplates);
-      setTotalPages(data.totalPages);
-    } 
-    catch (error) {
+    if (!response.ok) {
       console.error('Error fetching templates');
+      setTemplates([]);
+      setTotalPages(1);
+      return;
     }
+
+    const data = await response.json();
+
+    console.log(data);
+
+    setTemplates(data.codeTemplates);
+    setTotalPages(data.totalPages);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -102,7 +98,7 @@ const CodeTemplatesList = () => {
   };
 
   return (
-    <div className="fade-in container mx-auto p-4">
+    <div className="fade-in container mx-auto p-4 mb-4">
       <NavBar/>
 
       <h1 className="text-2xl font-bold mb-4">Code Templates</h1>

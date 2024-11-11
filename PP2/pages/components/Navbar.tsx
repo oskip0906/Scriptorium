@@ -20,7 +20,7 @@ function NavBar() {
 
 
   return (
-    <div className="flex justify-center mb-8">
+    <div className="flex justify-center mb-4">
     <button
       onClick={setTheme}
       className="px-4 py-2 bg-gray-400 font-semibold rounded-lg shadow-md focus:outline-none">

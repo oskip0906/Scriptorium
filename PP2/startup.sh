@@ -4,17 +4,17 @@ if ! npm i > log.txt; then
 fi
 echo "Dependencies installed successfully";
 
-if ! npx prisma migrate dev --name init >> log.txt; then 
-    echo "Failed to migrate database";
-    exit 1;
-fi
-echo "Database migrated successfully";
+# if ! npx prisma migrate dev --name init >> log.txt; then 
+#     echo "Failed to migrate database";
+#     exit 1;
+# fi
+# echo "Database migrated successfully";
 
-if ! npx prisma generate >> log.txt; then 
-    echo "Failed to generate Prisma Client";
-    exit 1;
-fi
-echo "Prisma Client generated successfully";
+# if ! npx prisma generate >> log.txt; then 
+#     echo "Failed to generate Prisma Client";
+#     exit 1;
+# fi
+# echo "Prisma Client generated successfully";
 
 if [ -f .env ]; then
     echo ".env file already exists. Deleting it..."
@@ -57,8 +57,8 @@ if ! node --version >> log.txt; then
 fi
 echo "Node.js found";
 
-if ! node lib/Startup/addAdmin.mjs; then 
-    echo "Failed to add admin";
-    exit 1;
-fi
-echo "Admin added successfully";
+# if ! node lib/Startup/addAdmin.mjs; then 
+#     echo "Failed to add admin";
+#     exit 1;
+# fi
+# echo "Admin added successfully";
