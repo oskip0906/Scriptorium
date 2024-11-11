@@ -5,7 +5,7 @@ const fs = require('node:fs');
 // C, C++, Java, Python, and JavaScript
 // Given a language, code, input, we need to execute the code, and return the output
 const cmds = {
-  python3: (code, input) => runPython3Code(code, input),
+  python: (code, input) => runPython3Code(code, input),
   java: (code, input, className) => runJavaCode(code, input, className),
   c: (code, input) => runCCode(code, input),
   cpp: (code, input) => runCppCode(code, input),

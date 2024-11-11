@@ -1,43 +1,69 @@
-import React, { useContext, useRef } from 'react'
-import Editor, { DiffEditor, useMonaco, loader } from '@monaco-editor/react';
+import React, { useContext, useEffect, useRef } from 'react'
+import Editor from '@monaco-editor/react';
 import { AppContext } from '@/pages/components/AppVars';
 
 interface TerminalProps {
   lang: string;
+  code?: string;
+  setOutput?: React.Dispatch<React.SetStateAction<string>>;
+  setError?: React.Dispatch<React.SetStateAction<string>>;
+  run?: boolean;
+  setRun?: React.Dispatch<React.SetStateAction<boolean>>;
+  input?: string;
+}
+
+interface RequestBody {
+  language: string;
+  code: string;
+  input: string;
 }
 
 
-
-const Terminal: React.FC<TerminalProps> = ({ lang }) => {
+const Terminal: React.FC<TerminalProps> = ({ lang, code, setOutput, setError, run, setRun, input }) => {
 
 
   const context = useContext(AppContext);
 
   const theme = context?.theme;
-
-
-  
   
   const editorRef = useRef(null);
-
-
-
 
 
   function onMount(editor: any) {
     editorRef.current = editor;    
   }
-
-
+  useEffect(() => {
+    if (run) {
+      runCode();
+    }
+  }
+  , [run])
   
+  const runCode = async () => {
+    const editor: any = editorRef.current;
+    if (!editor || !setOutput || !setError || !setRun) return;
+
+    const req: RequestBody = { language: lang, code: editor.getValue(), input: input ?? '' };
+    const response = await fetch('/api/CodeRunner', {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(req)
+    });
+    const data = await response.json();
+    setOutput(data.output ?? 'Failed to run');
+    setError(data.error ?? '');
+    setRun(false);
+  }
 
   return (
     <div>
         <Editor
         height='90vh'
         width = '50vw'  
-        defaultLanguage='javascript'
-        defaultValue="// some> code"
+        defaultLanguage={lang}
+        defaultValue={code ?? '// write your code here'}
         onMount={onMount}
         language={lang}
         theme={theme === 'light' ? 'vs-light' : 'vs-dark'}
