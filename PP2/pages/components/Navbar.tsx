@@ -9,14 +9,14 @@ function NavBar() {
   const context = useContext(AppContext);
 
   const setTheme = () => {
-    context?.setTheme(context.theme === 'light' ? 'dark' : 'light');
+    const newTheme = localStorage.getItem('theme') === 'light' ? 'dark' : 'light';
+    document.body.classList.remove('light', 'dark');
+    document.body.classList.add(newTheme);
+    localStorage.setItem('theme', newTheme); 
+    context?.setTheme(newTheme);
   }
 
-  useEffect(() => {
-    console.log("Theme changed to", context?.theme);
-    document.body.classList.remove('light', 'dark');
-    document.body.classList.add(context?.theme === 'light' ? 'light' : 'dark');
-  }, [context?.theme]);
+
 
 
   return (
