@@ -6,12 +6,12 @@ async function handler(req, res) {
     if (req.method === "POST") {
 
         try {
-            const { id } = req.body;
+            let { id } = req.body;
 
             if (!id) {
                 return res.status(400).json({ error: "Missing required fields" });
             }
-
+            id = parseInt(id);
             // Get original template
             const originalTemplate = await prisma.codeTemplate.findUnique({
                 where: { id: id },

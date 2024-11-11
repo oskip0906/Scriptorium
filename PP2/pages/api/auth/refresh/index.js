@@ -22,7 +22,7 @@ export default async function refresh(req, res) {
     const accessData = checkAccess(accessToken);
     if (accessData) {
         newAccessToken = accessToken
-        return res.status(200).json({ newAccessToken });
+        return res.status(200).json({ token: newAccessToken });
     }
 
     try {
@@ -47,7 +47,7 @@ export default async function refresh(req, res) {
             { expiresIn: "1h" }
         )
 
-        return res.status(200).json({ newAccessToken });
+        return res.status(200).json({ token: newAccessToken });
     }
     catch (error){
         return res.status(500).json({ error: error.message });

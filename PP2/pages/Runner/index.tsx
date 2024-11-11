@@ -3,6 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Terminal from '@/pages/components/Terminal'
 import NavBar from '@/pages/components/Navbar'
+import refresh from '@/lib/refresh'
+import { saveCode, deleteCode, forkCode } from '@/lib/CodeController'
+
+
 
 const index = () => {
 
@@ -13,15 +17,15 @@ const index = () => {
   const [error, setError] = useState('')
   const [run, setRun] = useState(false)
   const [input, setInput] = useState('')
-
+  let tags = []
+  let description = 'description'
   const router = useRouter()
   const { id } = router.query
 
 
   const fetchCode = async (id: string) => {
     const response = await fetch(`/api/CodeTemplates?id=${id}`);
-    const data = await response.json();
-    console.log(data);
+    const data = await response.json();    
     return data;
   };
 
@@ -31,9 +35,16 @@ const index = () => {
       fetchCode(id as string).then((data) => {
         setCode(data.code)
         setLanguage(data.language)
+        tags = data.tags
+        description = data.description
+        refresh()
       })
     }
   }, [id])
+
+
+
+
 
 
   return (
@@ -62,6 +73,27 @@ const index = () => {
               </button>
             </div>
         </div>
+        <div className="flex space-x-4">
+
+            <button className="" onClick={() => {
+              forkCode(id as string, code, language, 'title', {}, 'description')
+            }}>
+                <i className="fas fa-code-branch"></i> 
+            </button>
+
+            <button className="" onClick={() => {
+              saveCode(id as string, code, language, 'title', {}, 'description')
+            }}>
+                <i className="fas fa-save"></i> 
+            </button>
+
+
+            <button className="" onClick={() =>{
+              deleteCode(id as string, code, language, 'title', {}, 'description')
+            }}>
+                <i className="fas fa-trash-alt"></i> 
+            </button>
+        </div>  
           <div className='flex flex-row mt-4'>
             <Terminal 
             lang={language} code={code} setOutput={setOutput} setError={setError} run={run} setRun={setRun} input={input}

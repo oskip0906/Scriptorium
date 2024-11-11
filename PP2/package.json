@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^9.2.0",
+    "@fortawesome/fontawesome-free": "^6.6.0",
     "@monaco-editor/react": "^4.6.0",
     "@prisma/client": "^5.21.1",
     "@prisma/studio": "^0.503.0",

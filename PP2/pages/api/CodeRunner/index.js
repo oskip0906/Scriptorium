@@ -39,11 +39,8 @@ export default function handler(req, res) {
 
   const error = runner.stderr.toString();
 
-  if (error) {
-    return res.status(400).json({ error });
-  }
-  return res.status(200).json({ output });
-  }
+  return res.status(200).json({ output, error });
+  } 
   catch (error) {
     return res.status(500).json({ error: error.message });
   }
