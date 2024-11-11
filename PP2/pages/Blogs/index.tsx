@@ -101,7 +101,7 @@ const BlogPostsList = () => {
   };
 
   return (
-    <div className="fade-in container mx-auto p-4">
+    <div className="fade-in container mx-auto p-4 mb-4">
       <NavBar />
       
       <h1 className="text-2xl font-bold mb-4">All Blog Posts</h1>

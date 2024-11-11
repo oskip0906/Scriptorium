@@ -82,7 +82,7 @@ const DetailedTemplateView = () => {
     <div className="fade-in container mx-auto p-4 mb-4">
       <NavBar />
     
-      <div className="border rounded p-10">
+      <div className="border rounded p-4">
         <div className="flex justify-center">
           {blogId ? (
             <button

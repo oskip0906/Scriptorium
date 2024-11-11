@@ -162,11 +162,11 @@ const DetailedPostView = () => {
     console.log(data);
 
     setComments(data);
-    setHasMore(data.length === pageSize);
+    setHasMore(true);
   };
 
   const handleNextPage = () => {
-    setPage(page - 1);
+    setPage(page + 1);
   };
 
   const handlePreviousPage = () => {
@@ -174,10 +174,10 @@ const DetailedPostView = () => {
   };
 
   return (
-    <div className="fade-in container mx-auto p-4">
+    <div className="fade-in container mx-auto p-4 mb-4">
       <NavBar />
 
-      <div className="border rounded p-10">
+      <div className="border rounded p-4">
         <div className="flex justify-center">
           <button
             onClick={() => router.push('/Blogs')}
@@ -237,7 +237,7 @@ const DetailedPostView = () => {
             <CommentComponent key={comment.id} comment={comment} />
           ))}
 
-          <div className="flex justify-between mt-4">
+          <div className="flex justify-between mt-4 px-1">
             <button
               onClick={handlePreviousPage}
               className="py-1 px-2 rounded text-xs"
