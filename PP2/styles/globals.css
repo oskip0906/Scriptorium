@@ -81,6 +81,10 @@ button {
   transition: color var(--transition-speed), background-color var(--transition-speed);
 }
 
+.border {
+  border: 1px solid rgba(var(--cta-border), 0.2);
+}
+
 
 .fade-in {
   opacity: 0;

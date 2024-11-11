@@ -18,12 +18,7 @@ interface Comment {
   createdBy: { userName: string };
 }
 
-interface CommentProp {
-  comment: Comment;
-  pageSize: number;
-}
-
-const CommentComponent: React.FC<CommentProp> = ({ comment }) => {
+const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
 
   const pageSize = 5;
 
@@ -78,7 +73,7 @@ const CommentComponent: React.FC<CommentProp> = ({ comment }) => {
   };
 
   return (
-    <div className="border p-4">
+    <div className="border p-4 m-1">
 
       <div className="flex justify-between items-center">
         <p className="inline-block ml-2">{comment.content} - <span className="italic">{comment.createdBy.userName}</span></p>
@@ -93,7 +88,7 @@ const CommentComponent: React.FC<CommentProp> = ({ comment }) => {
       {isExpanded && (
         <div className="ml-2 mt-2">
           {replies.map((reply) => (
-            <CommentComponent key={reply.id} comment={reply} pageSize={pageSize} />
+            <CommentComponent key={reply.id} comment={reply} />
           ))}
 
           <div className="flex justify-between mt-2">
@@ -256,7 +251,7 @@ const DetailedPostView = () => {
         <div className="mt-8">
           <h3 className="text-lg font-semibold">Comments</h3>
           {comments.map((comment) => (
-            <CommentComponent key={comment.id} comment={comment} pageSize={pageSize} />
+            <CommentComponent key={comment.id} comment={comment} />
           ))}
 
           <div className="flex justify-between mt-4">
