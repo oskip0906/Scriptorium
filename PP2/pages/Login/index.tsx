@@ -48,7 +48,7 @@ const LoginPage = () => {
                         id="userName"
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}
-                        className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border sm:text-sm"
+                        className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm outline-none focus:ring focus:border sm:text-sm"
                     />
                 </div>
 
@@ -61,13 +61,13 @@ const LoginPage = () => {
                         id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border sm:text-sm"
+                        className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm outline-none focus:ring focus:border sm:text-sm"
                     />
                 </div>
 
                 <button
                     type="submit"
-                    className="w-full py-2 px-4 rounded-md shadow focus:outline-none">
+                    className="w-full py-2 px-4 rounded-md shadow outline-none">
                     Log In
                 </button>
             </form>

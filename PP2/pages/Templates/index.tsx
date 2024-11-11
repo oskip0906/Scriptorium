@@ -101,21 +101,21 @@ const CodeTemplatesList = () => {
     <div className="fade-in container mx-auto p-4 mb-4">
       <NavBar/>
 
-      <h1 className="text-2xl font-bold mb-4">Code Templates</h1>
+      <h1 className="text-2xl font-bold mb-4">All Code Templates</h1>
 
       <div className="mb-4 flex flex-wrap gap-2 items-center">
 
         <select 
           value={searchLanguage} 
           onChange={(e) => setSearchLanguage(e.target.value)} 
-          className="border p-2 rounded pr-8 focus:outline-none">
+          className="border p-2 rounded pr-8 outline-none">
             <option value="">Select language</option>
             <option value="c">C</option>
-            <option value="c++">C++</option>
+            <option value="cpp">Cpp</option>
             <option value="java">Java</option>
             <option value="python">Python</option>
             <option value="javascript">JavaScript</option>
-            <option value="c#">C#</option>
+            <option value="csharp">Csharp</option>
             <option value="rust">Rust</option>
             <option value="swift">Swift</option>
             <option value="go">Go</option>
@@ -127,7 +127,7 @@ const CodeTemplatesList = () => {
           placeholder="Search by title" 
           value={searchTitle} 
           onChange={(e) => setSearchTitle(e.target.value)} 
-          className="p-2 rounded w-1/4 focus:outline-none" 
+          className="p-2 rounded w-1/4 outline-none" 
         />
 
         <input 
@@ -135,7 +135,7 @@ const CodeTemplatesList = () => {
           placeholder="Search by explanation" 
           value={searchExplanation} 
           onChange={(e) => setSearchExplanation(e.target.value)} 
-          className="p-2 rounded w-1/4 focus:outline-none" 
+          className="p-2 rounded w-1/4 outline-none" 
         />
 
         <input 
@@ -143,7 +143,7 @@ const CodeTemplatesList = () => {
           placeholder="Search by username" 
           value={searchUser} 
           onChange={(e) => setSearchUser(e.target.value)} 
-          className="p-2 rounded w-1/4 focus:outline-none"
+          className="p-2 rounded w-1/4 outline-none"
         />
 
         <div className="flex items-center w-1/2 rounded h-10" id="tagSelect">

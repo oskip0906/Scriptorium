@@ -104,13 +104,13 @@ const BlogPostsList = () => {
     <div className="fade-in container mx-auto p-4">
       <NavBar />
       
-      <h1 className="text-2xl font-bold mb-4">Blog Posts</h1>
+      <h1 className="text-2xl font-bold mb-4">All Blog Posts</h1>
 
       <div className="mb-4 flex flex-wrap gap-2 items-center">
         <select 
           value={order} 
           onChange={(e) => setOrder(e.target.value)} 
-          className="border p-2 rounded pr-8 focus:outline-none">
+          className="border p-2 rounded pr-8 outline-none">
           <option value="desc">Most Valued</option>
           <option value="asc">Most Controversial</option>
         </select>
@@ -120,7 +120,7 @@ const BlogPostsList = () => {
           placeholder="Search by title" 
           value={searchTitle} 
           onChange={(e) => setSearchTitle(e.target.value)} 
-          className="p-2 rounded w-1/4 focus:outline-none" 
+          className="p-2 rounded w-1/4 outline-none" 
         />
         
         <input 
@@ -128,7 +128,7 @@ const BlogPostsList = () => {
           placeholder="Search by description" 
           value={searchDescription} 
           onChange={(e) => setSearchDescription(e.target.value)} 
-          className="p-2 rounded w-1/4 focus:outline-none" 
+          className="p-2 rounded w-1/4 outline-none" 
         />
 
         <input 
@@ -136,7 +136,7 @@ const BlogPostsList = () => {
           placeholder="Search by content" 
           value={searchContent} 
           onChange={(e) => setSearchContent(e.target.value)} 
-          className="p-2 rounded w-1/4 focus:outline-none" 
+          className="p-2 rounded w-1/4 outline-none" 
         />
 
         <input 

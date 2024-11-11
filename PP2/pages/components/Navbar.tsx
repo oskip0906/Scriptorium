@@ -23,7 +23,7 @@ function NavBar() {
     <div className="flex justify-center mb-4">
     <button
       onClick={setTheme}
-      className="px-4 py-2 bg-gray-400 font-semibold rounded-lg shadow-md focus:outline-none">
+      className="px-4 py-2 bg-transparent text-gray-400 font-semibold border outline-none">
       Toggle Theme
     </button>
     </div>

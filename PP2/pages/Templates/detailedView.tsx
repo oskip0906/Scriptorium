@@ -106,8 +106,8 @@ const DetailedTemplateView = () => {
         
         {context && (
           <Editor
-            height="300px"
-            language={template.language === 'c++' ? 'cpp' : template.language === 'c#' ? 'csharp' : template.language}
+            height="40vh"
+            language={template.language}
             value={template.code}
             options={{
               readOnly: true,
@@ -144,7 +144,7 @@ const DetailedTemplateView = () => {
           </button>
 
           <button
-            onClick={() => router.push(`/`)}
+            onClick={() => router.push(`/Runner?id=${template.id}&templateId=${template.id}`)}
             className="bg-button text-button-text py-2 px-4 rounded">
             Try or Edit
           </button>

@@ -56,7 +56,12 @@ button {
   transition: color var(--transition-speed), background-color var(--transition-speed);
 }
 
-.container {
+button:hover {
+  transform: scale(1.01);
+  box-shadow: 0 0 5px rgba(7, 113, 200, 0.5);
+}
+
+.container, textarea {
   color: rgb(var(--main-text));
   background-color: rgb(var(--cta-background));
   transition: color var(--transition-speed), background-color var(--transition-speed);

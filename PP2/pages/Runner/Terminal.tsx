@@ -16,7 +16,6 @@ const Terminal: React.FC<TerminalProps> = ({ lang }) => {
     editorRef.current = editor;    
 
   }
-
   
 
   return (
@@ -24,8 +23,6 @@ const Terminal: React.FC<TerminalProps> = ({ lang }) => {
         <Editor
         height='90vh'
         width = '50vw'  
-        defaultLanguage='javascript'
-        defaultValue="// some> code"
         onMount={onMount}
         language={lang}
         theme= 'vs-dark'
