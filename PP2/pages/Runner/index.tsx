@@ -76,7 +76,7 @@ const index = () => {
         <div className="flex space-x-4">
 
             <button className="" onClick={() => {
-              forkCode(id as string, code, language, 'title', {}, 'description')
+              forkCode(id as string)
             }}>
                 <i className="fas fa-code-branch"></i> 
             </button>
