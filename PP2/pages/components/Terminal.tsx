@@ -62,8 +62,9 @@ const Terminal: React.FC<TerminalProps> = ({ lang, code, setOutput, setError, ru
         <Editor
         height='90vh'
         width = '50vw'  
-        defaultLanguage={lang}
-        defaultValue={code ?? '// write your code here'}
+        defaultLanguage={"javascript"}
+        defaultValue={'// write your code here'}
+        value={code}
         onMount={onMount}
         language={lang}
         theme={theme === 'light' ? 'vs-light' : 'vs-dark'}
