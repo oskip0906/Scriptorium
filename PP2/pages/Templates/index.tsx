@@ -5,7 +5,6 @@ import NavBar from '@/pages/components/Navbar';
 interface CodeTemplate {
   id: number;
   title: string;
-  code: string;
   language: string;
   tags: { name: string }[],
   createdBy: { userName: string };
@@ -196,27 +195,26 @@ const CodeTemplatesList = () => {
 
       <div className="space-y-4">
         {templates.map((template) => (
-          <div key={template.id} className="p-4 border rounded shadow">
+          <div className="p-4 border rounded shadow" key={template.id}>
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">{template.title}</h2>
-              
-              <div className="text-gray-500">
-                <span className="font-semibold">Created by: {template.createdBy.userName}</span>
-              </div>
+              <span className="font-semibold">Created by: {template.createdBy.userName}</span>
             </div>
             
             <p className="mt-2">Language: {template.language}</p>
 
-            <div className="flex space-x-2 mt-2">
-              {template.tags.map((tag) => (
-                <span key={tag.name} className="px-2 py-1 rounded" id="tag">
-                  {tag.name}
-                </span>
-              ))}
-            </div>
+            {template.tags && template.tags.length !== 0 && (
+              <div className="flex space-x-2 mt-4">
+                {template.tags.map((tag) => (
+                  <span className="px-2 py-1 rounded" id="tag" key={tag.name}>
+                    {tag.name}
+                  </span>
+                ))}
+              </div>
+            )}
 
             <button
-              onClick={() => router.push(`Templates/detailedView?id=${template.id}`)}
+              onClick={() => router.push(`Templates/detailedView?templateId=${template.id}`)}
               className="mt-4 px-4 py-2 rounded">
               Read More
             </button>

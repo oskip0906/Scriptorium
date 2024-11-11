@@ -62,7 +62,30 @@ async function handler(req, res) {
     else if (req.method === "GET") {
 
         try {
-            const { title, description, content, tags, codeTemplates, createdUser, order, page, pageSize} = req.query;
+            const { id, title, description, content, tags, codeTemplates, createdUser, order, page, pageSize} = req.query;
+
+            if (id) {
+                const blogPost = await prisma.BlogPost.findUnique({
+                    where: { id: parseInt(id) },
+                    include: { 
+                        tags: {
+                            select: { name: true }
+                        },
+                        codeTemplates: {
+                            select: { id: true, title: true }
+                        },
+                        createdBy: {
+                            select: { userName: true }
+                        }
+                    },
+                });
+
+                if (!blogPost) {
+                    return res.status(404).json({ error: "Blog post not found" });
+                }
+
+                return res.status(200).json(blogPost);
+            }
 
             if (!page || !pageSize) {
                 return res.status(400).json({ error: "Page or page size missing"});
@@ -127,9 +150,11 @@ async function handler(req, res) {
                         select: { name: true }
                     },
                     codeTemplates: {
-                        select: { id: true }
+                        select: { id: true, title: true }
                     },
-                    createdBy: true
+                    createdBy: {
+                        select: { userName: true }
+                    }
                 },
                 skip: (parseInt(page) - 1) * parseInt(pageSize),
                 take: parseInt(pageSize),

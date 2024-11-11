@@ -6,9 +6,7 @@ interface BlogPost {
   id: number;
   title: string;
   description: string;
-  content: string;
   tags: { name: string }[];
-  codeTemplates: { id: number }[];
   createdBy: { userName: string };
 }
 
@@ -106,7 +104,7 @@ const BlogPostsList = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="fade-in container mx-auto p-4">
       <NavBar />
       
       <h1 className="text-2xl font-bold mb-4">Blog Posts</h1>
@@ -197,24 +195,23 @@ const BlogPostsList = () => {
 
       <div className="space-y-4">
         {blogPosts.map((post) => (
-          <div key={post.id} className="p-4 border rounded shadow">
+          <div className="p-4 border rounded shadow" key={post.id}>
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">{post.title}</h2>
-              
-              <div>
-                <span className="font-semibold">Created by: {post.createdBy.userName}</span>
-              </div>
+              <span className="font-semibold">Created by: {post.createdBy.userName}</span>
             </div>
 
             <p className="my-2">{post.description}</p>
 
-            <div className="flex space-x-2 mt-2">
-              {post.tags.map((tag) => (
-                <span key={tag.name} className="px-2 py-1 rounded" id="tag">
-                  {tag.name}
-                </span>
-              ))}
-            </div>
+            {post.tags && post.tags.length !== 0 && (
+              <div className="flex space-x-2 mt-4">
+                {post.tags.map((tag) => (
+                  <span className="px-2 py-1 rounded" id="tag" key={tag.name}>
+                    {tag.name}
+                  </span>
+                ))}
+              </div>
+            )}
 
             <button
               onClick={() => router.push(`Blogs/detailedView?id=${post.id}`)}

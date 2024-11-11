@@ -13,17 +13,19 @@ function NavBar() {
   }
 
   useEffect(() => {
-    console.log("Theme changed to: ", context?.theme);
+    console.log("Theme changed to", context?.theme);
     document.body.classList.remove('light', 'dark');
     document.body.classList.add(context?.theme === 'light' ? 'light' : 'dark');
   }, [context?.theme]);
 
 
   return (
-    <div>
+    <div className="flex justify-center mb-8">
     <button
-    onClick={setTheme}
-    >Theme</button>        
+      onClick={setTheme}
+      className="px-4 py-2 bg-gray-400 font-semibold rounded-lg shadow-md focus:outline-none">
+      Toggle Theme
+    </button>
     </div>
   )
 }

@@ -79,7 +79,7 @@ async function handler(req, res) {
                 searchFilters.push({ content: { contains: content } });
             }
             if (repliedToId) {
-                searchFilters.push({ blogPostId: parseInt(blogPostId) });
+                searchFilters.push({ repliedToId: parseInt(repliedToId) });
             }
             if (blogPostId) {
                 searchFilters.push({ blogPostId: parseInt(blogPostId) });
@@ -97,7 +97,12 @@ async function handler(req, res) {
             }
 
             const comments = await prisma.Comment.findMany({
-                where: { AND: searchFilters },
+                where: { AND: searchFilters },  
+                include: { 
+                    createdBy: {
+                        select: { userName: true }
+                    }
+                },
                 orderBy: { rating: order },
                 skip: (parseInt(page) - 1) * parseInt(pageSize),
                 take: parseInt(pageSize)

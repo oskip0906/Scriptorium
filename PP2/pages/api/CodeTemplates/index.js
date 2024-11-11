@@ -45,7 +45,26 @@ async function handler(req, res) {
         try {
             const { id, title, explanation, language, tags, createdUser, page, pageSize } = req.query;
 
-            if (!id && (!page || !pageSize)) {
+            if (id) {
+                const codeTemplate = await prisma.CodeTemplate.findUnique({
+                    where: { id: parseInt(id) },
+                    include: { 
+                        tags: true, 
+                        createdBy: {
+                            select: { userName: true }
+                        }
+                    }
+                });
+
+                if (!codeTemplate) {
+                    return res.status(404).json({ error: "Code template not found" });
+                }
+
+                return res.status(200).json(codeTemplate);
+            }
+
+
+            if (!page || !pageSize) {
                 return res.status(400).json({ error: "Page or page size missing"});
             }
 
@@ -82,22 +101,14 @@ async function handler(req, res) {
                 searchFilters.push({ createdUserId: { in: users.map(user => user.id) } });
             }
 
-            if (id) {
-                const codeTemplate = await prisma.CodeTemplate.findUnique({
-                    where: { id: parseInt(id) },
-                    include: { tags: true, createdBy: true }
-                });
-
-                if (!codeTemplate) {
-                    return res.status(404).json({ error: "Code template not found" });
-                }
-
-                return res.status(200).json(codeTemplate);
-            }
-
             const codeTemplates = await prisma.CodeTemplate.findMany({
                 where: { AND: searchFilters },
-                include: { tags: true, createdBy: true },
+                include: { 
+                    tags: true, 
+                    createdBy: {
+                        select: { userName: true }
+                    }
+                },
                 skip: (parseInt(page) - 1) * parseInt(pageSize),
                 take: parseInt(pageSize),
                 orderBy: { id: 'desc' }

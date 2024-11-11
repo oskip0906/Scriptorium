@@ -25,6 +25,7 @@ body {
   --cta-background: 26, 26, 26; 
   --cta-primary: 45, 45, 45; 
   --cta-secondary: 225, 225, 225;
+  --cta-tertiary: 100, 55, 100;
   --cta-border: 238, 238, 238;
   --cta-button: 255, 161, 22; 
 }
@@ -32,8 +33,9 @@ body {
 .light {
   --main-text: 26, 26, 26;           
   --cta-background: 248, 248, 248;  
-  --cta-primary: 225, 225, 225;    
-  --cta-secondary: 45, 45, 45;        
+  --cta-primary: 235, 235, 235;    
+  --cta-secondary: 45, 45, 45;       
+  --cta-tertiary: 220, 175, 220; 
   --cta-border: 100, 100, 100;       
   --cta-button: 0, 123, 255;          
 }
@@ -51,25 +53,32 @@ body {
 button {
   background-color: rgb(var(--cta-button));
   color: rgb(var(--cta-primary));
-  transition: background-color var(--transition-speed), color var(--transition-speed);
+  transition: color var(--transition-speed), background-color var(--transition-speed);
 }
 
 .container {
   color: rgb(var(--main-text));
   background-color: rgb(var(--cta-background));
-  transition: background-color var(--transition-speed);
+  transition: color var(--transition-speed), background-color var(--transition-speed);
 }
 
 .card, input, select, #tagSelect {
   background-color: rgb(var(--cta-background));
   color: rgb(var(--main-text));
   border: 1px solid rgba(var(--cta-border), 0.1);
-  transition: background-color var(--transition-speed), color var(--transition-speed);
+  transition: color var(--transition-speed), background-color var(--transition-speed);
 }
 
 #tag {
   background-color: rgb(var(--cta-primary));
   color: rgb(var(--main-text));
+  transition: color var(--transition-speed), background-color var(--transition-speed);
+}
+
+#template {
+  background-color: rgb(var(--cta-tertiary));
+  color: rgb(var(--main-text));
+  transition: color var(--transition-speed), background-color var(--transition-speed);
 }
 
 
