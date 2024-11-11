@@ -109,7 +109,7 @@ async function handler(req, res) {
             if (tags) {
                 const tagsList = tags.split(",");
                 tagsList.forEach(tag => {
-                    searchFilters.push({ tags: { some: { name: tag } } });
+                    searchFilters.push({ tags: { some: { name: { contains: tag } } } });
                 });
             }
             if (codeTemplates) {
