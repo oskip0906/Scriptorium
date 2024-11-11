@@ -58,11 +58,7 @@ const BlogPostsList = () => {
 
     console.log(query);
 
-    const response = await fetch(`/api/BlogPosts?${query}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(`/api/BlogPosts?${query}`);
 
     if (!response.ok) {
       console.error('Error fetching blog posts');

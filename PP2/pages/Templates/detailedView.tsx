@@ -21,7 +21,6 @@ const DetailedTemplateView = () => {
   const router = useRouter();
   const { id } = router.query;
   const [token, setToken] = useState('');
-
   const [template, setTemplate] = useState<CodeTemplate>();
 
   useEffect(() => {
@@ -69,7 +68,7 @@ const DetailedTemplateView = () => {
     if (!response.ok) {
       alert('Error forking template!');
       return;
-    } 
+    }
 
     alert('Code template forked successfully');
   };

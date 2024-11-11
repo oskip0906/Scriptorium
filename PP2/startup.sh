@@ -57,8 +57,8 @@ if ! node --version >> log.txt; then
 fi
 echo "Node.js found";
 
-# if ! node lib/Startup/addAdmin.mjs; then 
-#     echo "Failed to add admin";
-#     exit 1;
-# fi
-# echo "Admin added successfully";
+if ! node lib/Startup/addAdmin.mjs; then 
+    echo "Failed to add admin";
+    exit 1;
+fi
+echo "Admin added successfully";

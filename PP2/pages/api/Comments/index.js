@@ -63,7 +63,24 @@ async function handler(req, res) {
     else if (req.method === "GET") {
 
         try {
-            const { content, repliedToId, blogPostId, createdUserId, order, page, pageSize } = req.query;
+            const { id, content, repliedToId, blogPostId, createdUserId, order, page, pageSize } = req.query;
+
+            if (id) {
+                const comment = await prisma.Comment.findUnique({
+                    where: { id: parseInt(id) },
+                    include: {
+                        createdBy: {
+                            select: { userName: true }
+                        }
+                    }
+                });
+
+                if (!comment) {
+                    return res.status(404).json({ error: "Comment not found" });
+                }
+
+                return res.status(200).json(comment);
+            }
 
             if (!page || !pageSize) {
                 return res.status(400).json({ error: "Page or page size missing"});

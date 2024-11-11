@@ -12,14 +12,12 @@ const LoginPage = () => {
         try {
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
                 body: JSON.stringify({ userName, password })
             });
 
             if (!response.ok) {
                 alert('Login failed');
+                return;
             }
 
             const { accessToken, refreshToken } = await response.json();
@@ -31,6 +29,7 @@ const LoginPage = () => {
         } 
         catch (error) {
             alert('Login failed');
+            return;
         }
     };
 

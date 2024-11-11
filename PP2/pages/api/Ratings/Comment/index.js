@@ -8,9 +8,9 @@ async function handler(req, res) {
     }
 
     try {
-        const { commentId, value } = req.body;
+        const { id, value } = req.body;
 
-        if (!commentId || !value) {
+        if (!id || !value) {
             return res.status(400).json({ error: "Missing parameters" });
         }
 
@@ -18,7 +18,7 @@ async function handler(req, res) {
             return res.status(400).json({ error: "Invalid rating value" });
         }
 
-        const rating = await rateComment(req.user.id, value, commentId);
+        const rating = await rateComment(req.user.id, value, id);
 
         if (!rating) {
             return res.status(400).json({ error: "Bad request" });

@@ -56,11 +56,7 @@ const CodeTemplatesList = () => {
 
     console.log(query);
 
-    const response = await fetch(`/api/CodeTemplates?${query}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(`/api/CodeTemplates?${query}`);
 
     if (!response.ok) {
       console.error('Error fetching templates');
