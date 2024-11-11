@@ -9,8 +9,12 @@ function getRandomLanguage() {
   return languages[Math.floor(Math.random() * languages.length)];
 }
 
+function getRandomRating() {
+  return Math.floor(Math.random() * 201) - 100; // Generates a rating between -100 and 100
+}
+
 async function main() {
-  // Create an admin and 5 additional users
+  // Create an admin and 5 additional users with password '123'
   const admin = await prisma.user.create({
     data: {
       userName: 'adminUser',
@@ -19,7 +23,7 @@ async function main() {
       email: 'admin@example.com',
       avatar: faker.image.avatar(),
       phoneNumber: faker.phone.number(),
-      password: faker.internet.password(),
+      password: '123',
       role: 'admin',
     },
   });
@@ -34,7 +38,7 @@ async function main() {
           email: faker.internet.email(),
           avatar: faker.image.avatar(),
           phoneNumber: faker.phone.number(),
-          password: faker.internet.password(),
+          password: '123',
           role: 'user',
         },
       })
@@ -103,6 +107,7 @@ async function main() {
         content: faker.lorem.sentence(),
         createdUserId: allUsers[Math.floor(Math.random() * allUsers.length)].id,
         blogPostId: blogPost.id,
+        rating: getRandomRating(),
       },
     });
     commentThreads.push(baseComment);
@@ -116,6 +121,7 @@ async function main() {
           createdUserId: allUsers[layer % allUsers.length].id,
           blogPostId: blogPost.id,
           repliedToId: parentComment.id,
+          rating: getRandomRating(),
         },
       });
       parentComment = reply;
@@ -129,6 +135,7 @@ async function main() {
             createdUserId: allUsers[Math.floor(Math.random() * allUsers.length)].id,
             blogPostId: blogPost.id,
             repliedToId: parentComment.id,
+            rating: getRandomRating(),
           },
         });
         commentThreads.push(subReply);
@@ -136,7 +143,7 @@ async function main() {
     }
   }
 
-  // Add isolated comments on various posts
+  // Add isolated comments on various posts with random ratings
   for (let i = 0; i < 50; i++) {
     const blogPost = blogPosts[Math.floor(Math.random() * blogPosts.length)];
     await prisma.comment.create({
@@ -144,6 +151,7 @@ async function main() {
         content: faker.lorem.sentence(),
         createdUserId: allUsers[Math.floor(Math.random() * allUsers.length)].id,
         blogPostId: blogPost.id,
+        rating: getRandomRating(),
       },
     });
   }
@@ -160,3 +168,5 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
+
+// Source: ChatGPT-4o
