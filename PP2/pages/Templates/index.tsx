@@ -8,6 +8,7 @@ interface CodeTemplate {
   language: string;
   tags: { name: string }[],
   createdBy: { userName: string };
+  forkedFromID: number;
 }
 
 const CodeTemplatesList = () => {
@@ -189,9 +190,13 @@ const CodeTemplatesList = () => {
         {templates.map((template) => (
           <div className="p-4 border rounded shadow" key={template.id}>
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">{template.title}</h2>
+              <h2 className="text-xl font-semibold">{template.title} [ID: {template.id}]</h2>
               <span className="font-semibold">Created by: {template.createdBy.userName}</span>
             </div>
+
+            {template.forkedFromID && (
+             <p>(Forked Template)</p>
+            )}
             
             <p className="mt-2">Language: {template.language}</p>
 
