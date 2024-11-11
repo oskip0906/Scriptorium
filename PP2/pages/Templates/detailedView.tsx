@@ -13,6 +13,7 @@ interface CodeTemplate {
   language: string;
   tags: { name: string }[];
   createdBy: { userName: string };
+  forkedFromID: number;
 }
 
 const DetailedTemplateView = () => {
@@ -43,6 +44,7 @@ const DetailedTemplateView = () => {
     }
 
     const data = await response.json();
+    console.log(data);
     setTemplate(data);
   };
 
@@ -84,10 +86,18 @@ const DetailedTemplateView = () => {
       <div className="border rounded p-4">
 
         <div className="flex justify-between mt-4">
-          <h2 className="text-xl font-semibold">{template.title}</h2>
+          <h2 className="text-xl font-semibold">{template.title} [ID: {template.id}]</h2>
           <span className="font-semibold">Created by: {template.createdBy.userName}</span>
         </div>
-        
+
+        {template.forkedFromID && (
+          <button
+            onClick={() => router.push(`/Templates/detailedView?id=${template.forkedFromID}`)}
+            className="bg-gray-400 p-2 rounded my-4 text-center w-full">
+            Note: This is a forked version. Click here to view original template!
+          </button>
+        )}
+
         {context && (
           <Editor
             height="40vh"
