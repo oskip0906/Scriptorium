@@ -108,11 +108,20 @@ async function handler(req, res) {
                 take: parseInt(pageSize)
             });
 
+            const totalComments = await prisma.Comment.count({
+                where: { AND: searchFilters }
+            });
+
+            const paginatedResponse = {
+                totalPages: Math.ceil(totalComments / parseInt(pageSize)),
+                comments: comments
+            };
+
             if (comments.length === 0) {
                 return res.status(404).json({ error: "No comments found" });
             }
-
-            return res.status(200).json(comments);
+            
+            return res.status(200).json(paginatedResponse);
         }
 
         catch (error) {

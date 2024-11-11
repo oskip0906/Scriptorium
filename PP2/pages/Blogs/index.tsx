@@ -13,10 +13,10 @@ interface BlogPost {
 const BlogPostsList = () => {
 
   const router = useRouter();
-  const pageSize = 3;
+  const pageSize = 5;
 
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const [order, setOrder] = useState('desc');
@@ -30,7 +30,7 @@ const BlogPostsList = () => {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setCurrentPage(1);
+      setPage(1);
       fetchPosts();
     }, 500);
   
@@ -41,12 +41,12 @@ const BlogPostsList = () => {
   
   useEffect(() => {
     fetchPosts();
-  }, [currentPage]);
+  }, [page]);
 
   const fetchPosts = async () => {
 
     const query = new URLSearchParams({
-      page: String(currentPage),
+      page: String(page),
       pageSize: String(pageSize),
       order: order,
       description: searchDescription,
@@ -77,12 +77,12 @@ const BlogPostsList = () => {
 
     setBlogPosts(data.posts);
     setTotalPages(data.totalPages);
-    
+
   };
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
-      setCurrentPage(newPage);
+      setPage(newPage);
     }
   };
 
@@ -221,20 +221,20 @@ const BlogPostsList = () => {
 
       <div className="flex justify-between items-center mt-6">
         <button
-          onClick={() => handlePageChange(currentPage - 1)}
+          onClick={() => handlePageChange(page - 1)}
           className="px-4 py-2 rounded"
-          disabled={currentPage === 1}>
+          disabled={page === 1}>
           Previous
         </button>
 
         <span>
-          Page {currentPage} of {totalPages}
+          Page {page} of {totalPages}
         </span>
 
         <button
-          onClick={() => handlePageChange(currentPage + 1)}
+          onClick={() => handlePageChange(page + 1)}
           className="px-4 py-2 rounded"
-          disabled={currentPage === totalPages}>
+          disabled={page === totalPages}>
           Next
         </button>
       </div>

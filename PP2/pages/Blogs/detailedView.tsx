@@ -23,9 +23,10 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
   const pageSize = 5;
 
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [replies, setReplies] = useState<Comment[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [hasMoreReplies, setHasMoreReplies] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     fetchReplies(1);
@@ -36,7 +37,8 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
 
     if (!response.ok) {
       console.error(`Error fetching replies for comment ${comment.id}`);
-      setHasMoreReplies(false);
+      setTotalPages(1);
+      setHasMore(false);
       return;
     }
 
@@ -44,8 +46,9 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
 
     console.log(data);
 
-    setReplies((prevReplies) => (page === 1 ? data : [...prevReplies, ...data]));
-    setHasMoreReplies(true);
+    setReplies((prevReplies) => (page === 1 ? data.comments : [...prevReplies, ...data.comments]));
+    setTotalPages(data.totalPages);
+
   };
 
   const toggleExpand = () => {
@@ -59,13 +62,15 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
     setIsExpanded(!isExpanded);
   };
 
-  const handleNextPage = () => {
-    setPage(page - 1);
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+    }
   };
 
-  const handlePreviousPage = () => {
-    setPage(page - 1);
-  };
+  if (!comment) {
+    return;
+  }
 
   return (
     <div className="border p-4 m-1">
@@ -73,7 +78,7 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
       <div className="flex justify-between items-center">
         <p className="inline-block ml-2">{comment.content} - <span className="italic">{comment.createdBy.userName}</span></p>
 
-        {hasMoreReplies && (
+        {hasMore && (
           <button onClick={toggleExpand} className="text-primary p-1 mt-2 bg-transparent">
           {isExpanded ? '⬆' : '⬇'}
           </button>
@@ -88,16 +93,16 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
 
           <div className="flex justify-between mt-2">
             <button
-              onClick={handlePreviousPage}
+              onClick={() => handlePageChange(page - 1)}
               className="py-1 px-2 rounded text-xs"
               disabled={page === 1}>
               Previous
             </button>
 
             <button
-              onClick={handleNextPage}
+              onClick={() => handlePageChange(page + 1)}
               className="py-1 px-2 rounded text-xs"
-              disabled={!hasMoreReplies}>
+              disabled={page === totalPages}>
               Next
             </button>
           </div>
@@ -117,7 +122,7 @@ const DetailedPostView = () => {
   const [post, setPost] = useState<BlogPost>();
   const [comments, setComments] = useState<Comment[]>([]);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     if (id) {
@@ -154,6 +159,7 @@ const DetailedPostView = () => {
     
     if (!response.ok) {
       console.error('Error fetching comments');
+      setTotalPages(1);
       return;
     }
 
@@ -161,17 +167,20 @@ const DetailedPostView = () => {
 
     console.log(data);
 
-    setComments(data);
-    setHasMore(true);
+    setComments(data.comments);
+    setTotalPages(data.totalPages);
+
   };
 
-  const handleNextPage = () => {
-    setPage(page + 1);
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+    }
   };
 
-  const handlePreviousPage = () => {
-    setPage(page - 1);
-  };
+  if (!post) {
+    return;
+  }
 
   return (
     <div className="fade-in container mx-auto p-4 mb-4">
@@ -239,16 +248,16 @@ const DetailedPostView = () => {
 
           <div className="flex justify-between mt-4 px-1">
             <button
-              onClick={handlePreviousPage}
+              onClick={() => handlePageChange(page - 1)}
               className="py-1 px-2 rounded text-xs"
               disabled={page === 1}>
               Previous
             </button>
 
             <button
-              onClick={handleNextPage}
+              onClick={() => handlePageChange(page + 1)}
               className="py-1 px-2 rounded text-xs"
-              disabled={!hasMore}>
+              disabled={page === totalPages}>
               Next
             </button>
           </div>
