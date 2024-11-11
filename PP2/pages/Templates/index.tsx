@@ -140,7 +140,7 @@ const CodeTemplatesList = () => {
 
         <input 
           type="text" 
-          placeholder="Search by username" 
+          placeholder="Search by user" 
           value={searchUser} 
           onChange={(e) => setSearchUser(e.target.value)} 
           className="p-2 rounded w-1/4 outline-none"
@@ -210,7 +210,7 @@ const CodeTemplatesList = () => {
             )}
 
             <button
-              onClick={() => router.push(`Templates/detailedView?templateId=${template.id}`)}
+              onClick={() => router.push(`Templates/detailedView?id=${template.id}`)}
               className="mt-4 px-4 py-2 rounded">
               Read More
             </button>

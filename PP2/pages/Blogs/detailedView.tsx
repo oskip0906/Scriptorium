@@ -76,7 +76,9 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
     <div className="border p-4 m-1">
 
       <div className="flex justify-between items-center">
-        <p className="inline-block ml-2">{comment.content} - <span className="italic">{comment.createdBy.userName}</span></p>
+        <p className="inline-block ml-2">{comment.content} 
+          - <span className="italic font-semibold">{comment.createdBy.userName}</span>
+        </p>
 
         {hasMore && (
           <button onClick={toggleExpand} className="text-primary p-1 mt-2 bg-transparent">
@@ -187,17 +189,10 @@ const DetailedPostView = () => {
       <NavBar />
 
       <div className="border rounded p-4">
-        <div className="flex justify-center">
-          <button
-            onClick={() => router.push('/Blogs')}
-            className="text-primary py-2 px-4 rounded">
-            Back to Blog Posts
-          </button>
-        </div>
 
         {post && (
           <>
-            <div className="flex justify-between items-center mt-8">
+            <div className="flex justify-between mt-4">
               <h2 className="text-xl font-semibold">{post.title}</h2>
               <span className="font-semibold">Created by: {post.createdBy.userName}</span>
             </div>
@@ -230,7 +225,7 @@ const DetailedPostView = () => {
                       key={template.id}
                       className="px-2 py-1 rounded cursor-pointer"
                       id="template"
-                      onClick={() => router.push(`/Templates/detailedView?templateId=${template.id}&blogId=${post.id}`)}>
+                      onClick={() => router.push(`/Templates/detailedView?id=${template.id}`)}>
                       {template.title}
                     </span>
                   ))}

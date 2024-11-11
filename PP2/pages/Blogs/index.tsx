@@ -141,10 +141,10 @@ const BlogPostsList = () => {
 
         <input 
           type="text" 
-          placeholder="Search by username" 
+          placeholder="Search by user" 
           value={searchUser} 
           onChange={(e) => setSearchUser(e.target.value)} 
-          className="p-2 rounded w-1/4"
+          className="p-2 rounded w-1/4 outline-none"
         />
 
         <div className="flex items-center w-1/2 rounded h-10" id="tagSelect">

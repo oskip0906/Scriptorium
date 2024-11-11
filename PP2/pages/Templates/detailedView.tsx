@@ -19,7 +19,7 @@ const DetailedTemplateView = () => {
 
   const context = useContext(AppContext);
   const router = useRouter();
-  const { templateId, blogId } = router.query;
+  const { id } = router.query;
   const [token, setToken] = useState('');
 
   const [template, setTemplate] = useState<CodeTemplate>();
@@ -30,13 +30,13 @@ const DetailedTemplateView = () => {
   }, []);
 
   useEffect(() => {
-    if (templateId) {
+    if (id) {
       fetchTemplateDetails();
     }
-  }, [templateId]);
+  }, [id]);
 
   const fetchTemplateDetails = async () => {
-    const response = await fetch(`/api/CodeTemplates?id=${templateId}`);
+    const response = await fetch(`/api/CodeTemplates?id=${id}`);
 
     if (!response.ok) {
       console.error('Error fetching template details');
@@ -48,7 +48,7 @@ const DetailedTemplateView = () => {
   };
 
   
-  const handleFork = async (templateId: number) => {
+  const handleFork = async (id: number) => {
     if (!token) {
       alert('Please login first!');
       setTimeout(() => {
@@ -63,7 +63,7 @@ const DetailedTemplateView = () => {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: templateId }),
+      body: JSON.stringify({ id: id }),
     });
 
     if (!response.ok) {
@@ -83,23 +83,8 @@ const DetailedTemplateView = () => {
       <NavBar />
     
       <div className="border rounded p-4">
-        <div className="flex justify-center">
-          {blogId ? (
-            <button
-              onClick={() => router.push(`/Blogs/detailedView?id=${blogId}`)}
-              className="text-primary py-2 px-4 rounded">
-              Back to Blog Post
-            </button>
-          ) : (
-            <button
-              onClick={() => router.push('/Templates')}
-              className="text-primary py-2 px-4 rounded">
-              Back to Code Templates
-            </button>
-          )}
-        </div>
 
-        <div className="flex justify-between items-center mt-8">
+        <div className="flex justify-between mt-4">
           <h2 className="text-xl font-semibold">{template.title}</h2>
           <span className="font-semibold">Created by: {template.createdBy.userName}</span>
         </div>
@@ -136,7 +121,7 @@ const DetailedTemplateView = () => {
           </div>
         )}
 
-        <div className="flex justify-between mt-8">
+        <div className="flex justify-between mt-4">
           <button
             onClick={() => handleFork(template.id)}
             className="bg-button text-button-text py-2 px-4 rounded">
@@ -144,7 +129,7 @@ const DetailedTemplateView = () => {
           </button>
 
           <button
-            onClick={() => router.push(`/Runner?id=${template.id}&templateId=${template.id}`)}
+            onClick={() => router.push(`/Runner?id=${template.id}`)}
             className="bg-button text-button-text py-2 px-4 rounded">
             Try or Edit
           </button>

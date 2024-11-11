@@ -15,7 +15,7 @@ const index = () => {
   const [input, setInput] = useState('')
 
   const router = useRouter()
-  const { id, templateId } = router.query
+  const { id } = router.query
 
 
   const fetchCode = async (id: string) => {
@@ -41,16 +41,6 @@ const index = () => {
       <NavBar />
 
       <div className="border p-4">
-        <div className="flex justify-center">
-          {templateId ? (
-            <button
-              onClick={() => router.push(`/Templates/detailedView?templateId=${templateId}`)}
-              className="text-primary py-2 px-4 rounded">
-              Back to Code Template
-            </button>
-          ) : null}
-        </div>
-
         <div className="flex items-center justify-between ">
             <div className=" font-semibold ">Code Execution</div>
             
