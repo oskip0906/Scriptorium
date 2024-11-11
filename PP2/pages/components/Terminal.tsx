@@ -46,6 +46,9 @@ const Terminal: React.FC<TerminalProps> = ({ lang, code, setOutput, setError, ru
     const req: RequestBody = { language: lang, code: editor.getValue(), input: input ?? '' };
     const response = await fetch('/api/CodeRunner', {
       method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(req)
     });
     const data = await response.json();
