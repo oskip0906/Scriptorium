@@ -17,7 +17,7 @@ const index = () => {
   const [error, setError] = useState('')
   const [run, setRun] = useState(false)
   const [input, setInput] = useState('')
-  let tags = []
+  let tags: Array<Object> = []
   let description = 'description'
   const router = useRouter()
   const { id } = router.query
@@ -26,6 +26,7 @@ const index = () => {
   const fetchCode = async (id: string) => {
     const response = await fetch(`/api/CodeTemplates?id=${id}`);
     const data = await response.json();    
+    console.log(data);
     return data;
   };
 
@@ -82,14 +83,14 @@ const index = () => {
             </button>
 
             <button className="" onClick={() => {
-              saveCode(id as string, code, language, 'title', {}, 'description')
+              saveCode(id as string, code, language, 'title', tags, description)
             }}>
                 <i className="fas fa-save"></i> 
             </button>
 
 
             <button className="" onClick={() =>{
-              deleteCode(id as string, code, language, 'title', {}, 'description')
+              deleteCode(id as string, code, language, 'title', tags, description)
             }}>
                 <i className="fas fa-trash-alt"></i> 
             </button>

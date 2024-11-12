@@ -1,7 +1,6 @@
-export const saveCode = async (id: string, code: string, language:string, title:string, tags: Object, desc: string) => {
-
+export const saveCode = async (id: string, code: string, language:string, title:string, tags: Array<Object>, desc: string) => {
     const response = await fetch(`/api/CodeTemplates/${id}`, {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'authorization': 'Bearer ' + localStorage.getItem('accessToken')
@@ -9,7 +8,13 @@ export const saveCode = async (id: string, code: string, language:string, title:
       body: JSON.stringify({ code: code, language: language, title: title, tags: tags, desc: desc })
     });
     const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Error saving code');
+      return;
+    }
     console.log(data);
+    alert('Code saved successfully');
   }
   
 export const deleteCode = async  (id: string, code: string, language:string, title:string, tags: Object, desc: string) => {
