@@ -6,16 +6,20 @@ import NavBar from '@/pages/components/Navbar'
 import refresh from '@/lib/refresh'
 import { saveCode, deleteCode, forkCode } from '@/lib/CodeController'
 
+const languages = ['python', 'javascript', 'java', 'c', 'cpp']
 
+interface RequestBody {
+  language: string;
+  code: string;
+  input: string;
+}
 
 const index = () => {
 
-  const languages = ['python', 'javascript', 'java', 'c', 'cpp']
   const [language, setLanguage] = useState('python')
   const [code, setCode] = useState('# Type your code here')
   const [output , setOutput] = useState('Output')
   const [error, setError] = useState('')
-  const [run, setRun] = useState(false)
   const [input, setInput] = useState('')
   let tags: Array<Object> = []
   let description = 'description'
@@ -29,6 +33,22 @@ const index = () => {
     console.log(data);
     return data;
   };
+
+
+  const runCode = async () => {
+    const req: RequestBody = { language: language, code: code, input: input ?? '' };
+    const response = await fetch('/api/CodeRunner', {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(req)
+    });
+    const data = await response.json();
+    setOutput(data.output ?? 'Failed to run');
+    setError(data.error ?? '');
+  }
+
 
 
   useEffect(() => {
@@ -69,7 +89,7 @@ const index = () => {
               </select>
 
               <button className=" font-bold py-2 px-4 rounded"
-              onClick={() => setRun(true)}>
+              onClick={() => runCode()}>
                 Run code
               </button>
             </div>
@@ -90,14 +110,14 @@ const index = () => {
 
 
             <button className="" onClick={() =>{
-              deleteCode(id as string, code, language, 'title', tags, description)
+              deleteCode(id as string)
             }}>
                 <i className="fas fa-trash-alt"></i> 
             </button>
         </div>  
           <div className='flex flex-row mt-4'>
             <Terminal 
-            lang={language} code={code} setOutput={setOutput} setError={setError} run={run} setRun={setRun} input={input}
+            lang={language} code={code} setCode={setCode}
             />
 
             <div className="flex flex-col w-screen h-screen px-4">

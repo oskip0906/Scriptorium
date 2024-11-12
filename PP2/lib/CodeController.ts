@@ -17,7 +17,7 @@ export const saveCode = async (id: string, code: string, language:string, title:
     alert('Code saved successfully');
   }
   
-export const deleteCode = async  (id: string, code: string, language:string, title:string, tags: Object, desc: string) => {
+export const deleteCode = async  (id: string) => {
     const response = await fetch(`/api/CodeTemplates/${id}`, {
       method: 'DELETE',
       headers: {
