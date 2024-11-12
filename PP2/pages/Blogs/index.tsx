@@ -7,6 +7,7 @@ interface BlogPost {
   title: string;
   description: string;
   tags: { name: string }[];
+  rating: number;
   createdBy: { userName: string };
 }
 

@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import Terminal from '@/pages/components/Terminal'
 import NavBar from '@/pages/components/Navbar'
 import refresh from '@/lib/refresh'
-import { saveCode, deleteCode, forkCode } from '@/lib/CodeController'
 
 const languages = ['python', 'javascript', 'java', 'c', 'cpp']
 
@@ -27,13 +26,84 @@ const index = () => {
   const { id } = router.query
 
 
+  const saveCode = async (id: string, code: string, language: string, title: string, tags: Array<Object>, desc: string) => {
+
+    const response = await fetch(`/api/CodeTemplates/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer ' + localStorage.getItem('accessToken')
+      },
+      body: JSON.stringify({ code, language, title, tags, desc })
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert('Error saving code');
+      return;
+    }
+
+    console.log(data);
+    alert('Code saved successfully!');
+
+  }
+
+  const deleteCode = async (id: string) => {
+
+    const response = await fetch(`/api/CodeTemplates/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer ' + localStorage.getItem('accessToken')
+      }
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert('Error deleting code');
+      return;
+    }
+
+    console.log(data);
+    alert('Code deleted successfully!');
+
+    setTimeout(() => {
+      router.push('/Runner?id=0');
+    }, 500);
+
+  }
+
+  const forkCode = async (id: string) => {
+
+    const response = await fetch(`/api/CodeTemplates/Fork`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer ' + localStorage.getItem('accessToken')
+      },
+      body: JSON.stringify({ id })
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert('Error forking code');
+      return;
+    }
+
+    console.log(data);
+    alert('Code forked successfully!');
+
+    setTimeout(() => {
+      router.push(`/Runner?id=${data.id}`);
+    }, 500);
+  }
+
   const fetchCode = async (id: string) => {
     const response = await fetch(`/api/CodeTemplates?id=${id}`);
     const data = await response.json();    
     console.log(data);
     return data;
   };
-
 
   const runCode = async () => {
     const req: RequestBody = { language: language ?? 'python', code: code ?? '#', input: input ?? '' };
@@ -50,8 +120,6 @@ const index = () => {
     setError(data.error ?? '');
   }
 
-
-
   useEffect(() => {
     if (id) {
       fetchCode(id as string).then((data) => {
@@ -64,18 +132,33 @@ const index = () => {
     }
   }, [id])
 
-
-
-
-
-
   return (
     <div className="fade-in p-4 mb-4">
       <NavBar />
 
       <div className="border p-4">
         <div className="flex items-center justify-between ">
-            <div className=" font-semibold ">Code Execution</div>
+            <div className="text-xl font-semibold ">Code Runner</div>
+
+            <div className="flex space-x-4">
+                <button className="text-xl rounded px-4" onClick={() => {
+                  forkCode(id as string)
+                }}>
+                  <i className="fas fa-code-branch"></i> 
+                </button>
+
+                <button className="text-xl rounded px-4" onClick={() =>{
+                  deleteCode(id as string)
+                }}>
+                  <i className="fas fa-trash-alt"></i> 
+                </button>
+
+                <button className="text-xl rounded px-4" onClick={() => {
+                  saveCode(id as string, code, language, 'title', tags, description)
+                }}>
+                  <i className="fas fa-save"></i> 
+                </button>
+            </div>  
             
             <div className="flex items-center space-x-4">
               <select 
@@ -95,28 +178,8 @@ const index = () => {
               </button>
             </div>
         </div>
-        <div className="flex space-x-4">
-
-            <button className="" onClick={() => {
-              forkCode(id as string)
-            }}>
-                <i className="fas fa-code-branch"></i> 
-            </button>
-
-            <button className="" onClick={() => {
-              saveCode(id as string, code, language, 'title', tags, description)
-            }}>
-                <i className="fas fa-save"></i> 
-            </button>
-
-
-            <button className="" onClick={() =>{
-              deleteCode(id as string)
-            }}>
-                <i className="fas fa-trash-alt"></i> 
-            </button>
-        </div>  
-          <div className='flex flex-row mt-4'>
+  
+        <div className='flex flex-row mt-4'>
             <Terminal 
             lang={language} code={code} setCode={setCode}
             />
