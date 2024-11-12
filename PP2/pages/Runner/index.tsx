@@ -36,7 +36,8 @@ const index = () => {
 
 
   const runCode = async () => {
-    const req: RequestBody = { language: language, code: code, input: input ?? '' };
+    const req: RequestBody = { language: language ?? 'python', code: code ?? '#', input: input ?? '' };
+    console.log(req)
     const response = await fetch('/api/CodeRunner', {
       method: 'POST', 
       headers: {
@@ -54,10 +55,10 @@ const index = () => {
   useEffect(() => {
     if (id) {
       fetchCode(id as string).then((data) => {
-        setCode(data.code)
-        setLanguage(data.language)
-        tags = data.tags
-        description = data.description
+        setCode(data.code ?? '# Type your code here')
+        setLanguage(data.language ?? 'python')
+        tags = data.tags ?? []
+        description = data.description ?? 'description'
         refresh()
       })
     }
