@@ -21,13 +21,7 @@ const DetailedTemplateView = () => {
   const context = useContext(AppContext);
   const router = useRouter();
   const { id } = router.query;
-  const [token, setToken] = useState('');
   const [template, setTemplate] = useState<CodeTemplate>();
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken') || '';
-    setToken(accessToken);
-  }, []);
 
   useEffect(() => {
     if (id) {
@@ -48,33 +42,6 @@ const DetailedTemplateView = () => {
     setTemplate(data);
   };
 
-  
-  const handleFork = async (id: number) => {
-    if (!token) {
-      alert('Please login first!');
-      setTimeout(() => {
-        router.push('/Login');
-      }, 500);
-      return;
-    }
-    
-    const response = await fetch(`/api/CodeTemplates/Fork`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id: id }),
-    });
-
-    if (!response.ok) {
-      alert('Error forking template!');
-      return;
-    }
-
-    alert('Code template forked successfully');
-  };
-
   if (!template) {
     return;
   }
@@ -91,11 +58,7 @@ const DetailedTemplateView = () => {
         </div>
 
         {template.forkedFromID && (
-          <button
-            onClick={() => router.push(`/Templates/detailedView?id=${template.forkedFromID}`)}
-            className="bg-gray-400 p-2 rounded my-4 text-center w-full">
-            Note: This is a forked version. Click here to view original template!
-          </button>
+            <p>(Forked Template)</p>
         )}
 
         {context && (
@@ -114,7 +77,7 @@ const DetailedTemplateView = () => {
           />
         )}
 
-        <div className="mt-4">
+        <div className="mt-2">
           <p>{template.explanation}</p>
         </div>
         
@@ -130,18 +93,20 @@ const DetailedTemplateView = () => {
           </div>
         )}
 
-        <div className="flex justify-between mt-4">
-          <button
-            onClick={() => handleFork(template.id)}
-            className="bg-button text-button-text py-2 px-4 rounded">
-            Fork Template
-          </button>
-
+        <div className="flex justify-between mt-6">
           <button
             onClick={() => router.push(`/Runner?id=${template.id}`)}
-            className="bg-button text-button-text py-2 px-4 rounded">
-            Try or Edit
+            className="text-button-text py-2 px-4 rounded">
+            Try or Edit Template
           </button>
+
+          {template.forkedFromID && (
+            <button
+              onClick={() => router.push(`/Templates/detailedView?id=${template.forkedFromID}`)}
+              className="bg-gray-400 text-button-text py-2 px-4 rounded">
+              View Original Template
+            </button>
+          )}
         </div>
       </div>
     </div>

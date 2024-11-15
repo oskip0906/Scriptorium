@@ -51,7 +51,7 @@ async function handler(req, res) {
                 }
             });
 
-            return res.status(201).json({ newTemplate, message: "Code template forked successfully" });
+            return res.status(201).json(newTemplate);
         }
         catch (error) {
             return res.status(500).json({ error: error.message });
