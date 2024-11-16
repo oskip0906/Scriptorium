@@ -1,0 +1,11 @@
+docker build -t pythonrunner ./python
+docker build -t javarunner ./java
+docker build -t crunner ./c
+docker build -t cpprunner ./cpp
+docker build -t gorunner ./go
+docker build -t phprunner ./php
+docker build -t rubyrunner ./ruby
+docker build -t javascriptrunner ./javascript
+docker build -t rrunner ./r
+docker build -t swiftrunner ./swift
+docker build -t rustrunner ./rust
