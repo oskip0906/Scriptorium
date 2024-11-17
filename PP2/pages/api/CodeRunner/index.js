@@ -21,30 +21,25 @@ export default function handler(req, res) {
   }
   !className && (className = 'main');
   !input && (input = '');
-  let parsed_code = code.replace(/"/g, '\\"').replace(/\n/g, '\\n');
+  if (language === 'c'){}
+  console.log(code)
+  let parsed_code = code.replace(/"/g, '\\"').replace(/\\n/g, '\\\\\\n').replace(/\n/g, '\\n');
 
   let parsed_input = input.replace(/"/g, '\\"').replace(/\n/g, '\\n');
+  console.log(parsed_code);
   const args = `-m 512m -e FILE_CONTENT="${parsed_code}" -e FILE_INPUT="${parsed_input}" -e FILE_NAME="${className}"`;
 
   const runner = spawnSync('bash',['-c', `docker run ${args} ${language}runner`], defaults);
-
-
-  let output = '';
-  let error = '';
-  console.log(runner)
-  if (runner.status === 137 || runner.error && runner.error.code === 'ETIMEDOUT') {
+  console.log(args)
+    if (runner.status === 137 || runner.error && runner.error.code === 'ETIMEDOUT') {
     return res.status(500).json({ error: 'Memory/Timeout Error' });
   }
 
-  if (runner.output){
-    output = runner.output.toString();
-  }
-  if (runner.error){
-    error = runner.error.toString();
-  }
-
+  
+  const output = runner.stdout ? runner.stdout.toString() : '';
+  const error = runner.stderr ? runner.stderr.toString() : '';
   return res.status(200).json({ output, error });
-  } 
+}
   catch (error) {
     return res.status(500).json({ error: error.message });
   }
