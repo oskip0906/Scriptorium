@@ -59,7 +59,7 @@ function NavBar() {
               className="w-8 h-8 rounded-full"
             />
 
-            <span className="text-gray-700 font-bold text-2xl">{profile.userName}</span>
+            <span className="cta-primary font-bold text-2xl">{profile.userName}</span>
           </div>
         )}
       </div>
