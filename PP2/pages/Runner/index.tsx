@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Terminal from '@/pages/components/Terminal'
-import NavBar from '@/pages/components/Navbar'
 
 const languages = ['python', 'javascript', 'java', 'c', 'cpp']
 
