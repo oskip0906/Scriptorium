@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
+import { AppContext } from '@/pages/components/AppVars';
 
 const LoginPage = () => {
+
+    const context = useContext(AppContext);
+
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
@@ -23,11 +27,21 @@ const LoginPage = () => {
                 return;
             }
 
-            const { accessToken, refreshToken } = await response.json();
+            console.log(response);
+
+            const { accessToken, refreshToken, userID } = await response.json();
+
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
-            console.log('Login successful');
-            router.push('/');
+
+            context?.setUserID(userID.toString());
+            localStorage.setItem('userID', userID.toString());
+
+            alert('Login successful');
+
+            setTimeout(() => {
+                router.push('/');
+            }, 500);
 
         } 
         catch (error) {

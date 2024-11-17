@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import NavBar from '@/pages/components/Navbar';
 
 interface BlogPost {
   id: number;
@@ -98,8 +97,7 @@ const BlogPostsList = () => {
   };
 
   return (
-    <div className="fade-in container mx-auto p-4 mb-4">
-      <NavBar />
+    <div className="container mx-auto p-4 mb-4">
       
       <h1 className="text-2xl font-bold mb-4">All Blog Posts</h1>
 
@@ -117,15 +115,15 @@ const BlogPostsList = () => {
           placeholder="Search by title" 
           value={searchTitle} 
           onChange={(e) => setSearchTitle(e.target.value)} 
-          className="p-2 rounded w-1/4 outline-none" 
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none" 
         />
-        
+
         <input 
           type="text" 
           placeholder="Search by description" 
           value={searchDescription} 
           onChange={(e) => setSearchDescription(e.target.value)} 
-          className="p-2 rounded w-1/4 outline-none" 
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none" 
         />
 
         <input 
@@ -133,7 +131,7 @@ const BlogPostsList = () => {
           placeholder="Search by content" 
           value={searchContent} 
           onChange={(e) => setSearchContent(e.target.value)} 
-          className="p-2 rounded w-1/4 outline-none" 
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none" 
         />
 
         <input 
@@ -141,10 +139,10 @@ const BlogPostsList = () => {
           placeholder="Search by user" 
           value={searchUser} 
           onChange={(e) => setSearchUser(e.target.value)} 
-          className="p-2 rounded w-1/4 outline-none"
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none"
         />
 
-        <div className="flex items-center w-1/2 rounded h-10" id="tagSelect">
+        <div className="flex items-center w-full md:w-3/4 lg:w-1/2 rounded h-10" id="tagSelect">
           {searchTags.map((tag) => (
             <span className="flex items-center px-2 py-1 rounded mr-1" id="tag">
               {tag}
@@ -187,9 +185,9 @@ const BlogPostsList = () => {
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="overflow-y-auto h-[60vh] p-4 border">
         {blogPosts.map((post) => (
-          <div className="p-4 border rounded shadow" key={post.id}>
+          <div className="p-4 border-b rounded shadow" key={post.id}>
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">{post.title}</h2>
               <span className="font-semibold">Created by: {post.createdBy.userName}</span>
@@ -216,7 +214,7 @@ const BlogPostsList = () => {
         ))}
       </div>
 
-      <div className="flex justify-between items-center mt-6">
+      <div className="flex justify-between items-center mt-4">
         <button
           onClick={() => handlePageChange(page - 1)}
           className="px-4 py-2 rounded"

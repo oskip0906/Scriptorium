@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
-import { useContext } from 'react'
 import { AppContext } from '@/pages/components/AppVars'
 import Editor from '@monaco-editor/react';
-import NavBar from '@/pages/components/Navbar';
 
 interface CodeTemplate {
   id: number;
@@ -47,8 +45,7 @@ const DetailedTemplateView = () => {
   }
 
   return (
-    <div className="fade-in container mx-auto p-4 mb-4">
-      <NavBar />
+    <div className="container mx-auto p-4 mb-4">
     
       <div className="border rounded p-4">
 
@@ -61,21 +58,19 @@ const DetailedTemplateView = () => {
             <p>(Forked Template)</p>
         )}
 
-        {context && (
-          <Editor
-            height="40vh"
-            language={template.language}
-            value={template.code}
-            options={{
-              readOnly: true,
-              minimap: { enabled: false },
-              scrollbar: { vertical: 'auto', horizontal: 'auto' },
-              fontSize: 14,
-            }}
-            theme={context.theme === 'light' ? 'vs-light' : 'vs-dark'}
-            className="my-4 border border-accent rounded"
-          />
-        )}
+        <Editor
+          height="25vh"
+          language={template.language}
+          value={template.code}
+          options={{
+            readOnly: true,
+            minimap: { enabled: false },
+            scrollbar: { vertical: 'auto', horizontal: 'auto' },
+            fontSize: 14,
+          }}
+          theme={context?.theme === 'light' ? 'vs-light' : 'vs-dark'}
+          className="my-4 border border-accent rounded"
+        />
 
         <div className="mt-2">
           <p>{template.explanation}</p>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import NavBar from '@/pages/components/Navbar';
 
 interface CodeTemplate {
   id: number;
@@ -95,8 +94,7 @@ const CodeTemplatesList = () => {
   };
 
   return (
-    <div className="fade-in container mx-auto p-4 mb-4">
-      <NavBar/>
+    <div className="container mx-auto p-4 mb-4">
 
       <h1 className="text-2xl font-bold mb-4">All Code Templates</h1>
 
@@ -124,7 +122,7 @@ const CodeTemplatesList = () => {
           placeholder="Search by title" 
           value={searchTitle} 
           onChange={(e) => setSearchTitle(e.target.value)} 
-          className="p-2 rounded w-1/4 outline-none" 
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none" 
         />
 
         <input 
@@ -132,7 +130,7 @@ const CodeTemplatesList = () => {
           placeholder="Search by explanation" 
           value={searchExplanation} 
           onChange={(e) => setSearchExplanation(e.target.value)} 
-          className="p-2 rounded w-1/4 outline-none" 
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none" 
         />
 
         <input 
@@ -140,12 +138,12 @@ const CodeTemplatesList = () => {
           placeholder="Search by user" 
           value={searchUser} 
           onChange={(e) => setSearchUser(e.target.value)} 
-          className="p-2 rounded w-1/4 outline-none"
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none"
         />
 
-        <div className="flex items-center w-1/2 rounded h-10" id="tagSelect">
+        <div className="flex items-center w-full md:w-1/2 lg:w-1/2 rounded h-10" id="tagSelect">
           {searchTags.map((tag) => (
-            <span className="flex items-center px-2 py-1 rounded mr-1" id="tag">
+            <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={tag}> 
               {tag}
                 <button
                   onClick={() => {
@@ -186,9 +184,9 @@ const CodeTemplatesList = () => {
 
       </div>
 
-      <div className="space-y-4">
+      <div className="overflow-y-auto h-[60vh] p-4 border">
         {templates.map((template) => (
-          <div className="p-4 border rounded shadow" key={template.id}>
+          <div className="p-4 border-b rounded shadow" key={template.id}>
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">{template.title} [ID: {template.id}]</h2>
               <span className="font-semibold">Created by: {template.createdBy.userName}</span>
@@ -219,7 +217,7 @@ const CodeTemplatesList = () => {
         ))}
       </div>
 
-      <div className="flex justify-between items-center mt-6">
+      <div className="flex justify-between items-center mt-4">
         <button
           onClick={() => handlePageChange(page - 1)}
           className="px-4 py-2 rounded"

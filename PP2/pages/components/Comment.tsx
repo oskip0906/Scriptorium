@@ -18,14 +18,8 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
   const [replies, setReplies] = useState<Comment[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [token, setToken] = useState('');
   const [ratingChange, setRatingChange] = useState(false);
   const [currentComment, setCurrentComment] = useState<Comment>(comment);
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken') || '';
-    setToken(accessToken);
-  }, []);
 
   useEffect(() => {
     fetchReplies(page);
@@ -66,19 +60,12 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
   const createRating = async (value: number, id: number, type: string) => {
 
     if (type === 'Comment' || type === 'Blog') {
-      if (!token) {
-        alert('Please login first!');
-        setTimeout(() => {
-          router.push('/Login');
-        }, 500);
-        return;
-      }
       
       const response = await fetch(`/api/Ratings/${type}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
         },
         body: JSON.stringify({ value: value, id: id }),
       });
@@ -88,7 +75,7 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
         return;
       }
 
-      setRatingChange(!ratingChange); // Toggle ratingChange to trigger re-fetch
+      setRatingChange(!ratingChange);
     }
   };
 
@@ -129,9 +116,9 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
       </div>
 
         <div className="flex items-center space-x-2">
-          <button onClick={async () => { await createRating(1, currentComment.id, 'Comment'); }} className="bg-transparent"> ⬆ </button>
+          <button onClick={async () => { await createRating(1, currentComment.id, 'Comment'); }} className="bg-transparent"> ⬆️ </button>
           <span>{currentComment.rating}</span>
-          <button onClick={async () => { await createRating(-1, currentComment.id, 'Comment'); }} className="bg-transparent"> ⬇ </button>
+          <button onClick={async () => { await createRating(-1, currentComment.id, 'Comment'); }} className="bg-transparent"> ⬇️ </button>
         </div>
 
       {isExpanded && (

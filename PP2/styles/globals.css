@@ -32,7 +32,7 @@ body {
 
 .light {
   --main-text: 26, 26, 26;           
-  --cta-background: 248, 248, 248;  
+  --cta-background: 250, 250, 250;  
   --cta-primary: 235, 235, 235;    
   --cta-secondary: 45, 45, 45;       
   --cta-tertiary: 220, 175, 220; 
@@ -86,18 +86,46 @@ button:hover, #template:hover {
   transition: color var(--transition-speed), background-color var(--transition-speed);
 }
 
-.border {
-  border: 1px solid rgba(var(--cta-border), 0.2);
+#navbar {
+  background-color: rgb(var(--cta-primary), 0.5);
+  color: rgb(var(--main-text));
+  transition: color var(--transition-speed), background-color var(--transition-speed);
 }
 
+#navButton {
+  background-color: transparent;
+  color: rgb(var(--cta-button));
+  padding: 10px 20px;
+  border: 1px solid rgba(var(--cta-border), 0.2);
+  font-weight: bold;
+  transition: none;
+}
 
-.fade-in {
-  opacity: 0;
-  animation: fadeIn 1.5s ease forwards;
+#navButton:hover, #navButton.active {
+  background-color: rgb(var(--cta-primary));
+  box-shadow: 0 0 5px rgba(7, 113, 200, 0.5);
+}
+
+.border {
+  border: 1px solid rgba(var(--cta-border), 0.2);
 }
 
 @keyframes fadeIn {
   to {
     opacity: 1;
   }
+}
+
+/* Transparent scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(var(--cta-secondary), 0.2);
+  border-radius: 5px;
 }

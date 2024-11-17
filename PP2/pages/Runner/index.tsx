@@ -32,7 +32,7 @@ const index = () => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'authorization': 'Bearer ' + localStorage.getItem('accessToken')
+        'authorization': 'Bearer '+ localStorage.getItem('accessToken')
       },
       body: JSON.stringify({ code, language, title, tags, desc })
     });
@@ -133,8 +133,7 @@ const index = () => {
   }, [id])
 
   return (
-    <div className="fade-in p-4 mb-4">
-      <NavBar />
+    <div className="p-4 mb-4">
 
       <div className="border p-4">
         <div className="flex items-center justify-between ">

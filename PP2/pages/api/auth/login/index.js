@@ -55,7 +55,7 @@ export default async function handler(req, res) {
         { expiresIn: "7d" }
       );
 
-      return res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken });
+      return res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken, userID: accessData.id});
 
     } 
     catch (err) {

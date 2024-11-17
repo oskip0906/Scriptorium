@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import NavBar from '@/pages/components/Navbar';
 import CommentComponent from '@/pages/components/Comment';
 
 interface BlogPost {
@@ -90,8 +89,7 @@ const DetailedPostView = () => {
   }
 
   return (
-    <div className="fade-in container mx-auto p-4 mb-4">
-      <NavBar />
+    <div className="container mx-auto p-4 mb-4">
 
       <div className="border rounded p-4">
 
