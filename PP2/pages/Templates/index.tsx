@@ -188,7 +188,7 @@ const CodeTemplatesList = () => {
         {templates.map((template) => (
           <div className="p-4 border-b rounded shadow" key={template.id}>
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">{template.title} [ID: {template.id}]</h2>
+              <h2 className="text-xl font-semibold">{template.title}</h2>
               <span className="font-semibold">Created by: {template.createdBy.userName}</span>
             </div>
 

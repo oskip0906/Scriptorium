@@ -84,21 +84,21 @@ const TemplateCreator = () => {
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full border rounded px-2 py-1"
+                    className="w-full border rounded px-2 py-1 outline-none"
                 />
 
                 <label className="block font-medium mt-4 mb-2">Explanation</label>
                 <textarea
                     value={explanation}
                     onChange={(e) => setExplanation(e.target.value)}
-                    className="w-full h-20 border rounded px-2 py-1">
+                    className="w-full h-20 border rounded px-2 py-1 outline-none">
                 </textarea>
 
                 <label className="block font-medium mt-4 mb-2">Language</label>
                 <select
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
-                    className="w-full border rounded px-2 py-1">
+                    className="w-full border rounded px-2 py-1 outline-none">
                     <option value="">Select language</option>
                     <option value="c">C</option>
                     <option value="cpp">Cpp</option>
@@ -125,7 +125,7 @@ const TemplateCreator = () => {
                     }}
                     onChange={(value) => setCode(value || '')}
                     theme={context?.theme === 'light' ? 'vs-light' : 'vs-dark'}
-                    className="border border-accent rounded"
+                    className="border rounded outline-none"
                 />
 
                 <label className="block font-medium mt-4 mb-2">Tags</label>

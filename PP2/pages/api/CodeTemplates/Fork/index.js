@@ -34,6 +34,10 @@ async function handler(req, res) {
                 return res.status(400).json({ error: "User already forked this template" });
             }
 
+            if (originalTemplate.createdUserId === req.user.id) {
+                return res.status(400).json({ error: "User cannot fork their own template" });
+            }
+
             // Create new forked template
             const newTemplate = await prisma.codeTemplate.create({
                 data: {
