@@ -1,9 +1,6 @@
-
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Terminal from '@/pages/components/Terminal'
-import NavBar from '@/pages/components/Navbar'
-import refresh from '@/lib/refresh'
 
 const languages = ['python', 'javascript', 'java', 'c', 'cpp']
 
@@ -127,8 +124,7 @@ const index = () => {
         setLanguage(data.language ?? 'python')
         tags = data.tags ?? []
         description = data.description ?? 'description'
-        refresh()
-      })
+       })
     }
   }, [id])
 
@@ -172,7 +168,12 @@ const index = () => {
               </select>
 
               <button className=" font-bold py-2 px-4 rounded"
-              onClick={() => runCode()}>
+              onClick={() => {
+                console.log(code)
+                runCode()
+
+              }
+              }>
                 Run code
               </button>
             </div>
@@ -186,7 +187,7 @@ const index = () => {
             <div className="flex flex-col w-screen h-screen px-4">
                 <textarea
                   className="mb-4 p-2 border rounded-lg w-full h-1/2 outline-none"
-                  placeholder="Type your input here..."
+                  placeholder="Type your input here separated by newlines..."
                   onChange={(e) => setInput(e.target.value)}
                 />
 
