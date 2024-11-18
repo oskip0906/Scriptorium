@@ -19,6 +19,7 @@ async function handler(req, res){
         if (!blogPost) {
             return res.status(400).json({ message: 'Bad request' });
         }
+        
         return res.status(200).json({ message: 'Blog post hidden' });
     }
     else if (commentId) {

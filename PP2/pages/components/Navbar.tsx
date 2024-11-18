@@ -10,6 +10,9 @@ function NavBar() {
   const [profile, setProfile] = useState({userName: '', avatar: ''});
   const [menuOpen, setMenuOpen] = useState(false);
 
+
+
+
   const setTheme = () => {
     const newTheme = localStorage.getItem('theme') === 'light' ? 'dark' : 'light';
     document.body.classList.remove('light', 'dark');
@@ -28,6 +31,7 @@ function NavBar() {
           return;
         }
 
+
         const data = await response.json();
 
         setProfile({
@@ -38,8 +42,19 @@ function NavBar() {
       
     };
 
+    const checkAdmin = async () => await fetch('/api/auth/verifyAdmin', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      },
+  }).then(res => res.json()).then(data => {context?.setAdmin(data.status)});
+
+    checkAdmin();
     fetchProfile();
   }, [context?.userID]);
+
+
 
   return (
     <div className="flex justify-between items-center p-4 mb-4 shadow-md" id="navbar">
@@ -99,6 +114,19 @@ function NavBar() {
           className={router.pathname === '/Templates' ? 'active' : ''}>
           Code Templates
         </button>
+
+        {context?.admin === 'True' ? 
+        <button
+          onClick={() => router.push('/Admin')}
+          id="navButton"
+          className={router.pathname === '/Admin' ? 'active' : ''}>
+        Admin</button> 
+          
+        
+        
+        
+        
+        :<></>}
       </nav>
 
     </div>

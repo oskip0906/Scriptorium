@@ -17,6 +17,13 @@ export default async function hideComment(CommentID) {
                 inappropriate: true,
             }
         });
+
+        const deleteReports = await prisma.report.deleteMany({
+            where: {
+                commentId: CommentID
+            }
+        });
+
         return Comment;
     }
     catch (error) {

@@ -4,9 +4,9 @@ import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { userName, email, password } = req.body;
+    const { userName, password } = req.body;
 
-    if ((!userName && !email) || !password) {
+    if ((!userName) || !password) {
       return res.status(400).json({ error: "Bad Request" });
     }
     
@@ -15,7 +15,6 @@ export default async function handler(req, res) {
         where: {
           OR: [
             { userName },
-            { email }
           ]
         },
       });
@@ -59,6 +58,7 @@ export default async function handler(req, res) {
 
     } 
     catch (err) {
+      console.log(err)
       return res.status(400).json({ error: "Login unsuccessful" });
     }
   } 
