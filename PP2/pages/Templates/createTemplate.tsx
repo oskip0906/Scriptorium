@@ -110,6 +110,7 @@ const TemplateCreator = () => {
                     <option value="swift">Swift</option>
                     <option value="go">Go</option>
                     <option value="r">R</option>
+                    <option value="php">PHP</option>
                 </select>
 
                 <label className="block font-medium mt-4 mb-2">Code</label>

@@ -43,7 +43,7 @@ async function handler(req, res) {
     else if (req.method === "GET") {
 
         try {
-            const { id, title, explanation, language, tags, createdUser, page, pageSize } = req.query;
+            const { id, title, explanation, language, code, tags, createdUser, page, pageSize } = req.query;
 
             if (id) {
                 const codeTemplate = await prisma.CodeTemplate.findUnique({
@@ -78,6 +78,9 @@ async function handler(req, res) {
             }
             if (language) {
                 searchFilters.push({ language: language });
+            }
+            if (code) {
+                searchFilters.push({ code: { contains: code } });
             }
             if (tags) {
                 const tagsList = tags.split(",");

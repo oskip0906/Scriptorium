@@ -6,6 +6,7 @@ interface CodeTemplate {
   title: string;
   language: string;
   tags: { name: string }[],
+  code: string;
   createdBy: { userName: string };
   forkedFromID: number;
 }
@@ -23,7 +24,9 @@ const CodeTemplatesList = () => {
   const [searchTitle, setSearchTitle] = useState('');
   const [searchLanguage, setSearchLanguage] = useState('');
   const [searchExplanation, setSearchExplanation] = useState('');
+  const [searchCode, setSearchCode] = useState('');
   const [searchTags, setSearchTags] = useState<string[]>([]);
+
   const [tagInput, setTagInput] = useState('');
   const [tagsPlaceHolder, setPlaceholder] = useState('Add tags (press Enter)');
 
@@ -36,7 +39,7 @@ const CodeTemplatesList = () => {
     return () => {
       clearTimeout(handler);
     };
-  }, [searchUser, searchTitle, searchLanguage, searchExplanation, searchTags]);
+  }, [searchUser, searchTitle, searchLanguage, searchExplanation, searchCode, searchTags]);
   
   useEffect(() => {
     fetchTemplates();
@@ -50,6 +53,7 @@ const CodeTemplatesList = () => {
       createdUser: searchUser,
       title: searchTitle,
       language: searchLanguage,
+      code: searchCode,
       explanation: searchExplanation,
       tags: searchTags.join(','),
     }).toString();
@@ -95,11 +99,9 @@ const CodeTemplatesList = () => {
 
   return (
     <div className="container mx-auto p-4 mb-4">
-
       <h1 className="text-2xl font-bold mb-4">All Code Templates</h1>
 
-      <div className="mb-4 flex flex-wrap gap-2 items-center">
-
+      <div className="mb-4 flex flex-wrap gap-2 items-center justify-center bg-gray-500 bg-opacity-10 p-1">
         <select 
           value={searchLanguage} 
           onChange={(e) => setSearchLanguage(e.target.value)} 
@@ -115,6 +117,7 @@ const CodeTemplatesList = () => {
             <option value="swift">Swift</option>
             <option value="go">Go</option>
             <option value="r">R</option>
+            <option value="php">PHP</option>
         </select>
 
         <input 
@@ -135,10 +138,18 @@ const CodeTemplatesList = () => {
 
         <input 
           type="text" 
+          placeholder="Search by code" 
+          value={searchCode} 
+          onChange={(e) => setSearchCode(e.target.value)} 
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none"
+        />
+
+        <input 
+          type="text" 
           placeholder="Search by user" 
           value={searchUser} 
           onChange={(e) => setSearchUser(e.target.value)} 
-          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none"
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/6 outline-none"
         />
 
         <div className="flex items-center w-full md:w-1/2 lg:w-1/2 rounded h-10" id="tagSelect">
@@ -193,7 +204,7 @@ const CodeTemplatesList = () => {
             </div>
 
             {template.forkedFromID && (
-             <p>(Forked Template)</p>
+             <p>[ Forked Template ]</p>
             )}
             
             <p className="mt-2">Language: {template.language}</p>

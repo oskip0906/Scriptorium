@@ -20,12 +20,23 @@ const DetailedTemplateView = () => {
   const router = useRouter();
   const { id } = router.query;
   const [template, setTemplate] = useState<CodeTemplate>();
+  const [originalTemplate, setOriginalTemplate] = useState<CodeTemplate>();
 
   useEffect(() => {
     if (id) {
       fetchTemplateDetails();
     }
   }, [id]);
+
+  useEffect(() => {
+    const fetchOriginal = async () => {
+      if (template?.forkedFromID) {
+        const original = await fetchOriginalTemplate(template.forkedFromID);
+        setOriginalTemplate(original);
+      }
+    };
+    fetchOriginal();
+  }, [template?.forkedFromID]);
 
   const fetchTemplateDetails = async () => {
     const response = await fetch(`/api/CodeTemplates?id=${id}`);
@@ -40,6 +51,19 @@ const DetailedTemplateView = () => {
     setTemplate(data);
   };
 
+  const fetchOriginalTemplate = async (id: number) => {
+    const response = await fetch(`/api/CodeTemplates?id=${id}`);
+
+    if (!response.ok) {
+      console.error('Error fetching original template');
+      return;
+    }
+
+    const data = await response.json();
+    console.log(data);
+    return data;
+  }
+
   if (!template) {
     return;
   }
@@ -50,12 +74,17 @@ const DetailedTemplateView = () => {
       <div className="border rounded p-4">
 
         <div className="flex justify-between mt-4">
-          <h2 className="text-xl font-semibold">{template.title} [ID: {template.id}]</h2>
+          <h2 className="text-xl font-semibold">{template.title}</h2>
           <span className="font-semibold">Created by: {template.createdBy.userName}</span>
         </div>
 
-        {template.forkedFromID && (
-            <p>(Forked Template)</p>
+        {originalTemplate && (
+            <div className="mt-2">
+              <p>[ Forked From: 
+              <span className="font-semibold"> {originalTemplate.title} </span> 
+              by <span className="font-semibold"> {originalTemplate.createdBy.userName} </span>
+              ]</p>
+            </div>
         )}
 
         <Editor

@@ -10,6 +10,7 @@ interface BlogPost {
   tags: { name: string }[];
   codeTemplates: { id: number; title: string }[];
   createdBy: { userName: string };
+  rating: number;   
 }
 
 interface Comment {
@@ -20,7 +21,6 @@ interface Comment {
 }
 
 const DetailedPostView = () => {
-
   const router = useRouter();
   const { id } = router.query;
   const pageSize = 5;
@@ -29,12 +29,14 @@ const DetailedPostView = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [newComment, setNewComment] = useState('');
+  const [ratingChange, setRatingChange] = useState(false);
 
   useEffect(() => {
     if (id) {
       fetchBlogPostDetails();
     }
-  }, [id]);
+  }, [id, ratingChange]);
 
   useEffect(() => {
     if (post) {
@@ -52,7 +54,6 @@ const DetailedPostView = () => {
 
     const data = await response.json();
 
-    console.log(data);
     setPost(data);
   };
 
@@ -71,11 +72,8 @@ const DetailedPostView = () => {
 
     const data = await response.json();
 
-    console.log(data);
-
     setComments(data.comments);
     setTotalPages(data.totalPages);
-
   };
 
   const handlePageChange = (newPage: number) => {
@@ -84,17 +82,62 @@ const DetailedPostView = () => {
     }
   };
 
+  const createRating = async (value: number, id: number) => {
+
+    const response = await fetch(`/api/Ratings/Blog`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: JSON.stringify({ value: value, id: id }),
+    });
+  
+    if (!response.ok) {
+      alert('Error creating rating!');
+      return;
+    }
+
+    setRatingChange(!ratingChange);
+
+  };
+
+  const handleCommentSubmit = async () => {
+    if (newComment.trim() === '') {
+      alert('Comment cannot be empty.');
+      return;
+    }
+
+    const response = await fetch(`/api/Comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: JSON.stringify({ content: newComment, blogPostId: post?.id }),
+    });
+
+    if (!response.ok) {
+      alert('Error submitting comment!');
+      return;
+    }
+
+    console.log(response);
+    alert('Comment submitted successfully!');
+
+    setNewComment('');
+    fetchComments(1);
+  };
+
   if (!post) {
     return;
   }
 
   return (
     <div className="container mx-auto p-4 mb-4">
-
       <div className="border rounded p-4">
-
         {post && (
-          <>
+          <div>
             <div className="flex justify-between mt-4">
               <h2 className="text-xl font-semibold">{post.title}</h2>
               <span className="font-semibold">Created by: {post.createdBy.userName}</span>
@@ -135,14 +178,38 @@ const DetailedPostView = () => {
                 </div>
               </div>
             )}
-          </>
+          </div>
         )}
+
+        <div className="flex items-center space-x-2 mt-4">
+          <button onClick={async () => { await createRating(1, post.id ); }} className="bg-transparent"> ⬆️ </button>
+          <div className="my-1 rounded-lg">
+            <p className="font-bold">⭐ Rating: {post.rating}</p>
+          </div>
+          <button onClick={async () => { await createRating(-1, post.id); }} className="bg-transparent"> ⬇️ </button>
+        </div>
 
         <div className="mt-6">
           <h3 className="text-lg font-semibold mb-2">Comments</h3>
           {comments.map((comment) => (
             <CommentComponent key={comment.id} comment={comment} />
           ))}
+
+          <div className="mt-4 relative">
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Write a comment..."
+              className="w-full p-2 border rounded outline-none"
+              rows={3}
+            />
+
+            <button
+              onClick={handleCommentSubmit}
+              className="py-1 px-4 bg-transparent text-gray-500 absolute bottom-2 right-2 font-semibold">
+              Submit Comment
+            </button>
+          </div>
 
           <div className="flex justify-between mt-4 px-1">
             <button
@@ -160,11 +227,9 @@ const DetailedPostView = () => {
             </button>
           </div>
         </div>
-
       </div>
     </div>
   );
-
 };
 
 export default DetailedPostView;

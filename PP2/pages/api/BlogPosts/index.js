@@ -91,10 +91,6 @@ async function handler(req, res) {
                 return res.status(400).json({ error: "Page or page size missing"});
             }
 
-            if (!order || order !== "asc" && order !== "desc") {
-                return res.status(400).json({ error: "Order must be specified as either asc or desc" });
-            }
-
             const searchFilters = [];
 
             if (title) {
@@ -115,7 +111,7 @@ async function handler(req, res) {
             if (codeTemplates) {
                 const codeTemplatesList = codeTemplates.split(",");
                 codeTemplatesList.forEach(template => {
-                    searchFilters.push({ codeTemplates: { some: { id: parseInt(template) } } });
+                    searchFilters.push({ codeTemplates: { some: { title: { contains: template } } } });
                 });
             }
             if (createdUser) {
@@ -158,10 +154,11 @@ async function handler(req, res) {
                 },
                 skip: (parseInt(page) - 1) * parseInt(pageSize),
                 take: parseInt(pageSize),
-                orderBy: [
+                orderBy: order ? [
                     { rating: order },
                     { id: 'desc' }
                 ]
+                : { id: 'desc' }
             });
 
             const totalPosts = await prisma.BlogPost.count({
@@ -181,6 +178,7 @@ async function handler(req, res) {
         }
 
         catch (error) {
+            console.log(error);
             return res.status(500).json({ error: error.message });
         }
 

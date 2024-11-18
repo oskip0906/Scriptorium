@@ -66,12 +66,12 @@ function NavBar() {
 
       <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="block md:hidden text-3xl bg-transparent text-gray-400 p-2"
+          className="block lg:hidden text-3xl bg-transparent text-gray-500 p-2"
           aria-label="Toggle Menu">
           ☰
       </button>
 
-      <nav className={`flex flex-col space-y-4 ${menuOpen ? 'block' : 'hidden'} md:flex md:flex-row md:space-y-0 md:space-x-4`}>
+      <nav className={`flex flex-col space-y-4 ${menuOpen ? 'block' : 'hidden'} lg:flex lg:flex-row lg:space-y-0 lg:space-x-4`}>
         <button
           onClick={() => router.push('/')}
           id="navButton"

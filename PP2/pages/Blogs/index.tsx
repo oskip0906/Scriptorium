@@ -6,7 +6,8 @@ interface BlogPost {
   title: string;
   description: string;
   tags: { name: string }[];
-  rating: number;
+  codeTemplates: { id: number; title: string }[],
+  rating: number,
   createdBy: { userName: string };
 }
 
@@ -19,14 +20,18 @@ const BlogPostsList = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const [order, setOrder] = useState('desc');
+  const [order, setOrder] = useState('');
   const [searchUser, setSearchUser] = useState('');
   const [searchTitle, setSearchTitle] = useState('');
   const [searchDescription, setSearchDescription] = useState('');
   const [searchContent, setSearchContent] = useState('');
   const [searchTags, setSearchTags] = useState<string[]>([]);
+  const [searchTemplates, setSearchTemplates] = useState<string[]>([]);
+
   const [tagInput, setTagInput] = useState('');
   const [tagsPlaceHolder, setPlaceholder] = useState('Add tags (press Enter)');
+  const [templatesInput, setTemplatesInput] = useState('');
+  const [templatesPlaceHolder, setTemplatesPlaceholder] = useState('Add templates (press Enter)');
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -37,7 +42,7 @@ const BlogPostsList = () => {
     return () => {
       clearTimeout(handler);
     };
-  }, [searchUser, searchTitle, searchDescription, searchContent, searchTags, order]);
+  }, [searchUser, searchTitle, searchDescription, searchContent, searchTags, searchTemplates, order]);
   
   useEffect(() => {
     fetchPosts();
@@ -54,6 +59,7 @@ const BlogPostsList = () => {
       createdUser: searchUser,
       title: searchTitle,
       tags: searchTags.join(','),
+      codeTemplates: searchTemplates.join(','),
     }).toString();
 
     console.log(query);
@@ -82,18 +88,29 @@ const BlogPostsList = () => {
     }
   };
 
-  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && tagInput.trim()) {
+  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>, type: 'tag' | 'template') => {
+    if (e.key === 'Enter' && (type === 'tag' ? tagInput.trim() : templatesInput.trim())) {
       e.preventDefault();
-      if (!searchTags.includes(tagInput.trim())) {
-        setSearchTags([...searchTags, tagInput.trim()]);
+      if (type === 'tag') {
+        if (!searchTags.includes(tagInput.trim())) {
+          setSearchTags([...searchTags, tagInput.trim()]);
+        }
+        setTagInput('');
+      } else {
+        if (!searchTemplates.includes(templatesInput.trim())) {
+          setSearchTemplates([...searchTemplates, templatesInput.trim()]);
+        }
+        setTemplatesInput('');
       }
-      setTagInput('');
     }
   };
 
-  const handleRemoveTag = (tag: string) => {
-    setSearchTags(searchTags.filter((t) => t !== tag));
+  const handleRemoveTag = (item: string, type: 'tag' | 'template') => {
+    if (type === 'tag') {
+      setSearchTags(searchTags.filter((t) => t !== item));
+    } else {
+      setSearchTemplates(searchTemplates.filter((t) => t !== item));
+    }
   };
 
   return (
@@ -101,11 +118,12 @@ const BlogPostsList = () => {
       
       <h1 className="text-2xl font-bold mb-4">All Blog Posts</h1>
 
-      <div className="mb-4 flex flex-wrap gap-2 items-center">
+      <div className="mb-4 flex flex-wrap gap-2 items-center justify-center bg-gray-500 bg-opacity-10 p-1">
         <select 
           value={order} 
           onChange={(e) => setOrder(e.target.value)} 
-          className="border p-2 rounded pr-8 outline-none">
+          className="border p-2 pr-8 rounded outline-none">
+          <option value="">Most Recent</option>
           <option value="desc">Most Valued</option>
           <option value="asc">Most Controversial</option>
         </select>
@@ -139,16 +157,16 @@ const BlogPostsList = () => {
           placeholder="Search by user" 
           value={searchUser} 
           onChange={(e) => setSearchUser(e.target.value)} 
-          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none"
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/6 outline-none"
         />
 
-        <div className="flex items-center w-full md:w-3/4 lg:w-1/2 rounded h-10" id="tagSelect">
+        <div className="flex items-center w-full md:w-3/4 lg:w-1/3 rounded h-10" id="tagSelect">
           {searchTags.map((tag) => (
-            <span className="flex items-center px-2 py-1 rounded mr-1" id="tag">
+            <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={tag}>
               {tag}
                 <button
                   onClick={() => {
-                    handleRemoveTag(tag);
+                    handleRemoveTag(tag, 'tag');
                     if (searchTags.length === 1) {
                     setPlaceholder('Add tags (press Enter)');
                     }
@@ -164,7 +182,34 @@ const BlogPostsList = () => {
             placeholder={tagsPlaceHolder}
             value={tagInput}
             onChange={(e) => { setTagInput(e.target.value); setPlaceholder(''); }}
-            onKeyDown={handleAddTag}
+            onKeyDown={(e) => handleAddTag(e, 'tag')}
+            className="border-none outline-none flex-grow h-full p-2"
+          />
+        </div>
+
+        <div className="flex items-center w-full md:w-3/4 lg:w-1/3 rounded h-10" id="tagSelect">
+          {searchTemplates.map((template) => (
+            <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={template}>
+              {template}
+              <button
+                onClick={() => {
+                  handleRemoveTag(template, 'template');
+                  if (searchTemplates.length === 1) {
+                    setTemplatesPlaceholder('Add templates (press Enter)');
+                  }
+                }}
+                className="ml-1 font-bold bg-transparent text-gray-500">
+                &times;
+              </button>
+            </span>
+          ))}
+
+          <input
+            type="text"
+            placeholder={templatesPlaceHolder}
+            value={templatesInput}
+            onChange={(e) => { setTemplatesInput(e.target.value); setTemplatesPlaceholder(''); }}
+            onKeyDown={(e) => handleAddTag(e, 'template')}
             className="border-none outline-none flex-grow h-full p-2"
           />
         </div>
@@ -187,7 +232,7 @@ const BlogPostsList = () => {
 
       <div className="overflow-y-auto h-[60vh] p-4 border">
         {blogPosts.map((post) => (
-          <div className="p-4 border-b rounded shadow" key={post.id}>
+          <div className="p-4 border-b border-gray-500" key={post.id}>
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">{post.title}</h2>
               <span className="font-semibold">Created by: {post.createdBy.userName}</span>
@@ -195,11 +240,29 @@ const BlogPostsList = () => {
 
             <p className="my-2">{post.description}</p>
 
+            <div className="my-2 rounded-lg">
+                <p className="font-bold">⭐ Rating: {post.rating}</p>
+            </div>
+
             {post.tags && post.tags.length !== 0 && (
               <div className="flex space-x-2 mt-4">
                 {post.tags.map((tag) => (
                   <span className="px-2 py-1 rounded" id="tag" key={tag.name}>
                     {tag.name}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {post.codeTemplates && post.codeTemplates.length > 0 && (
+              <div className="flex space-x-2 mt-4">
+                {post.codeTemplates.map((template) => (
+                  <span
+                    key={template.id}
+                    className="px-2 py-1 rounded cursor-pointer"
+                    id="template"
+                    onClick={() => router.push(`/Templates/detailedView?id=${template.id}`)}>
+                    {template.title}
                   </span>
                 ))}
               </div>

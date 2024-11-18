@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 
 interface Comment {
   id: number;
@@ -10,7 +9,6 @@ interface Comment {
 
 const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
 
-  const router = useRouter();
   const pageSize = 5;
 
   const [page, setPage] = useState(1);
@@ -20,6 +18,7 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
   const [hasMore, setHasMore] = useState(true);
   const [ratingChange, setRatingChange] = useState(false);
   const [currentComment, setCurrentComment] = useState<Comment>(comment);
+  const [newReplyContent, setNewReplyContent] = useState('');
 
   useEffect(() => {
     fetchReplies(page);
@@ -31,7 +30,7 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
 
   const fetchComment = async () => {
     const response = await fetch(`/api/Comments?id=${comment.id}`);
-    
+
     if (!response.ok) {
       console.error(`Error fetching comment ${comment.id}`);
       return;
@@ -43,7 +42,7 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
 
   const fetchReplies = async (page: number) => {
     const response = await fetch(`/api/Comments?repliedToId=${comment.id}&page=${page}&pageSize=${pageSize}&order=desc`);
-    
+
     if (!response.ok) {
       console.error(`Error fetching replies for comment ${comment.id}`);
       setTotalPages(1);
@@ -57,26 +56,24 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
     setTotalPages(data.totalPages);
   };
 
-  const createRating = async (value: number, id: number, type: string) => {
+  const createRating = async (value: number, id: number) => {
 
-    if (type === 'Comment' || type === 'Blog') {
-      
-      const response = await fetch(`/api/Ratings/${type}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-        body: JSON.stringify({ value: value, id: id }),
-      });
-    
-      if (!response.ok) {
-        alert('Error creating rating!');
-        return;
-      }
-
-      setRatingChange(!ratingChange);
+    const response = await fetch(`/api/Ratings/Comment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: JSON.stringify({ value: value, id: id }),
+    });
+  
+    if (!response.ok) {
+      alert('Error creating rating!');
+      return;
     }
+
+    setRatingChange(!ratingChange);
+
   };
 
   const toggleExpand = () => {
@@ -96,13 +93,43 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
     }
   };
 
+  const handleReplySubmit = async () => {
+    if (newReplyContent.trim() === '') {
+      alert('Comment cannot be empty.');
+      return;
+    }
+
+    const response = await fetch(`/api/Comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: JSON.stringify({
+        content: newReplyContent,
+        repliedToId: currentComment.id,
+      }),
+    });
+
+    if (!response.ok) {
+      alert('Error creating reply!');
+      return;
+    }
+
+    console.log(response);
+    alert('Comment submitted successfully!');
+
+    setNewReplyContent('');
+    setRatingChange(!ratingChange);
+    fetchReplies(1);
+  };
+
   if (!currentComment) {
     return null;
   }
 
   return (
     <div className="border p-4 m-1">
-
       <div className="flex justify-between items-center">
         <p className="inline-block ml-2">{currentComment.content} 
         <span className="italic font-semibold"> - {currentComment.createdBy.userName}</span>
@@ -115,11 +142,11 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
         )}
       </div>
 
-        <div className="flex items-center space-x-2">
-          <button onClick={async () => { await createRating(1, currentComment.id, 'Comment'); }} className="bg-transparent"> ⬆️ </button>
-          <span>{currentComment.rating}</span>
-          <button onClick={async () => { await createRating(-1, currentComment.id, 'Comment'); }} className="bg-transparent"> ⬇️ </button>
-        </div>
+      <div className="flex items-center space-x-2">
+        <button onClick={async () => { await createRating(1, currentComment.id ); }} className="bg-transparent"> ⬆️ </button>
+        <span>{currentComment.rating}</span>
+        <button onClick={async () => { await createRating(-1, currentComment.id); }} className="bg-transparent"> ⬇️ </button>
+      </div>
 
       {isExpanded && (
         <div className="ml-2 mt-2">
@@ -142,6 +169,23 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
               Next
             </button>
           </div>
+
+          <div className="mt-4 relative">
+            <textarea
+              value={newReplyContent}
+              onChange={(e) => setNewReplyContent(e.target.value)}
+              placeholder="Write a reply..."
+              className="w-full p-2 border rounded outline-none"
+              rows={3}
+            />
+
+            <button
+              onClick={handleReplySubmit}
+              className="py-1 px-4 bg-transparent text-gray-500 absolute bottom-2 right-2 font-semibold">
+              Submit Reply
+            </button>
+          </div>
+
         </div>
       )}
     </div>

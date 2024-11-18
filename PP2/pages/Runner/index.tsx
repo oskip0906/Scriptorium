@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Terminal from '@/pages/components/Terminal'
 
-const languages = ['python', 'javascript', 'java', 'c', 'cpp']
+const languages = ['python', 'javascript', 'java', 'c', 'cpp', 'ruby', 'rust', 'swift', 'r', 'php', 'go'];
 
 interface RequestBody {
   language: string;
