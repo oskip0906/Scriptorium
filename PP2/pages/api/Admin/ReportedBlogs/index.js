@@ -5,10 +5,10 @@ async function handler(req, res) {
     if (req.method !== 'GET') {
         return res.status(405).json({ error: "Method not allowed" });
     }
-    let { page, amount } = req.query;
-    !page ? page = 0 : page = page;
-    !amount ? amount = 10 : amount = amount;
     
+    let { page, amount } = req.query;
+    !page || page < 0 ? page = 0 : page = page;
+    !amount ? amount = 10 : amount = amount;
     try {
         const topReportedBlogs = await prisma.report.groupBy({
             by: ["blogPostId"],
