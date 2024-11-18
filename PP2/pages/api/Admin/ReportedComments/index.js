@@ -5,10 +5,10 @@ async function handler(req, res) {
     if (req.method !== 'GET') {
         return res.status(405).json({ error: "Method not allowed" });
     }
-    const { commentAmount } = req.query;
-    if (!commentAmount) {
-        return res.status(400).json({ error: "Bad Request" });
-    }
+
+    let { page, amount } = req.query;
+    !page ? page = 0 : page = page;
+    !amount ? amount = 10 : amount = amount;
     
     try {
         const topReportedComments = await prisma.report.groupBy({
@@ -19,14 +19,15 @@ async function handler(req, res) {
             where: {
                 commentId: {
                     not: null
-                }
+                },
             },
             orderBy: {
                 _count: {
                     commentId: "desc"
                 }
             },
-            take: parseInt(commentAmount)
+            skip: parseInt(page) * parseInt(amount),
+            take: parseInt(amount)
         });
 
         const reportedComments = []

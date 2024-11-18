@@ -17,7 +17,15 @@ export default async function hideBlog(blogPostId) {
                 inappropriate: true,
             }
         });
+        
+        const deleteReports = await prisma.report.deleteMany({
+            where: {
+                blogPostId: blogPostId
+            }
+        });
         return blogPost;
+
+
     }
     catch (error) {
         return null;

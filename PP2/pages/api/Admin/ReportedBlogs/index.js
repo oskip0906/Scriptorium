@@ -5,10 +5,9 @@ async function handler(req, res) {
     if (req.method !== 'GET') {
         return res.status(405).json({ error: "Method not allowed" });
     }
-    const { blogAmount } = req.query;
-    if (!blogAmount) {
-        return res.status(400).json({ error: "Bad Request" });
-    }
+    let { page, amount } = req.query;
+    !page ? page = 0 : page = page;
+    !amount ? amount = 10 : amount = amount;
     
     try {
         const topReportedBlogs = await prisma.report.groupBy({
@@ -19,14 +18,16 @@ async function handler(req, res) {
             where: {
                 blogPostId: {
                     not: null
-                }
+                },
             },
             orderBy: {
                 _count: {
                     blogPostId: "desc"
                 }
             },
-            take: parseInt(blogAmount)
+            skip: parseInt(page) * parseInt(amount),
+            take: parseInt(amount)
+
         });
         const reportedBlogs = []
         topReportedBlogs.map(blog => {
@@ -35,6 +36,7 @@ async function handler(req, res) {
         return res.status(200).json({ reportedBlogs });
     }
     catch (error) {
+        console.log(error)
         return res.status(500).json({ error: error.message });
     }
 }
