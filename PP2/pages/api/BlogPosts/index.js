@@ -138,6 +138,9 @@ async function handler(req, res) {
                     ]
                 });
             }
+            else {
+                searchFilters.push({ inappropriate: false });
+            }
 
             const blogPosts = await prisma.BlogPost.findMany({
                 where: { AND: searchFilters },

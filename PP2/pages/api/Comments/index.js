@@ -104,6 +104,7 @@ async function handler(req, res) {
             if (createdUserId) {
                 searchFilters.push({ createdUserId: parseInt(createdUserId) });
             }
+            
             if (req.user && req.user.id) {
                 searchFilters.push({
                     OR: [
@@ -111,6 +112,9 @@ async function handler(req, res) {
                         { AND: [{ inappropriate: true }, { createdUserId: req.user.id }] }
                     ]
                 });
+            }
+            else {
+                searchFilters.push({ inappropriate: false });
             }
 
             const comments = await prisma.Comment.findMany({
