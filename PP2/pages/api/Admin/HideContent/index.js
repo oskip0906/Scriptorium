@@ -1,6 +1,7 @@
 import verifyAdmin from '@/lib/Admin/verifyAdmin';
 import hideBlog from '@/lib/Admin/hideBlog';
 import hideComment from '@/lib/Admin/hideComment';
+import { parse } from 'path';
 
 async function handler(req, res){
 
@@ -15,7 +16,8 @@ async function handler(req, res){
     }
 
     if (blogPostId) {
-        const blogPost = await hideBlog(blogPostId);
+
+        const blogPost = await hideBlog(parseInt(blogPostId));
         if (!blogPost) {
             return res.status(400).json({ message: 'Bad request' });
         }
@@ -23,7 +25,7 @@ async function handler(req, res){
         return res.status(200).json({ message: 'Blog post hidden' });
     }
     else if (commentId) {
-        const comment = await hideComment(commentId);
+        const comment = await hideComment(parseInt(commentId));
         if (!comment) {
             return res.status(400).json({ message: 'Bad request' });
         }

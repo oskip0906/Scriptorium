@@ -42,7 +42,7 @@ function NavBar() {
       
     };
 
-    const checkAdmin = async () => await fetch('/api/auth/verifyAdmin', {
+    const checkAdmin = async () => await fetch('/api/auth/verifyAdminToken', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
