@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { useRouter } from 'next/router'
 import Terminal from '@/pages/components/Terminal'
-
+import { AppContext } from '@/pages/components/AppVars'
 const languages = ['python', 'javascript', 'java', 'c', 'cpp', 'ruby', 'rust', 'swift', 'r', 'php', 'go'];
 
 interface RequestBody {
@@ -10,13 +10,17 @@ interface RequestBody {
   input: string;
 }
 
+
 const index = () => {
 
+  
+  const context = useContext(AppContext);
   const [language, setLanguage] = useState('python')
   const [code, setCode] = useState('# Type your code here')
   const [output , setOutput] = useState('Output')
   const [error, setError] = useState('')
   const [input, setInput] = useState('')
+  const [title, setTitle] = useState('Code Runner')
   let tags: Array<Object> = []
   let description = 'description'
   const router = useRouter()
@@ -24,6 +28,8 @@ const index = () => {
 
 
   const saveCode = async (id: string, code: string, language: string, title: string, tags: Array<Object>, desc: string) => {
+    
+
 
     const response = await fetch(`/api/CodeTemplates/${id}`, {
       method: 'PUT',
@@ -36,11 +42,10 @@ const index = () => {
     const data = await response.json();
 
     if (!response.ok) {
-      alert('Error saving code');
+      alert(data.error);
       return;
     }
 
-    console.log(data);
     alert('Code saved successfully!');
 
   }
@@ -57,7 +62,7 @@ const index = () => {
     const data = await response.json();
 
     if (!response.ok) {
-      alert('Error deleting code');
+      alert(data.error)
       return;
     }
 
@@ -81,9 +86,8 @@ const index = () => {
       body: JSON.stringify({ id })
     });
     const data = await response.json();
-
     if (!response.ok) {
-      alert('Error forking code');
+      alert(data.error);
       return;
     }
 
@@ -124,6 +128,7 @@ const index = () => {
         setLanguage(data.language ?? 'python')
         tags = data.tags ?? []
         description = data.description ?? 'description'
+        setTitle(data.title ?? 'Code Runner')
        })
     }
   }, [id])
@@ -133,8 +138,9 @@ const index = () => {
 
       <div className="border p-4">
         <div className="flex items-center justify-between ">
-            <div className="text-xl font-semibold ">Code Runner</div>
+            <div className="text-xl font-semibold ">{title}</div>
 
+            { context?.userID ?
             <div className="flex space-x-4">
                 <button className="text-xl rounded px-4" onClick={() => {
                   forkCode(id as string)
@@ -153,7 +159,9 @@ const index = () => {
                 }}>
                   <i className="fas fa-save"></i> 
                 </button>
-            </div>  
+            </div> 
+            : <> </>
+            }
             
             <div className="flex items-center space-x-4">
               <select 

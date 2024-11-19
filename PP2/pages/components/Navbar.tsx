@@ -10,7 +10,14 @@ function NavBar() {
   const [profile, setProfile] = useState({userName: '', avatar: ''});
   const [menuOpen, setMenuOpen] = useState(false);
 
-
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userID');
+    context?.setUserID('');
+    context?.setAdmin('');
+    router.push('/Login');
+  }
 
 
   const setTheme = () => {
@@ -129,7 +136,11 @@ function NavBar() {
           className={router.pathname === '/Templates' ? 'active' : ''}>
           Code Templates
         </button>
-
+        <button 
+          onClick={handleLogout}
+          id="navButton"
+          className={router.pathname === '/Logout' ? 'active' : ''}>
+          Logout </button>
         {context?.admin === 'True' ? 
         <button
           onClick={() => router.push('/Admin')}
@@ -137,7 +148,7 @@ function NavBar() {
           className={router.pathname === '/Admin' ? 'active' : ''}>
         Admin</button> 
           
-        
+
         
         
         

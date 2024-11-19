@@ -2,28 +2,15 @@ import React, { useEffect, useContext, useState } from "react";
 import { AppContext } from "@/pages/components/AppVars";
 import { useRouter } from "next/router";
 
-const middleware = () => {
-  const context = useContext(AppContext);
-  const router = useRouter();
-  if (!context?.userID) {
-    return (
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Please log in to view your profile.</h1>
-        <button
-          onClick={() => router.push("/Login")}
-          className="w-full py-2 px-4 rounded-md shadow outline-none"
-        > Login</button>
-      </div>
-    )
-  }
-  else {
-    return ProfilePage();
-  }
-}
 
 
 const ProfilePage = () => {
   const context = useContext(AppContext);
+  const router = useRouter();
+  if (!context?.userID) {
+    router.push("/Login");
+  }
+
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -86,19 +73,16 @@ const ProfilePage = () => {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
       body: JSON.stringify({
-        userName: username,
         firstName,
         lastName,
-        email,
-        phoneNumber,
+         phoneNumber,
       }),
     });
-
     if (response.ok) {
       alert("Profile updated!");
     } else {
       const resContent = await response.json();
-      alert(`Error: ${JSON.stringify(resContent)}`);
+      alert(`Error: ${JSON.stringify(resContent.error)}`);
     }
   };
 
@@ -119,7 +103,7 @@ const ProfilePage = () => {
         alert("Avatar updated!");
       } else {
         const resContent = await response.json();
-        alert(`Error: ${JSON.stringify(resContent)}`);
+        alert(`Error: ${JSON.stringify(resContent.error)}`);
       }
     }
   };
@@ -143,7 +127,7 @@ const ProfilePage = () => {
       alert("Password updated!");
     } else {
       const resContent = await response.json();
-      alert(`Error: ${JSON.stringify(resContent)}`);
+      alert(`Error: ${JSON.stringify(resContent.error)}`);  
     }
   };
 
@@ -164,12 +148,17 @@ const ProfilePage = () => {
       )}
       <h1 className="text-2xl font-bold mb-4">Your Profile</h1>
 
-      <form onSubmit={handleSaveChanges} className="space-y-4">
+      <form onSubmit={
+        (e) => {
+          e.preventDefault();
+          handleSaveChanges();
+        }
+      } className="space-y-4">
         <div>
           <label htmlFor="username" className="block text-sm font-medium">
             Username
           </label>
-          <input
+          <input readOnly
             type="text"
             id="userName"
             value={username}
@@ -206,7 +195,7 @@ const ProfilePage = () => {
           <label htmlFor="email" className="block text-sm font-medium">
             Email
           </label>
-          <input
+          <input readOnly
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -295,4 +284,4 @@ const ProfilePage = () => {
   );
 };
 
-export default middleware;
+export default ProfilePage;

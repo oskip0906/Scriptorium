@@ -6,6 +6,12 @@ const LoginPage = () => {
 
     const context = useContext(AppContext);
 
+    if (context?.userID) {
+        const router = useRouter();
+        router.push('/');
+    }
+
+
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
@@ -27,7 +33,6 @@ const LoginPage = () => {
                 return;
             }
 
-            console.log(response);
 
             const { accessToken, refreshToken, userID } = await response.json();
 
@@ -87,6 +92,12 @@ const LoginPage = () => {
                     Log In
                 </button>
             </form>
+            <button 
+            className="w-full py-2 px-4 rounded-md shadow outline-none mt-10"
+            onClick={() => router.push('/Signup')}
+            > Sign up</button>
+
+        
         </div>
     );
 };
