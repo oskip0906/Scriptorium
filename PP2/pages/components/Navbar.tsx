@@ -34,9 +34,17 @@ function NavBar() {
 
         const data = await response.json();
 
+        let avatarBase64 ='';
+
+        if (data.avatar) {
+          const avatarResponse = await fetch(data.avatar)
+          const avatarJson = await avatarResponse.json()
+          avatarBase64 =  Buffer.from(avatarJson.imageBuffer).toString('base64')
+        }
+
         setProfile({
           userName: data.userName,
-          avatar: data.avatar,
+          avatar: `data:image/jpeg;base64,${avatarBase64}`,
         });
       }
       
@@ -95,9 +103,9 @@ function NavBar() {
         </button>
 
         <button
-          onClick={() => router.push('/profile')}
+          onClick={() => router.push('/Profile')}
           id="navButton"
-          className={router.pathname === '/profile' ? 'active' : ''}>
+          className={router.pathname === '/Profile' ? 'active' : ''}>
           Profile
         </button>
 
