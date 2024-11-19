@@ -1,4 +1,6 @@
-const refresh = async() => {const new_token = await fetch('/api/auth/refresh', {
+const refresh = async() => {
+    if (!localStorage.getItem('refreshToken')) return;
+    const new_token = await fetch('/api/auth/refresh', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'

@@ -29,6 +29,10 @@ function NavBar() {
   }
 
   useEffect(() => {
+    if (!context?.userID) {
+      return
+    }
+
     const fetchProfile = async () => {
 
       if (context?.userID) {
@@ -57,7 +61,8 @@ function NavBar() {
       
     };
 
-    const checkAdmin = async () => await fetch('/api/auth/verifyAdminToken', {
+    const checkAdmin = async () =>
+      await fetch('/api/auth/verifyAdminToken', {      
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
