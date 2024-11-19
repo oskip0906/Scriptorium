@@ -110,6 +110,13 @@ function NavBar() {
         </button>
 
         <button
+          onClick={() => router.push('/Runner')}
+          id="navButton"
+          className={router.pathname === '/' ? 'active' : ''}>
+          Code Execution
+        </button>
+
+        <button
           onClick={() => router.push('/Blogs')}
           id="navButton"
           className={router.pathname === '/Blogs' ? 'active' : ''}>

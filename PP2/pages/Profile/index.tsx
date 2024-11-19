@@ -1,5 +1,26 @@
 import React, { useEffect, useContext, useState } from "react";
 import { AppContext } from "@/pages/components/AppVars";
+import { useRouter } from "next/router";
+
+const middleware = () => {
+  const context = useContext(AppContext);
+  const router = useRouter();
+  if (!context?.userID) {
+    return (
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">Please log in to view your profile.</h1>
+        <button
+          onClick={() => router.push("/Login")}
+          className="w-full py-2 px-4 rounded-md shadow outline-none"
+        > Login</button>
+      </div>
+    )
+  }
+  else {
+    return ProfilePage();
+  }
+}
+
 
 const ProfilePage = () => {
   const context = useContext(AppContext);
@@ -274,4 +295,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default middleware;
