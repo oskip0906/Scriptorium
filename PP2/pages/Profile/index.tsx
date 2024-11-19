@@ -7,9 +7,7 @@ import { useRouter } from "next/router";
 const ProfilePage = () => {
   const context = useContext(AppContext);
   const router = useRouter();
-  if (!context?.userID) {
-    router.push("/Login");
-  }
+
 
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -24,6 +22,9 @@ const ProfilePage = () => {
   const [avatarDisplay, setAvatarDisplay] = useState("");
 
   useEffect(() => {
+    if (!localStorage.getItem("accessToken")) {
+      router.push("/Login");
+    }
     const fetchProfile = async () => {
       if (context?.userID) {
         const response = await fetch(`/api/Profile/${context.userID}`);
