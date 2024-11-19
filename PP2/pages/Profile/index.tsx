@@ -2,12 +2,10 @@ import React, { useEffect, useContext, useState } from "react";
 import { AppContext } from "@/pages/components/AppVars";
 import { useRouter } from "next/router";
 
-
-
 const ProfilePage = () => {
+
   const context = useContext(AppContext);
   const router = useRouter();
-
 
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -76,7 +74,7 @@ const ProfilePage = () => {
       body: JSON.stringify({
         firstName,
         lastName,
-         phoneNumber,
+        phoneNumber,
       }),
     });
     if (response.ok) {
@@ -102,7 +100,8 @@ const ProfilePage = () => {
 
       if (response.ok) {
         alert("Avatar updated!");
-      } else {
+      } 
+      else {
         const resContent = await response.json();
         alert(`Error: ${JSON.stringify(resContent.error)}`);
       }
@@ -164,7 +163,19 @@ const ProfilePage = () => {
             id="userName"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm outline-none focus:ring focus:border sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm outline-none sm:text-sm"
+          />
+        </div>
+
+        <div className="mt-3">
+          <label htmlFor="email" className="block text-sm font-medium">
+            Email
+          </label>
+          <input readOnly
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm outline-none sm:text-sm"
           />
         </div>
 
@@ -193,18 +204,6 @@ const ProfilePage = () => {
         </div>
 
         <div className="mt-3">
-          <label htmlFor="email" className="block text-sm font-medium">
-            Email
-          </label>
-          <input readOnly
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm outline-none focus:ring focus:border sm:text-sm"
-          />
-        </div>
-
-        <div className="mt-3">
           <label htmlFor="phoneNumber" className="block text-sm font-medium">
             Phone Number
           </label>
@@ -224,7 +223,7 @@ const ProfilePage = () => {
         </button>
       </form>
 
-      <form onSubmit={handleUploadAvatar} className="mt-10">
+      <form onSubmit={(e) => {e.preventDefault(); handleUploadAvatar()}} className="mt-10">
         <h2 className="text-1xl font-bold mb-4">Change Avatar</h2>
 
         <div className="mt-3">
