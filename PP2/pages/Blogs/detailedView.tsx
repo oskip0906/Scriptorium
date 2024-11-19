@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import CommentComponent from '@/pages/components/Comment';
-
+import { AppContext } from '@/pages/components/AppVars';
 interface BlogPost {
   id: number;
   title: string;
@@ -22,6 +22,7 @@ interface Comment {
 
 const DetailedPostView = () => {
   const router = useRouter();
+  const context = useContext(AppContext);
   const { id } = router.query;
   const pageSize = 5;
 
@@ -53,7 +54,12 @@ const DetailedPostView = () => {
     }
 
     const data = await response.json();
-
+    console.log(data);
+    if (context?.admin === 'True') {}
+    else if ((data.inappropriate && data.createdUserId != context?.userID) ) {
+      alert('This post has been reported as inappropriate and is currently under review.');
+      return;
+    }
     setPost(data);
   };
 

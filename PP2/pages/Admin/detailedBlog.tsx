@@ -66,7 +66,8 @@ function detailedBlog() {
 
 
     const hideContent = async () => {
-        const data = await fetch(`/api/Admin/HideContent?blogPostId=`, {
+        console.log("hi")
+        const data = await fetch(`/api/Admin/HideContent`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
