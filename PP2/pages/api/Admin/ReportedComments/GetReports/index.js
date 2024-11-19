@@ -9,7 +9,7 @@ async function handler(req, res) {
     }
     
     try {
-        const { id } = req.query;
+        const { id, page } = req.query;
         if (!id) {
             return res.status(400).json({ error: "Bad Request" });
         }
@@ -17,7 +17,12 @@ async function handler(req, res) {
         const reports = await prisma.report.findMany({
             where: {
                 commentId: parseInt(id)
-            }
+            },
+            include: {
+                createdBy: true
+            },
+            skip: parseInt(page ?? 0) * 5,
+            take: 5
         });
 
         res.status(200).json({ reports });

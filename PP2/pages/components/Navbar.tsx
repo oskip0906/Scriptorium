@@ -17,6 +17,7 @@ function NavBar() {
     context?.setUserID('');
     context?.setAdmin('');
     router.push('/Login');
+    setProfile({userName: '', avatar: ''});
   }
 
 
@@ -98,7 +99,6 @@ function NavBar() {
           </div>
         )}
       </div>
-
       <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="block lg:hidden text-3xl bg-transparent text-gray-500 p-2"
@@ -145,7 +145,7 @@ function NavBar() {
           onClick={handleLogout}
           id="navButton"
           className={router.pathname === '/Logout' ? 'active' : ''}>
-          Logout </button>
+          {context?.userID ? <>Logout</> : <>Login</> } </button>
         {context?.admin === 'True' ? 
         <button
           onClick={() => router.push('/Admin')}

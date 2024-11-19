@@ -45,8 +45,10 @@ function detailedComment() {
     const [reports, setReports] = useState<reportsArray[]>([]);
     const [comment, setComment] = useState<Comment>({} as Comment);
     const [username, setUsername] = useState('');
-    const fetchAllReports = async () => {
-        const data = await fetch(`/api/Admin/ReportedComments/GetReports?id=${commentId}`, {
+    const [reportCount, setReportCount] = useState(0);
+    const [loadedAll, setLoadedAll] = useState(false);
+    const fetchAllReports = async (page: number) => {
+        const data = await fetch(`/api/Admin/ReportedComments/GetReports?id=${commentId}&page=${page}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -54,8 +56,12 @@ function detailedComment() {
     }    
         })
         const response = await data.json();
-        setReports(response.reports);
-    }
+        if (response.reports.length === 0) {
+            setLoadedAll(true);
+             return;
+        }
+        setReports([...reports, ...response.reports]);
+     }
 
 
     const fetchComment = async () => {
@@ -93,7 +99,7 @@ function detailedComment() {
     useEffect(() => {
         if (router.isReady) {
         fetchComment();
-        fetchAllReports();
+        fetchAllReports(0);
         }
     }, [router.isReady])
 
@@ -105,29 +111,57 @@ function detailedComment() {
         
     {context?.admin === 'True' ? 
     <div>
-        <h1>Admin</h1> 
-        <button onClick={hideContent}> Hide Content</button>
-            <ul>
-                <div>Reports</div>
+        <div className="space-y-4">
+  <button
+    onClick={hideContent}
+    className="px-4 py-2 rounded-md border shadow hover:shadow-md active:shadow-sm transition"
+  >
+    Hide Content
+  </button>
 
-                <div>
-                CommentId: {comment.id}
-                Content {comment.content}   
-                Created BY: {username}
-    
-                </div>
-                {reports.map((report: reportsArray) => {
-                    return (
-                        <li key={report.id}>
-                            ReportID: {report.id}
-                            Reason: {report.reason}
-                            CreatedBy: {report.createdUserId}
-                        </li>
-                    )
-                })}
-            </ul>
+  <ul className="space-y-4">
+    <div className="text-lg font-semibold">Reports</div>
+
+    <div className="p-4 border rounded-lg shadow-sm">
+      <p className="text-sm">
+        <span className="font-medium">Comment ID:</span> {comment.id}
+      </p>
+      <p className="text-sm">
+        <span className="font-medium">Content:</span> {comment.content}
+      </p>
+      <p className="text-sm">
+        <span className="font-medium">Created By:</span> {username}
+      </p>
+    </div>
+
+    {reports.map((report: reportsArray) => (
+      <li
+        key={report.id}
+        className="p-4 border rounded-lg shadow-sm"
+      >
+        <p className="text-sm">
+          <span className="font-medium">Report ID:</span> {report.id}
+        </p>
+        <p className="text-sm">
+          <span className="font-medium">Reason:</span> {report.reason}
+        </p>
+        <p className="text-sm">
+          <span className="font-medium">Created By:</span> {report.createdUserId}
+        </p>
+      </li>
+    ))}
+  </ul>
+</div>
+
+{loadedAll ? <div>Loaded all reports</div> :
+                <button
+                onClick={() => { fetchAllReports(reportCount+1); setReportCount(reportCount+1)}}
+                className="px-4 py-2 rounded-md border shadow hover:shadow-md active:shadow-sm transition"
+                >
+                Load More
+                </button>
+                }
             
-
     </div>
     
     

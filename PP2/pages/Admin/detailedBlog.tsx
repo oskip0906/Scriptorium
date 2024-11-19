@@ -11,30 +11,25 @@ interface reportsArray {
 }
 
 
-function middleware() {
-    const context = useContext(AppContext);
 
-    if (context?.admin === 'False') {
-        return (
-            <div>
-                <h1>You are not an admin</h1>
-            </div>
-        )
-    }
-    else {
-        return detailedBlog();
-    }
-}
 
 
 function detailedBlog() {
 
     const context = useContext(AppContext);
     const router = useRouter();
+
+    if (!context?.admin) {
+        router.push('/');
+    }
+
     const [reports, setReports] = useState<reportsArray[]>([]);
+    const [reportCount, setReportCount] = useState(0);
+    const [loadedAll, setLoadedAll] = useState(false);
+
     const blogId = router.query.id;
-    const fetchAllReports = async () => {
-        const data = await fetch(`/api/Admin/ReportedBlogs/GetReports?id=${blogId}`, {
+    const fetchAllReports = async (page: number) => {
+        const data = await fetch(`/api/Admin/ReportedBlogs/GetReports?id=${blogId}&page=${page}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -42,9 +37,12 @@ function detailedBlog() {
     }    
         })
         const response = await data.json();
-        console.log(response);
-        setReports(response.reports);
-    }
+        if (response.reports.length === 0) {
+            setLoadedAll(true);
+             return;
+        }
+        setReports([...reports, ...response.reports]);
+     }
 
     const fetchBlogData= async(id: string) => {
         const data = await fetch(`/api/BlogPosts?id=${id}`, {
@@ -55,18 +53,16 @@ function detailedBlog() {
             }
         })
         const response = await data.json();
-        console.log(response);
     }
     useEffect(() => {
         if (router.isReady) {
-            fetchAllReports();
+            fetchAllReports(0);
             fetchBlogData(blogId as string);
         }
     }, [router.isReady]);
 
 
     const hideContent = async () => {
-        console.log("hi")
         const data = await fetch(`/api/Admin/HideContent`, {
             method: 'POST',
             headers: {
@@ -78,8 +74,6 @@ function detailedBlog() {
         })
 
         const response = await data.json();
-        console.log(response);
-
     }
 
   return (
@@ -90,22 +84,42 @@ function detailedBlog() {
     <div>
         {context?.admin === "True" ? 
         <div>
-            <h1>Admin</h1>
-            <button onClick={hideContent}> Hide Content</button>
+            <button 
+            onClick={hideContent} 
+            className="px-4 py-2 rounded-md shadow"
+            >
+            Hide Content
+            </button>
+
             <DetailedView />
-            <ul>
-                <div>Reports</div>
-                {reports.map((report: reportsArray) => {
-                    return (
-                        <li key={report.id}>
-                            ReportID: {report.id}
-                            Reason: {report.reason}
-                            CreatedBy: {report.createdUserId}
-                        </li>
-                    )
-                })}
-            </ul>
-            
+            <ul className="space-y-4">
+                <div className="text-lg font-semibold mb-2">Reports</div>
+                {reports.map((report: reportsArray) => (
+                    <li
+                    key={report.id}
+                    className="p-4 border rounded-lg shadow-sm"
+                    >
+                    <p className="text-sm">
+                        <span className="font-medium">Report ID:</span> {report.id}
+                    </p>
+                    <p className="text-sm">
+                        <span className="font-medium">Reason:</span> {report.reason}
+                    </p>
+                    <p className="text-sm">
+                        <span className="font-medium">Created By:</span> {report.createdUserId}
+                    </p>
+                    </li>
+                ))}
+</ul>
+
+                {loadedAll ? <div>Loaded all reports</div> :
+                <button
+                onClick={() => { fetchAllReports(reportCount+1); setReportCount(reportCount+1)}}
+                className="px-4 py-2 rounded-md border shadow hover:shadow-md active:shadow-sm transition"
+                >
+                Load More
+                </button>
+                }
         </div> 
         
         
@@ -131,4 +145,4 @@ function detailedBlog() {
   )
 }
 
-export default middleware
+export default detailedBlog
