@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 interface CodeTemplate {
-    id: number,
-    title: string,
+    id: number;
+    title: string;
     createdBy: { userName: string };
     forkedFromID: number;
 }
@@ -16,10 +16,8 @@ const BlogCreator = () => {
     const [content, setContent] = useState('');
     const [tags, setTags] = useState<string[]>([]);
     const [tagInput, setTagInput] = useState('');
-    const [tagsPlaceHolder, setPlaceholder] = useState('Add tags (press Enter)');
 
     const [codeTemplates, setCodeTemplates] = useState<CodeTemplate[]>([]);
-    const [filteredTemplates, setFilteredTemplates] = useState<CodeTemplate[]>([]);
     const [selectedTemplates, setSelectedTemplates] = useState<CodeTemplate[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -28,15 +26,12 @@ const BlogCreator = () => {
     const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
-        fetchCodeTemplates(page);
-    }, [page]);
+        setPage(1);
+    }, [searchQuery]);
 
     useEffect(() => {
-        const filtered = codeTemplates.filter((template) =>
-            template.title.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        setFilteredTemplates(filtered);
-    }, [searchQuery, codeTemplates]);
+        fetchCodeTemplates(page);
+    }, [page, searchQuery]);
 
     const handleCreateBlog = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -57,7 +52,7 @@ const BlogCreator = () => {
                 description,
                 content,
                 tags,
-                codeTemplateIds: selectedTemplates.map((template) => template.id),
+                codeTemplates: selectedTemplates.map((template) => template.id),
             }),
         });
 
@@ -89,7 +84,14 @@ const BlogCreator = () => {
     };
 
     const fetchCodeTemplates = async (page: number) => {
-        const response = await fetch(`/api/CodeTemplates?page=${page}&pageSize=${pageSize}`);
+
+        const query = new URLSearchParams({
+            page: String(page),
+            pageSize: String(pageSize),
+            title: searchQuery,
+        }).toString();
+
+        const response = await fetch(`/api/CodeTemplates?${query}`);
 
         if (!response.ok) {
             console.error('Failed to fetch code templates');
@@ -101,28 +103,27 @@ const BlogCreator = () => {
         console.log(data);
 
         setCodeTemplates(data.codeTemplates);
-        setFilteredTemplates(data.codeTemplates);
         setTotalPages(data.totalPages);
     };
 
     const toggleTemplate = (template: any) => {
         if (selectedTemplates.some((t) => t.id === template.id)) {
             setSelectedTemplates(selectedTemplates.filter((t) => t.id !== template.id));
-        } else {
+        } 
+        else {
             setSelectedTemplates([...selectedTemplates, template]);
         }
     };
 
     const handlePageChange = (newPage: number) => {
         if (newPage > 0 && newPage <= totalPages) {
-          setPage(newPage);
+            setPage(newPage);
         }
     };
 
     return (
         <div className="container mx-auto p-4 mb-4">
             <div className="border rounded p-4">
-
                 <h1 className="text-xl font-bold">Create New Blog Post</h1>
 
                 <label className="block font-medium mt-4 mb-2">Title</label>
@@ -137,8 +138,8 @@ const BlogCreator = () => {
                 <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full h-20 border rounded px-2 py-1 outline-none">
-                </textarea>
+                    className="w-full h-20 border rounded px-2 py-1 outline-none"
+                />
 
                 <label className="block font-medium mt-4 mb-2">Content</label>
                 <textarea
@@ -148,17 +149,13 @@ const BlogCreator = () => {
                 />
 
                 <label className="block font-medium mt-4 mb-2">Tags</label>
+
                 <div className="flex items-center w-full rounded h-10" id="tagSelect">
                     {tags.map((tag) => (
                         <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={tag}>
                             {tag}
                             <button
-                                onClick={() => {
-                                    handleRemoveTag(tag);
-                                    if (tags.length === 1) {
-                                        setPlaceholder('Add tags (press Enter)');
-                                    }
-                                }}
+                                onClick={() => handleRemoveTag(tag)}
                                 className="ml-1 font-bold bg-transparent text-gray-500">
                                 &times;
                             </button>
@@ -166,11 +163,11 @@ const BlogCreator = () => {
                     ))}
                     <input
                         type="text"
-                        placeholder={tagsPlaceHolder}
+                        placeholder="Add tags..."
                         value={tagInput}
-                        onChange={(e) => { setTagInput(e.target.value); setPlaceholder(''); }}
+                        onChange={(e) => setTagInput(e.target.value)}
                         onKeyDown={handleAddTag}
-                        className="border-none outline-none flex-grow h-full p-2 outline-none"
+                        className="border-none outline-none flex-grow h-full p-2"
                     />
                 </div>
 
@@ -181,18 +178,19 @@ const BlogCreator = () => {
                     placeholder="Search by title..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full border rounded px-2 py-1 mb-4 outline-none"
+                    className="w-full border rounded px-2 py-1 outline-none"
                 />
 
-                <div className="border rounded p-4 max-h-96 overflow-y-auto">
-                    {filteredTemplates.map((template) => (
+                <div className="border rounded p-4 max-h-[40vh] mt-2 overflow-y-auto">
+                    {codeTemplates.map((template) => (
                         <div
                             key={template.id}
                             onClick={() => toggleTemplate(template)}
                             className={`p-2 rounded mb-2 cursor-pointer border ${
-                                selectedTemplates.some((t) => t.id === template.id) ? '!border-blue-500' : 'border-gray-500'
+                                selectedTemplates.some((t) => t.id === template.id)
+                                    ? '!border-blue-500'
+                                    : 'border-gray-500'
                             }`}>
-                                
                             <h3 className="font-semibold">{template.title}</h3>
 
                             {template.forkedFromID && (
@@ -205,9 +203,9 @@ const BlogCreator = () => {
 
                     <div className="flex justify-between items-center mt-4">
                         <button
-                        onClick={() => handlePageChange(page - 1)}
-                        className="px-4 py-2 rounded"
-                        disabled={page === 1}>
+                            onClick={() => handlePageChange(page - 1)}
+                            className="px-4 py-2 rounded"
+                            disabled={page === 1}>
                             Previous
                         </button>
 
@@ -216,20 +214,21 @@ const BlogCreator = () => {
                         </span>
 
                         <button
-                        onClick={() => handlePageChange(page + 1)}
-                        className="px-4 py-2 rounded"
-                        disabled={page === totalPages}>
+                            onClick={() => handlePageChange(page + 1)}
+                            className="px-4 py-2 rounded"
+                            disabled={page === totalPages}>
                             Next
                         </button>
                     </div>
-
                 </div>
 
-                <button
-                    onClick={handleCreateBlog}
-                    className="bg-blue-500 text-white px-4 py-2 rounded mt-6">
-                    Create Blog
-                </button>
+                <div className="flex justify-center mt-6">
+                    <button
+                        onClick={handleCreateBlog}
+                        className="bg-transparent text-gray-400 border-2 border-gray-400 font-bold py-2 px-4 rounded">
+                        Create Blog
+                    </button>
+                </div>
             </div>
         </div>
     );

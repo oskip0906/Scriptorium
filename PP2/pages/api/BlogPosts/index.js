@@ -72,7 +72,14 @@ async function handler(req, res) {
                             select: { name: true }
                         },
                         codeTemplates: {
-                            select: { id: true, title: true }
+                            select: { 
+                                id: true, 
+                                title: true,
+                                forkedFromID: true,
+                                createdBy: { 
+                                    select: { userName: true } 
+                                } 
+                            }
                         },
                         createdBy: {
                             select: { id: true, userName: true }

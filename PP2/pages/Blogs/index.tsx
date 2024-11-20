@@ -195,7 +195,7 @@ const BlogPostsList = () => {
         />
 
         <div className="flex items-center w-full md:w-3/4 lg:w-1/3 rounded h-10" id="tagSelect">
-          {searchTags.map((tag) => (
+          {searchTags.filter((tag) => tag.trim() !== '').map((tag) => (
             <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={tag}>
               {tag}
                 <button
@@ -222,7 +222,7 @@ const BlogPostsList = () => {
         </div>
 
         <div className="flex items-center w-full md:w-3/4 lg:w-1/3 rounded h-10" id="tagSelect">
-          {searchTemplates.map((template) => (
+          {searchTemplates.filter((template) => template.trim() !== '').map((template) => (
             <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={template}>
               {template}
               <button

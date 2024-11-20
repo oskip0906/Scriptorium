@@ -15,7 +15,6 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [replies, setReplies] = useState<Comment[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
   const [ratingChange, setRatingChange] = useState(false);
   const [currentComment, setCurrentComment] = useState<Comment>(comment);
   const [newReplyContent, setNewReplyContent] = useState('');
@@ -46,7 +45,6 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
     if (!response.ok) {
       console.error(`Error fetching replies for comment ${comment.id}`);
       setTotalPages(1);
-      setHasMore(false);
       return;
     }
 
@@ -103,7 +101,7 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
       body: JSON.stringify({
         content: newReplyContent,
@@ -135,11 +133,9 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
         <span className="italic font-semibold"> - {currentComment.createdBy.userName}</span>
         </p>
 
-        {hasMore && (
-          <button onClick={toggleExpand} className="p-1 mt-2 rounded text-xs">
+        <button onClick={toggleExpand} className="p-1 mt-2 rounded text-xs">
           {isExpanded ? '<< collapse' : 'expand >>'}
-          </button>
-        )}
+        </button>
       </div>
 
       <div className="flex items-center space-x-2">

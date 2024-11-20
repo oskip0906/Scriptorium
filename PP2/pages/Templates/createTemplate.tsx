@@ -158,11 +158,13 @@ const TemplateCreator = () => {
                     />
                 </div>
 
-                <button
-                    onClick={handleCreateTemplate}
-                    className="bg-blue-500 text-white px-4 py-2 rounded mt-6">
-                    Create Template
-                </button>
+                <div className="flex justify-center mt-6">
+                    <button
+                        onClick={handleCreateTemplate}
+                        className="bg-transparent text-gray-400 border-2 border-gray-400 font-bold py-2 px-4 rounded">
+                        Create Template
+                    </button>
+                </div>
             </div>
 
         </div>

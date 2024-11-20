@@ -2,15 +2,16 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import CommentComponent from '@/pages/components/Comment';
 import { AppContext } from '@/pages/components/AppVars';
+
 interface BlogPost {
   id: number;
   title: string;
   description: string;
   content: string;
   tags: { name: string }[];
-  codeTemplates: { id: number; title: string }[];
-  createdBy: { userName: string };
-  rating: number;   
+  codeTemplates: CodeTemplate[];
+  createdBy: { id: number; userName: string };
+  rating: number;
 }
 
 interface Comment {
@@ -18,6 +19,13 @@ interface Comment {
   content: string;
   rating: number;
   createdBy: { userName: string };
+}
+
+interface CodeTemplate {
+  id: number;
+  title: string;
+  createdBy: { userName: string };
+  forkedFromID: number;
 }
 
 const DetailedPostView = () => {
@@ -32,6 +40,18 @@ const DetailedPostView = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [newComment, setNewComment] = useState('');
   const [ratingChange, setRatingChange] = useState(false);
+  const [editable, setEditable] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [updatedTitle, setUpdatedTitle] = useState('');
+  const [updatedDescription, setUpdatedDescription] = useState('');
+  const [updatedContent, setUpdatedContent] = useState('');
+  
+  const [tagInput, setTagInput] = useState('');
+  const [updatedTags, setUpdatedTags] = useState<string[]>([]);
+  const [codeTemplates, setCodeTemplates] = useState<CodeTemplate[]>([]);
+  const [selectedTemplates, setSelectedTemplates] = useState<CodeTemplate[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (id) {
@@ -42,8 +62,21 @@ const DetailedPostView = () => {
   useEffect(() => {
     if (post) {
       fetchComments(page);
+
+      if (String(context?.userID) === String(post?.createdBy.id)) {
+        setEditable(true);
+        setUpdatedTitle(post.title || '');
+        setUpdatedDescription(post.description || '');
+        setUpdatedContent(post.content || '');
+        setUpdatedTags(post.tags.map((tag) => tag.name) || []);
+        setSelectedTemplates(post.codeTemplates || []);
+      }
     }
   }, [post, page]);
+
+  useEffect(() => {
+    fetchCodeTemplates();
+  }, [searchQuery, page, isEditing]);
 
   const fetchBlogPostDetails = async () => {
     const response = await fetch(`/api/BlogPosts?id=${id}`);
@@ -54,22 +87,20 @@ const DetailedPostView = () => {
     }
 
     const data = await response.json();
-    console.log(data);
-    if (context?.admin === 'True') {}
-    else if ((data.inappropriate && data.createdUserId != context?.userID) ) {
+
+    if (!context?.admin && data.inappropriate && String(context?.userID) === String(data.createdBy.id)) {
       alert('This post has been reported as inappropriate and is currently under review.');
       return;
     }
+    
     setPost(data);
   };
 
   const fetchComments = async (page: number) => {
-    if (!post) {
-      return;
-    }
+    if (!post) return;
 
     const response = await fetch(`/api/Comments?blogPostId=${post.id}&page=${page}&pageSize=${pageSize}&order=desc`);
-    
+
     if (!response.ok) {
       console.error('Error fetching comments');
       setTotalPages(1);
@@ -77,20 +108,69 @@ const DetailedPostView = () => {
     }
 
     const data = await response.json();
-
     setComments(data.comments);
     setTotalPages(data.totalPages);
   };
 
-  const handlePageChange = (newPage: number) => {
-    if (newPage > 0 && newPage <= totalPages) {
-      setPage(newPage);
+  const fetchCodeTemplates = async () => {
+
+    const query = new URLSearchParams({
+      page: String(page),
+      pageSize: String(pageSize),
+      title: searchQuery,
+    }).toString();
+
+    const response = await fetch(`/api/CodeTemplates?${query}`);
+
+    if (!response.ok) {
+      console.error('Failed to fetch code templates');
+      return;
     }
+
+    const data = await response.json();
+
+    setCodeTemplates(data.codeTemplates);
+    setTotalPages(data.totalPages);
+  };
+
+  const toggleTemplate = (template: any) => {
+    if (selectedTemplates.some((t) => t.id === template.id)) {
+        setSelectedTemplates(selectedTemplates.filter((t) => t.id !== template.id));
+    } 
+    else {
+        setSelectedTemplates([...selectedTemplates, template]);
+    }
+};
+
+  const saveChanges = async () => {
+    const updatedPost = {
+      title: updatedTitle,
+      description: updatedDescription,
+      content: updatedContent,
+      tags: updatedTags,
+      codeTemplates: selectedTemplates.map((template) => template.id),
+    };
+
+    const response = await fetch(`/api/BlogPosts/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: JSON.stringify(updatedPost),
+    });
+
+    if (!response.ok) {
+      alert('Error updating post!');
+      return;
+    }
+
+    fetchBlogPostDetails();
+    setIsEditing(false);
   };
 
   const createRating = async (value: number, id: number) => {
-
-    const response = await fetch(`/api/Ratings/Blog`, {
+    const response = await fetch('/api/Ratings/Blog', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -98,14 +178,13 @@ const DetailedPostView = () => {
       },
       body: JSON.stringify({ value: value, id: id }),
     });
-  
+
     if (!response.ok) {
       alert('Error creating rating!');
       return;
     }
 
     setRatingChange(!ratingChange);
-
   };
 
   const handleCommentSubmit = async () => {
@@ -114,7 +193,7 @@ const DetailedPostView = () => {
       return;
     }
 
-    const response = await fetch(`/api/Comments`, {
+    const response = await fetch('/api/Comments', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -135,55 +214,186 @@ const DetailedPostView = () => {
     fetchComments(1);
   };
 
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  };
+
+  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && tagInput.trim()) {
+      e.preventDefault();
+      if (!updatedTags.includes(tagInput.trim())) {
+        setUpdatedTags([...updatedTags, tagInput.trim()]);
+      }
+      setTagInput('');
+    }
+  };
+
+  const handleRemoveTag = (tag: string) => {
+    setUpdatedTags(updatedTags.filter((t) => t !== tag));
+  };
+
+  const toggleEditMode = () => {
+    setIsEditing(!isEditing);
+  };
+
   if (!post) {
-    return;
+    return null;
   }
 
   return (
     <div className="container mx-auto p-4 mb-4">
       <div className="border rounded p-4">
-        {post && (
-          <div>
-            <div className="flex justify-between mt-4">
-              <h2 className="text-xl font-semibold">{post.title}</h2>
-              <span className="font-semibold">Created by: {post.createdBy.userName}</span>
-            </div>
+        <div className="flex justify-between mt-4">
+          {isEditing ? (
+            <input
+              value={updatedTitle}
+              onChange={(e) => setUpdatedTitle(e.target.value)}
+              className="border p-2 w-full rounded outline-none focus:ring focus:border"
+            />
+          ) : (
+            <h2 className="text-xl font-semibold">{post.title}</h2>
+          )}
+          <span className="ml-8 font-semibold">Created by: {post.createdBy.userName}</span>
+        </div>
+
+        <div className="mt-4">
+          {isEditing ? (
+            <textarea
+              value={updatedDescription}
+              onChange={(e) => setUpdatedDescription(e.target.value)}
+              className="border p-2 w-full rounded outline-none focus:ring focus:border"
+              rows={3}
+            />
+          ) : (
+            <p className="text-lg">{post.description}</p>
+          )}
+        </div>
+
+        <div className="mt-4">
+          {isEditing ? (
+            <textarea
+              value={updatedContent}
+              onChange={(e) => setUpdatedContent(e.target.value)}
+              className="border p-2 w-full rounded outline-none focus:ring focus:border"
+              rows={5}
+            />
+          ) : (
+            <p>{post.content}</p>
+          )}
+        </div>
+
+        {isEditing ? (
+          <div className="flex items-center w-full rounded mt-4 h-10" id="tagSelect"
+            onClick={() => {
+              const inputElement = document.getElementById('tagInput') as HTMLInputElement;
+              inputElement?.focus();
+            }}
+          >
+            {updatedTags.map((tag) => (
+                <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={tag}>
+                    {tag}
+                    <button
+                        onClick={() => handleRemoveTag(tag)}
+                        className="ml-1 font-bold bg-transparent text-gray-500">
+                        &times;
+                    </button>
+                </span>
+            ))}
             
-            <div className="mt-4">
-              <p className="text-lg">{post.description}</p>
+            <input
+                type="text"
+                id="tagInput"
+                placeholder="Add tags..."
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleAddTag}
+                className="border-none outline-none flex-grow h-full p-2"
+            />
+        </div>
+        ) : (
+          post.tags && post.tags.length > 0 && (
+            <div className="flex space-x-2 mt-4">
+              {post.tags.map((tag) => (
+                <span key={tag.name} className="px-2 py-1 rounded" id="tag">
+                  {tag.name}
+                </span>
+              ))}
             </div>
+          )
+        )}
 
-            <div className="mt-4">
-              <p>{post.content}</p>
-            </div>
+        {isEditing ? (
+          <div className="mt-4">
+            <input
+              type="text"
+              placeholder="Search by title..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full border rounded px-2 py-1 outline-none"
+            />
 
-            {post.tags && post.tags.length > 0 && (
-              <div className="flex space-x-2 mt-4">
-                {post.tags.map((tag, index) => (
-                  <span key={index} className="px-2 py-1 rounded" id="tag">
-                    {tag.name}
-                  </span>
-                ))}
-              </div>
-            )}
+          <div className="border rounded p-4 max-h-[40vh] mt-2 overflow-y-auto">
+            {codeTemplates.map((template) => (
+                <div
+                    key={template.id}
+                    onClick={() => toggleTemplate(template)}
+                    className={`p-2 rounded mb-2 cursor-pointer border ${
+                        selectedTemplates.some((t) => t.id === template.id)
+                            ? '!border-blue-500'
+                            : 'border-gray-500'
+                    }`}>
+                    <h3 className="font-semibold">{template.title}</h3>
 
-            {post.codeTemplates && post.codeTemplates.length > 0 && (
-              <div>
-                <p className="mt-4 font-semibold">Linked Code Templates: </p>
+                    {template.forkedFromID && (
+                        <p className="text-xs">(Forked Template)</p>
+                    )}
 
-                <div className="flex space-x-2 mt-2">
-                  {post.codeTemplates.map((template) => (
-                    <span
-                      key={template.id}
-                      className="px-2 py-1 rounded cursor-pointer"
-                      id="template"
-                      onClick={() => router.push(`/Templates/detailedView?id=${template.id}`)}>
-                      {template.title}
-                    </span>
-                  ))}
+                    <p className="text-xs">Created by: {template.createdBy.userName}</p>
                 </div>
-              </div>
-            )}
+            ))}
+
+            <div className="flex justify-between items-center mt-4">
+                <button
+                    onClick={() => handlePageChange(page - 1)}
+                    className="px-4 py-2 rounded"
+                    disabled={page === 1}>
+                    Previous
+                </button>
+
+                <span>
+                    Page {page} of {totalPages}
+                </span>
+
+                <button
+                    onClick={() => handlePageChange(page + 1)}
+                    className="px-4 py-2 rounded"
+                    disabled={page === totalPages}>
+                    Next
+                </button>
+            </div>
+          </div>
+        </div>
+        ) : (
+          post.codeTemplates && post.codeTemplates.length > 0 && (
+            <div className="flex space-x-2 mt-4">
+              {post.codeTemplates.map((template) => (
+                <span key={template.id} className="px-2 py-1 rounded border border-blue-500" id="template">
+                  {template.title}
+                </span>
+              ))}
+            </div>
+          )
+        )}
+
+        {editable && (
+          <div className="flex justify-center mt-6">
+            <button
+              onClick={isEditing ? saveChanges : toggleEditMode}
+              className="bg-transparent text-gray-400 border-2 border-gray-400 font-bold py-2 px-4 rounded">
+              {isEditing ? 'Save Changes' : 'Edit'}
+            </button>
           </div>
         )}
 
@@ -236,6 +446,7 @@ const DetailedPostView = () => {
       </div>
     </div>
   );
+
 };
 
 export default DetailedPostView;

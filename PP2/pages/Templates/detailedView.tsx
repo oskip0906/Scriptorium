@@ -22,6 +22,7 @@ const DetailedTemplateView = () => {
   const [template, setTemplate] = useState<CodeTemplate>();
   const [originalTemplate, setOriginalTemplate] = useState<CodeTemplate>();
   const [editable, setEditable] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const [updatedTitle, setUpdatedTitle] = useState('');
   const [updatedExplanation, setUpdatedExplanation] = useState('');
@@ -93,13 +94,13 @@ const DetailedTemplateView = () => {
       body: JSON.stringify(updatedTemplate),
     });
 
-    if (response.ok) {
-      alert('Template updated successfully');
-      fetchTemplateDetails(); 
-    }
-    else {
+    if (!response.ok) {
       alert('Error updating template');
+      return;
     }
+    
+    fetchTemplateDetails(); 
+    setIsEditing(false);
   };
 
   const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -116,6 +117,10 @@ const DetailedTemplateView = () => {
     setUpdatedTags(updatedTags.filter((t) => t !== tag));
   };
 
+  const toggleEditMode = () => {
+    setIsEditing(!isEditing);
+  };
+
   if (!template) {
     return <p>Loading template...</p>;
   }
@@ -123,8 +128,9 @@ const DetailedTemplateView = () => {
   return (
     <div className="container mx-auto p-4 mb-4">
       <div className="border rounded p-4">
+
         <div className="flex justify-between mt-4">
-          {editable ? (
+          {isEditing ? (
             <input
               value={updatedTitle}
               onChange={(e) => setUpdatedTitle(e.target.value)}
@@ -133,7 +139,7 @@ const DetailedTemplateView = () => {
           ) : (
             <h2 className="text-xl font-semibold">{template.title}</h2>
           )}
-            <span className="ml-8 font-semibold">Created by: {template.createdBy.userName}</span>
+          <span className="ml-8 font-semibold">Created by: {template.createdBy.userName}</span>
         </div>
 
         {originalTemplate && (
@@ -164,7 +170,7 @@ const DetailedTemplateView = () => {
         <p>Language: <span className="font-bold">{template.language}</span></p>
 
         <div className="mt-4">
-          {editable ? (
+          {isEditing ? (
             <textarea
               value={updatedExplanation}
               onChange={(e) => setUpdatedExplanation(e.target.value)}
@@ -175,39 +181,54 @@ const DetailedTemplateView = () => {
             <p>{template.explanation}</p>
           )}
         </div>
+        
+        {isEditing ? (
+          <div className="flex flex-wrap items-center p-1 rounded w-full mt-4" id="tagSelect"
+            onClick={() => {
+              const inputElement = document.getElementById('tagInput') as HTMLInputElement;
+              inputElement?.focus();
+            }}
+          >
+            {updatedTags.map((tag) => (
+              <span className="flex items-center px-2 py-1 rounded mr-2" id="tag" key={tag}>
+                {tag}
+                {editable && (
+                  <button
+                    onClick={() => handleRemoveTag(tag)}
+                    className="ml-1 font-bold bg-transparent text-gray-500">
+                    &times;
+                  </button>
+                )}
+              </span>
+            ))}
 
-        <div className="flex flex-wrap items-center border p-2 rounded w-full mt-4" id="tagSelect">
-          {updatedTags.map((tag) => (
-            <span className="flex items-center px-2 py-1 rounded mr-2" id="tag" key={tag}>
-              {tag}
-              {editable && (
-                <button
-                  onClick={() => handleRemoveTag(tag)}
-                  className="ml-1 font-bold bg-transparent text-gray-500">
-                  &times;
-                </button>
-              )}
-            </span>
-          ))}
-
-          {editable && (
             <input
               type="text"
+              id="tagInput"
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
               onKeyDown={handleAddTag}
-              className=" border-none outline-none"
-              placeholder="Add a tag..."
+              className="border-none outline-none flex-grow h-full p-1"
             />
-          )}
-        </div>
+          </div>
+        ) : (
+          template.tags && template.tags.length > 0 && (
+            <div className="flex space-x-2 mt-4">
+              {template.tags.map((tag: { name: string }, index: number) => (
+                <span key={index} className="px-2 py-1 rounded" id="tag">
+                  {tag.name}
+                </span>
+              ))}
+            </div>
+          )
+        )}
 
         {editable && (
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-4">
             <button
-              onClick={saveChanges}
+              onClick={isEditing ? saveChanges : toggleEditMode}
               className="bg-transparent text-gray-400 border-2 border-gray-400 font-bold py-2 px-4 rounded">
-              Save Changes
+              {isEditing ? 'Save Changes' : 'Edit'}
             </button>
           </div>
         )}
@@ -216,7 +237,7 @@ const DetailedTemplateView = () => {
           <button
             onClick={() => router.push(`/Runner?id=${template.id}`)}
             className="text-button-text py-2 px-4 rounded">
-            Try or Edit Template
+            Try or Edit Code
           </button>
 
           {template.forkedFromID && (

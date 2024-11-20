@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { s } from 'framer-motion/client';
 
 interface CodeTemplate {
   id: number;
@@ -44,7 +45,8 @@ const CodeTemplatesList = () => {
   }, [router.isReady]);
 
   useEffect(() => {
-
+    setPage(1);
+    
     const handler = setTimeout(() => {
       const currentQuery = {
         page: String(page),
@@ -135,7 +137,7 @@ const CodeTemplatesList = () => {
         <select 
           value={searchLanguage} 
           onChange={(e) => setSearchLanguage(e.target.value)} 
-          className="border p-2 rounded pr-8 outline-none">
+          className="border p-2 rounded pr-8 outline-none h-10">
             <option value="">Select language</option>
             <option value="c">C</option>
             <option value="cpp">Cpp</option>
@@ -155,7 +157,7 @@ const CodeTemplatesList = () => {
           placeholder="Search by title" 
           value={searchTitle} 
           onChange={(e) => setSearchTitle(e.target.value)} 
-          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none" 
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-non h-10" 
         />
 
         <input 
@@ -163,7 +165,7 @@ const CodeTemplatesList = () => {
           placeholder="Search by explanation" 
           value={searchExplanation} 
           onChange={(e) => setSearchExplanation(e.target.value)} 
-          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none" 
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none h-10" 
         />
 
         <input 
@@ -171,7 +173,7 @@ const CodeTemplatesList = () => {
           placeholder="Search by code" 
           value={searchCode} 
           onChange={(e) => setSearchCode(e.target.value)} 
-          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none"
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none h-10"
         />
 
         <input 
@@ -179,10 +181,10 @@ const CodeTemplatesList = () => {
           placeholder="Search by user" 
           value={searchUser} 
           onChange={(e) => setSearchUser(e.target.value)} 
-          className="p-2 rounded w-full md:w-1/3 lg:w-1/6 outline-none"
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/6 outline-none h-10"
         />
 
-        <div className="flex items-center w-full md:w-1/2 lg:w-1/2 rounded h-10" id="tagSelect">
+        <div className="flex items-center w-full md:w-1/2 lg:w-1/2 rounded h-10 p-1" id="tagSelect">
           {searchTags.filter(tag => tag.trim() !== '').map((tag) => (
             <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={tag}> 
               {tag}
@@ -205,7 +207,7 @@ const CodeTemplatesList = () => {
             value={tagInput}
             onChange={(e) => { setTagInput(e.target.value); setPlaceholder(''); }}
             onKeyDown={handleAddTag}
-            className="border-none outline-none flex-grow h-full p-2"
+            className="border-none outline-none flex-grow h-full p-1"
           />
         </div>
 
