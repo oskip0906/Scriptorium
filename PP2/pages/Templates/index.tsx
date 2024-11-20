@@ -12,7 +12,6 @@ interface CodeTemplate {
 }
 
 const CodeTemplatesList = () => {
-
   const router = useRouter();
   const pageSize = 5;
   
@@ -31,22 +30,56 @@ const CodeTemplatesList = () => {
   const [tagsPlaceHolder, setPlaceholder] = useState('Add tags (press Enter)');
 
   useEffect(() => {
+    if (router.isReady) {
+      const { page, createdUser, title, language, explanation, code, tags } = router.query;
+
+      setPage(Number(page) || 1);
+      setSearchUser((createdUser as string) || '');
+      setSearchTitle((title as string) || '');
+      setSearchLanguage((language as string) || '');
+      setSearchExplanation((explanation as string) || '');
+      setSearchCode((code as string) || '');
+      setSearchTags((tags as string)?.split(',') || []);
+    }
+  }, [router.isReady]);
+
+  useEffect(() => {
+    if (page !== Number(router.query.page) || 1) {
+      return;
+    }
+
     const handler = setTimeout(() => {
-      setPage(1);
+      const currentQuery = {
+        page: String(page),
+        createdUser: searchUser,
+        title: searchTitle,
+        language: searchLanguage,
+        code: searchCode,
+        explanation: searchExplanation,
+        tags: searchTags.join(','),
+      };
+  
+      const urlQuery = router.asPath.split('?')[1] || '';
+      const newQuery = new URLSearchParams(currentQuery).toString();
+  
+      if (urlQuery !== newQuery) {
+        router.push({
+          pathname: router.pathname,
+          query: currentQuery,
+        }, undefined, { shallow: true });
+      }
+  
       fetchTemplates();
-    }, 500);
+    }, 500); 
   
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [searchUser, searchTitle, searchLanguage, searchExplanation, searchCode, searchTags]);
-  
+    return () => clearTimeout(handler);
+  }, [searchUser, searchTitle, searchLanguage, searchExplanation, searchCode, searchTags]);  
+
   useEffect(() => {
     fetchTemplates();
   }, [page]);
 
   const fetchTemplates = async () => {
-    
     const query = new URLSearchParams({
       page: String(page),
       pageSize: String(pageSize),
@@ -153,19 +186,19 @@ const CodeTemplatesList = () => {
         />
 
         <div className="flex items-center w-full md:w-1/2 lg:w-1/2 rounded h-10" id="tagSelect">
-          {searchTags.map((tag) => (
+          {searchTags.filter(tag => tag.trim() !== '').map((tag) => (
             <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={tag}> 
               {tag}
-                <button
-                  onClick={() => {
-                    handleRemoveTag(tag);
-                    if (searchTags.length === 1) {
+              <button
+                onClick={() => {
+                  handleRemoveTag(tag);
+                  if (searchTags.length === 1) {
                     setPlaceholder('Add tags (press Enter)');
-                    }
-                  }}
-                  className="ml-1 font-bold bg-transparent text-gray-500">
-                  &times;
-                </button>
+                  }
+                }}
+                className="ml-1 font-bold bg-transparent text-gray-500">
+                &times;
+              </button>
             </span>
           ))}
 
@@ -250,6 +283,6 @@ const CodeTemplatesList = () => {
 
     </div>
   );
-}
+};
 
 export default CodeTemplatesList;

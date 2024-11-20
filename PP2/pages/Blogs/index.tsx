@@ -34,14 +34,51 @@ const BlogPostsList = () => {
   const [templatesPlaceHolder, setTemplatesPlaceholder] = useState('Add templates (press Enter)');
 
   useEffect(() => {
+    if (router.isReady) {
+      const { page, createdUser, title, description, content, tags, codeTemplates, order } = router.query;
+
+      setPage(Number(page) || 1);
+      setSearchUser((createdUser as string) || '');
+      setSearchTitle((title as string) || '');
+      setSearchDescription((description as string) || '');
+      setSearchContent((content as string) || '');
+      setSearchTags((tags as string)?.split(',') || []);
+      setSearchTemplates((codeTemplates as string)?.split(',') || []);
+      setOrder((order as string) || '');
+    }
+  }, [router.isReady]);
+
+  useEffect(() => {
+    if (page !== Number(router.query.page) || 1) {
+      return;
+    }
+
     const handler = setTimeout(() => {
-      setPage(1);
-      fetchPosts();
-    }, 500);
+      const currentQuery = {
+        page: String(page),
+        createdUser: searchUser,
+        title: searchTitle,
+        description: searchDescription,
+        content: searchContent,
+        tags: searchTags.join(','),
+        codeTemplates: searchTemplates.join(','),
+        order: order,
+      };
   
-    return () => {
-      clearTimeout(handler);
-    };
+      const urlQuery = router.asPath.split('?')[1] || '';
+      const newQuery = new URLSearchParams(currentQuery).toString();
+  
+      if (urlQuery !== newQuery) {
+        router.push({
+          pathname: router.pathname,
+          query: currentQuery,
+        }, undefined, { shallow: true });
+      }
+  
+      fetchPosts();
+    }, 500); 
+  
+    return () => clearTimeout(handler);
   }, [searchUser, searchTitle, searchDescription, searchContent, searchTags, searchTemplates, order]);
   
   useEffect(() => {
