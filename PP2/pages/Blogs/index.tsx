@@ -49,9 +49,6 @@ const BlogPostsList = () => {
   }, [router.isReady]);
 
   useEffect(() => {
-    if (page !== Number(router.query.page) || 1) {
-      return;
-    }
 
     const handler = setTimeout(() => {
       const currentQuery = {

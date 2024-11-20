@@ -15,7 +15,6 @@ interface CodeTemplate {
 }
 
 const DetailedTemplateView = () => {
-  
   const context = useContext(AppContext);
   const router = useRouter();
 
@@ -26,6 +25,7 @@ const DetailedTemplateView = () => {
 
   const [updatedTitle, setUpdatedTitle] = useState('');
   const [updatedExplanation, setUpdatedExplanation] = useState('');
+  const [tagInput, setTagInput] = useState('');
   const [updatedTags, setUpdatedTags] = useState<string[]>([]);
 
   useEffect(() => {
@@ -60,9 +60,6 @@ const DetailedTemplateView = () => {
     }
 
     const data = await response.json();
-
-    console.log(data);
-    
     setTemplate(data);
   };
 
@@ -82,8 +79,10 @@ const DetailedTemplateView = () => {
     const updatedTemplate = {
       title: updatedTitle,
       explanation: updatedExplanation,
-      tags: updatedTags.map(tag => ({ name: tag })),
+      tags: updatedTags
     };
+
+    console.log(updatedTemplate);
 
     const response = await fetch(`/api/CodeTemplates/${id}`, {
       method: 'PUT',
@@ -96,10 +95,25 @@ const DetailedTemplateView = () => {
 
     if (response.ok) {
       alert('Template updated successfully');
-      fetchTemplateDetails(); // Refresh the template details
-    } else {
+      fetchTemplateDetails(); 
+    }
+    else {
       alert('Error updating template');
     }
+  };
+
+  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && tagInput.trim()) {
+      e.preventDefault();
+      if (!updatedTags.includes(tagInput.trim())) {
+        setUpdatedTags([...updatedTags, tagInput.trim()]);
+      }
+      setTagInput('');
+    }
+  };
+
+  const handleRemoveTag = (tag: string) => {
+    setUpdatedTags(updatedTags.filter((t) => t !== tag));
   };
 
   if (!template) {
@@ -162,26 +176,29 @@ const DetailedTemplateView = () => {
           )}
         </div>
 
-        <div className="flex flex-wrap gap-2 mt-4">
-          {editable ? (
-            updatedTags.map((tag, index) => (
-              <input
-                key={index}
-                value={tag}
-                onChange={(e) => {
-                  const newTags = [...updatedTags];
-                  newTags[index] = e.target.value;
-                  setUpdatedTags(newTags);
-                }}
-                className="border p-1 rounded"
-              />
-            ))
-          ) : (
-            template.tags.map(tag => (
-              <span key={tag.name} className="px-2 py-1 bg-gray-200 rounded">
-                {tag.name}
-              </span>
-            ))
+        <div className="flex flex-wrap items-center border p-2 rounded w-full mt-4" id="tagSelect">
+          {updatedTags.map((tag) => (
+            <span className="flex items-center px-2 py-1 rounded mr-2" id="tag" key={tag}>
+              {tag}
+              {editable && (
+                <button
+                  onClick={() => handleRemoveTag(tag)}
+                  className="ml-1 font-bold bg-transparent text-gray-500">
+                  &times;
+                </button>
+              )}
+            </span>
+          ))}
+
+          {editable && (
+            <input
+              type="text"
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyDown={handleAddTag}
+              className=" border-none outline-none"
+              placeholder="Add a tag..."
+            />
           )}
         </div>
 
