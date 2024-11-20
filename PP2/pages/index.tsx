@@ -1,9 +1,8 @@
 import React from 'react';
-
+import DetailedView from '@/pages/Blogs/detailedView'
 const HomePage = () => {
   return (
-    <div>
-      <h1>Home Page</h1>
+    <div> 
     </div>
   );
 };
