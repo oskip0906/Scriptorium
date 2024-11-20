@@ -75,7 +75,7 @@ async function handler(req, res) {
                             select: { id: true, title: true }
                         },
                         createdBy: {
-                            select: { userName: true }
+                            select: { id: true, userName: true }
                         }
                     },
                 });
@@ -152,7 +152,7 @@ async function handler(req, res) {
                         select: { id: true, title: true }
                     },
                     createdBy: {
-                        select: { userName: true }
+                        select: { id: true, userName: true }
                     }
                 },
                 skip: (parseInt(page) - 1) * parseInt(pageSize),

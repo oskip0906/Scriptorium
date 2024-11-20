@@ -60,7 +60,7 @@ function NavBar() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
         },
       });
 
@@ -78,7 +78,7 @@ function NavBar() {
   }, [context?.userID]);
 
   return (
-    <div className="flex justify-between items-center p-4 shadow-md" id="navbar">
+    <div className="flex justify-between items-center p-4" id="navbar">
       <div className="flex items-center space-x-8">
         <button
           onClick={setTheme}

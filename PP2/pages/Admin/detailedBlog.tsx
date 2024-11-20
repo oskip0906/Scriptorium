@@ -10,10 +10,6 @@ interface reportsArray {
     blogPostId: number;
 }
 
-
-
-
-
 function detailedBlog() {
 
     const context = useContext(AppContext);
@@ -33,7 +29,7 @@ function detailedBlog() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                "authorization": `Bearer ${localStorage.getItem('accessToken')}`   
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,   
     }    
         })
         const response = await data.json();
@@ -49,7 +45,7 @@ function detailedBlog() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                "authorization": `Bearer ${localStorage.getItem('accessToken')}`
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             }
         })
         const response = await data.json();
@@ -67,7 +63,7 @@ function detailedBlog() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                "authorization": `Bearer ${localStorage.getItem('accessToken')}`
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify({
                 blogPostId: blogId})
@@ -77,9 +73,6 @@ function detailedBlog() {
     }
 
   return (
-
-
-
 
     <div>
         {context?.admin === "True" ? 
@@ -121,24 +114,7 @@ function detailedBlog() {
                 </button>
                 }
         </div> 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         : <div>Not Admin</div>}
 
     </div>

@@ -52,7 +52,7 @@ function detailedComment() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                "authorization": `Bearer ${localStorage.getItem('accessToken')}`   
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,   
     }    
         })
         const response = await data.json();
@@ -73,7 +73,7 @@ function detailedComment() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                "authorization": `Bearer ${localStorage.getItem('accessToken')}`   
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,   
         }    
             })
             const response = await data.json();
@@ -89,7 +89,7 @@ function detailedComment() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                "authorization": `Bearer ${localStorage.getItem('accessToken')}`
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
             },
             body: JSON.stringify({
                 commentId: commentId})
