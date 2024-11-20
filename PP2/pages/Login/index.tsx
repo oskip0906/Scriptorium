@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { AppContext } from '@/pages/components/AppVars';
+import { toast } from 'react-toastify';
 
 const LoginPage = () => {
 
@@ -31,10 +32,9 @@ const LoginPage = () => {
             });
 
             if (!response.ok) {
-                alert('Login failed');
+                toast.error('Login failed');
                 return;
             }
-
 
             const { accessToken, refreshToken, userID } = await response.json();
 
@@ -44,7 +44,7 @@ const LoginPage = () => {
             context?.setUserID(userID.toString());
             localStorage.setItem('userID', userID.toString());
 
-            alert('Login successful');
+            toast.success('Login successful');
 
             setTimeout(() => {
                 router.push('/');
@@ -52,7 +52,7 @@ const LoginPage = () => {
 
         } 
         catch (error) {
-            alert('Login failed');
+            toast.error('Login failed');
             return;
         }
     };

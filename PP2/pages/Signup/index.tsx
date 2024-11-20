@@ -1,5 +1,6 @@
 import React, { useState, FormEvent } from 'react';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 interface SignUpFormData {
   email: string;
@@ -38,7 +39,7 @@ const SignUpPage: React.FC = () => {
     const { email, userName, firstName, lastName, phoneNumber, password } = formData;
 
     if (!email || !userName || !firstName || !lastName || !phoneNumber || !password) {
-        alert('Please fill in all fields');
+      toast.warning('All fields are required!');
       return;
     }
     const data = await fetch('/api/auth/signup/user', {
@@ -48,13 +49,14 @@ const SignUpPage: React.FC = () => {
         },
         body: JSON.stringify(formData),
         });
-const response = await data.json();
-console.log(response);
+    const response = await data.json();
+    console.log(response);
+
     if (!data.ok) {
-      alert(response.error);
+      toast.error('Sign up failed!');
       return;
     }
-    alert('Sign up successful');
+    toast.success('Sign up successful!');
   };
 
   return (

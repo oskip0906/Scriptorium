@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState } from "react";
 import { AppContext } from "@/pages/components/AppVars";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 const ProfilePage = () => {
 
@@ -34,14 +35,17 @@ const ProfilePage = () => {
         const data = await response.json();
         console.log(data);
 
+        let avatarBase64 = '';
+
         if (data.avatar) {
           const avatarResponse = await fetch(data.avatar);
-          const avatarJson = await avatarResponse.json();
-          const avatarBase64 = Buffer.from(avatarJson.imageBuffer).toString(
-            "base64"
-          );
-          setAvatarDisplay(`data:image/jpeg;base64,${avatarBase64}`);
+          if (avatarResponse.ok) {
+            const avatarJson = await avatarResponse.json();
+            avatarBase64 = Buffer.from(avatarJson.imageBuffer).toString('base64');
+          }
         }
+
+        setAvatarDisplay(avatarBase64 ? `data:image/jpeg;base64,${avatarBase64}` : '');
 
         setUsername(data.userName);
         setFirstName(data.firstName);
@@ -78,10 +82,9 @@ const ProfilePage = () => {
       }),
     });
     if (response.ok) {
-      alert("Profile updated!");
+      toast.success("Profile updated!");
     } else {
-      const resContent = await response.json();
-      alert(`Error: ${JSON.stringify(resContent.error)}`);
+      toast.error(`Error updating profile!`);
     }
   };
 
@@ -99,18 +102,17 @@ const ProfilePage = () => {
       });
 
       if (response.ok) {
-        alert("Avatar updated!");
+        toast.success("Avatar updated!");
       } 
       else {
-        const resContent = await response.json();
-        alert(`Error: ${JSON.stringify(resContent.error)}`);
+        toast.error(`Error updating avatar`);
       }
     }
   };
 
   const handleSavePassword = async () => {
     if (!savePasswordPrelightCheck()) {
-      alert("Please ensure your passwords match and try again.");
+      toast.warning("Please ensure your passwords match and try again.");
       return;
     }
 
@@ -124,10 +126,9 @@ const ProfilePage = () => {
     });
 
     if (response.ok) {
-      alert("Password updated!");
+      toast.success("Password updated!");
     } else {
-      const resContent = await response.json();
-      alert(`Error: ${JSON.stringify(resContent.error)}`);  
+      toast.error(`Error updating password!`);  
     }
   };
 

@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { AppContext } from '@/pages/components/AppVars'
 import Editor from '@monaco-editor/react';
+import { toast } from 'react-toastify';
 
 const TemplateCreator = () => {
 
@@ -20,7 +21,7 @@ const TemplateCreator = () => {
         e.preventDefault();
 
         if (!title || !code || !explanation || !language) {
-            alert('Please fill in all fields!');
+            toast.warning('Please fill in all fields!');
             return;
         }
 
@@ -40,7 +41,7 @@ const TemplateCreator = () => {
         });
 
         if (!response.ok) {
-            alert('Error creating template!');
+            toast.error('Error creating template!');
             return;
         }
 
@@ -49,11 +50,11 @@ const TemplateCreator = () => {
         console.log(newTemplate);
 
         if (!newTemplate || !newTemplate.id) {
-            alert('Error creating template!');
+            toast.error('Error creating template!');
             return;
         }
 
-        alert('Template created successfully!');
+        toast.success('Template created successfully!');
         setTimeout(() => {
             router.push(`/Templates/detailedView?id=${newTemplate.id}`);
         }, 500);

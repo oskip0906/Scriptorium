@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface Comment {
   id: number;
@@ -66,7 +67,7 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
     });
   
     if (!response.ok) {
-      alert('Error creating rating!');
+      toast.error('Error creating rating!');
       return;
     }
 
@@ -93,7 +94,7 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
 
   const handleReplySubmit = async () => {
     if (newReplyContent.trim() === '') {
-      alert('Comment cannot be empty.');
+      toast.warning('Comment cannot be empty.');
       return;
     }
 
@@ -110,12 +111,12 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
     });
 
     if (!response.ok) {
-      alert('Error creating reply!');
+      toast.error('Error creating reply!');
       return;
     }
 
     console.log(response);
-    alert('Comment submitted successfully!');
+    toast.success('Comment submitted successfully!');
 
     setNewReplyContent('');
     setRatingChange(!ratingChange);

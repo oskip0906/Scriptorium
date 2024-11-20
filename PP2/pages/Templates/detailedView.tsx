@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { AppContext } from '@/pages/components/AppVars';
 import Editor from '@monaco-editor/react';
+import { toast } from 'react-toastify';
 
 interface CodeTemplate {
   id: number;
@@ -95,7 +96,7 @@ const DetailedTemplateView = () => {
     });
 
     if (!response.ok) {
-      alert('Error updating template');
+      toast.error('Error updating template');
       return;
     }
     

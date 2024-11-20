@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState}  from 'react'
 import { AppContext } from '@/pages/components/AppVars'
 import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
 
 function middleware() {
     const context = useContext(AppContext);
@@ -67,25 +68,8 @@ function detailedComment() {
      }
 
 
-    const fetchComment = async () => {
-
-        const data = await fetch(`/api/Comments?id=${commentId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,   
-        }    
-            })
-            const response = await data.json();
-            setComment(response);
-
-            console.log(response);
-            setUsername(response.createdBy.userName);
-    }
-
-
     const hideContent = async () => {
-        const data = await fetch(`/api/Admin/HideContent`, {
+        const response = await fetch(`/api/Admin/HideContent`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,13 +79,17 @@ function detailedComment() {
                 commentId: commentId})
         })
 
-        const response = await data.json();
+        if (!response.ok) {
+            toast.error('Error hiding content!');
+            return;
+        }
+
+        toast.success('Content hidden successfully!');
 
     }
 
     useEffect(() => {
         if (router.isReady) {
-        fetchComment();
         fetchAllReports(0);
         }
     }, [router.isReady])

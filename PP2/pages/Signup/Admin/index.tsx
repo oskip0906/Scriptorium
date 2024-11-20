@@ -1,5 +1,5 @@
-import { form } from 'framer-motion/client';
 import React, { useState, FormEvent } from 'react';
+import { toast } from 'react-toastify';
 
 interface AdminSignUpFormData {
   email: string;
@@ -39,7 +39,7 @@ const SignUpPage: React.FC = () => {
     const { email, userName, firstName, lastName, phoneNumber, password, adminKey } = formData;
 
     if (!email || !userName || !firstName || !lastName || !phoneNumber || !password || !adminKey) {
-        alert('Please fill in all fields');
+      toast.warning('Please fill in all fields!');
       return;
     }
     console.log(formData);
@@ -53,10 +53,10 @@ const SignUpPage: React.FC = () => {
 const response = await data.json();
 console.log(response);
     if (!data.ok) {
-      alert(response.error);
+      toast.error('Sign up failed!');
       return;
     }
-    alert('Sign up successful');
+    toast.success('Sign up successful!');
   };
 
   return (

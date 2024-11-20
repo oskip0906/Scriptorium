@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 interface CodeTemplate {
     id: number;
@@ -37,7 +38,7 @@ const BlogCreator = () => {
         e.preventDefault();
 
         if (!title || !description || !content) {
-            alert('Please fill in all fields!');
+            toast.warning('Please fill in all fields!');
             return;
         }
 
@@ -57,13 +58,13 @@ const BlogCreator = () => {
         });
 
         if (!response.ok) {
-            alert('Error creating blog!');
+            toast.error('Error updating post!');
             return;
         }
 
         const newBlog = await response.json();
 
-        alert('Blog created successfully!');
+        toast.success('Blog created successfully!');
         setTimeout(() => {
             router.push(`/Blogs/detailedView?id=${newBlog.id}`);
         }, 500);

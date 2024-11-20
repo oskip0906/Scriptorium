@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from 'react'
 import { useRouter } from 'next/router'
 import Terminal from '@/pages/components/Terminal'
 import { AppContext } from '@/pages/components/AppVars'
+import { toast } from 'react-toastify'
+
 const languages = ['python', 'javascript', 'java', 'c', 'cpp', 'ruby', 'rust', 'swift', 'r', 'php', 'go'];
 
 interface RequestBody {
@@ -42,11 +44,11 @@ const index = () => {
     const data = await response.json();
 
     if (!response.ok) {
-      alert(data.error);
+      toast.error('Error saving code');
       return;
     }
 
-    alert('Code saved successfully!');
+    toast.success('Code saved successfully!');
 
   }
 
@@ -62,12 +64,12 @@ const index = () => {
     const data = await response.json();
 
     if (!response.ok) {
-      alert(data.error)
+      toast.error('Error deleting code');
       return;
     }
 
     console.log(data);
-    alert('Code deleted successfully!');
+    toast.success('Code deleted successfully!');
 
     setTimeout(() => {
       router.push('/Runner?id=0');
@@ -87,12 +89,12 @@ const index = () => {
     });
     const data = await response.json();
     if (!response.ok) {
-      alert(data.error);
+      toast.error('Error forking code');
       return;
     }
 
     console.log(data);
-    alert('Code forked successfully!');
+    toast.success('Code forked successfully!');
 
     setTimeout(() => {
       router.push(`/Runner?id=${data.id}`);

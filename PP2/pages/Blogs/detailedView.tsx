@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import CommentComponent from '@/pages/components/Comment';
 import { AppContext } from '@/pages/components/AppVars';
+import { toast } from 'react-toastify';
 
 interface BlogPost {
   id: number;
@@ -89,7 +90,7 @@ const DetailedPostView = () => {
     const data = await response.json();
 
     if (!context?.admin && data.inappropriate && String(context?.userID) === String(data.createdBy.id)) {
-      alert('This post has been reported as inappropriate and is currently under review.');
+      toast.info('This post has been reported as inappropriate and is currently under review.');
       return;
     }
     
@@ -161,7 +162,7 @@ const DetailedPostView = () => {
     });
 
     if (!response.ok) {
-      alert('Error updating post!');
+      toast.error('Error updating post!');
       return;
     }
 
@@ -180,7 +181,7 @@ const DetailedPostView = () => {
     });
 
     if (!response.ok) {
-      alert('Error creating rating!');
+      toast.error('Error creating rating!');
       return;
     }
 
@@ -189,7 +190,7 @@ const DetailedPostView = () => {
 
   const handleCommentSubmit = async () => {
     if (newComment.trim() === '') {
-      alert('Comment cannot be empty.');
+      toast.warning('Comment cannot be empty.');
       return;
     }
 
@@ -203,12 +204,12 @@ const DetailedPostView = () => {
     });
 
     if (!response.ok) {
-      alert('Error submitting comment!');
+      toast.error('Error submitting comment!');
       return;
     }
 
     console.log(response);
-    alert('Comment submitted successfully!');
+    toast.success('Comment submitted successfully!');
 
     setNewComment('');
     fetchComments(1);

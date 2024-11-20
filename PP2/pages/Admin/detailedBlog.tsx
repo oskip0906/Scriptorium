@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState}  from 'react'
 import { AppContext } from '@/pages/components/AppVars'
 import { useRouter } from 'next/router'
 import DetailedView from '@/pages/Blogs/detailedView'
+import { toast } from 'react-toastify'
 
 interface reportsArray {
     id: number;
@@ -40,26 +41,15 @@ function detailedBlog() {
         setReports([...reports, ...response.reports]);
      }
 
-    const fetchBlogData= async(id: string) => {
-        const data = await fetch(`/api/BlogPosts?id=${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-            }
-        })
-        const response = await data.json();
-    }
     useEffect(() => {
         if (router.isReady) {
             fetchAllReports(0);
-            fetchBlogData(blogId as string);
         }
     }, [router.isReady]);
 
 
     const hideContent = async () => {
-        const data = await fetch(`/api/Admin/HideContent`, {
+        const response = await fetch(`/api/Admin/HideContent`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -67,9 +57,14 @@ function detailedBlog() {
             },
             body: JSON.stringify({
                 blogPostId: blogId})
-        })
+        });
 
-        const response = await data.json();
+        if (!response.ok) {
+            toast.error('Error hiding content!');
+            return;
+        }
+
+        toast.success('Content hidden successfully!');
     }
 
   return (
