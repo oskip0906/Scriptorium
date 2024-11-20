@@ -223,7 +223,7 @@ const ProfilePage = () => {
         </button>
       </form>
 
-      <form onSubmit={(e) => {e.preventDefault(); handleUploadAvatar()}} className="mt-10">
+      <form onSubmit={(e) => handleUploadAvatar()} className="mt-10">
         <h2 className="text-1xl font-bold mb-4">Change Avatar</h2>
 
         <div className="mt-3">
