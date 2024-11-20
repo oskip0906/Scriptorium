@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { AppContext } from '@/pages/components/AppVars';
 
@@ -6,15 +6,17 @@ const LoginPage = () => {
 
     const context = useContext(AppContext);
 
-    if (context?.userID) {
-        const router = useRouter();
-        router.push('/');
-    }
-
 
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
+
+    useEffect(() => {
+
+        if (router.isReady && context?.userID) {
+            router.push('/');
+        }
+    }, [router.isReady]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
