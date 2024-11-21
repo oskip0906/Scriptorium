@@ -5,6 +5,7 @@ import { AppContext } from '@/pages/components/AppVars';
 import { toast } from 'react-toastify';
 import { BackgroundGradient } from '../components/BackgroundGradient';
 import Reports from '../components/Reports';
+
 interface BlogPost {
   id: number;
   title: string;
@@ -258,7 +259,6 @@ const DetailedPostView = () => {
             <h2 className="text-xl font-semibold">{post.title}</h2>
           )}
           <span className="ml-8 font-semibold">Created by: {post.createdBy.userName}</span>
-          <Reports blogPostId={post.id} />
         </div>
 
         <div className="mt-4">
@@ -395,21 +395,28 @@ const DetailedPostView = () => {
             <button
               onClick={isEditing ? saveChanges : toggleEditMode}
               className="bg-transparent text-gray-400 border-2 border-gray-400 font-bold py-2 px-4 rounded">
-              {isEditing ? 'Save Changes' : 'Edit'}
+              {isEditing ? 'Save Changes' : 'Edit Blog'}
             </button>
           </div>
         )}
 
-        <div className="flex items-center space-x-2 mt-4">
-          <button onClick={async () => { await createRating(1, post.id ); }} className="bg-transparent"> ⬆️ </button>
-          <div className="my-1 rounded-lg">
-            <p className="font-bold">⭐ Rating: {post.rating}</p>
+        <div className="mt-4 flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <button onClick={async () => { await createRating(1, post.id ); }} className="bg-transparent"> ⬆️ </button>
+            <div className="my-1 rounded-lg">
+              <p className="font-bold">⭐ Rating: {post.rating}</p>
+            </div>
+            <button onClick={async () => { await createRating(-1, post.id); }} className="bg-transparent"> ⬇️ </button>
           </div>
-          <button onClick={async () => { await createRating(-1, post.id); }} className="bg-transparent"> ⬇️ </button>
+
+          <div className="mr-auto ml-4">
+            <Reports blogPostId={post.id} />
+          </div>
         </div>
 
         <div className="mt-6">
           <h3 className="text-lg font-semibold mb-2">Comments</h3>
+
           {comments.map((comment) => (
             <CommentComponent key={comment.id} comment={comment} />
           ))}
@@ -430,21 +437,24 @@ const DetailedPostView = () => {
             </button>
           </div>
 
-          <div className="flex justify-between mt-1 px-1">
-            <button
-              onClick={() => handlePageChange(page - 1)}
-              className="bg-transparent font-bold text-gray-400 py-1 px-2 rounded text-sm"
-              disabled={page === 1}>
-              Previous
-            </button>
+            {totalPages > 1 && (
+              <div className="flex justify-between mt-2 px-1">
+                <button
+                onClick={() => handlePageChange(page - 1)}
+                className="py-1 px-2 rounded text-xs cursor-pointer"
+                disabled={page === 1}>
+                Previous
+                </button>
 
-            <button
-              onClick={() => handlePageChange(page + 1)}
-              className="bg-transparent font-bold text-gray-400 py-1 px-2 rounded text-sm"
-              disabled={page === totalPages}>
-              Next
-            </button>
-          </div>
+                <button
+                onClick={() => handlePageChange(page + 1)}
+                className="py-1 px-2 rounded text-xs cursor-pointer"
+                disabled={page === totalPages}>
+                Next
+                </button>
+              </div>
+            )}
+
         </div>
       </BackgroundGradient>
     </div>

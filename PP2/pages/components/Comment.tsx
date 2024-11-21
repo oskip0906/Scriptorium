@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import Reports from '../components/Reports';
 
 interface Comment {
   id: number;
@@ -130,19 +131,27 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
   return (
     <div className="border p-4 m-1">
       <div className="flex justify-between items-center">
-        <p className="inline-block ml-2">{currentComment.content} 
-        <span className="italic font-semibold"> - {currentComment.createdBy.userName}</span>
-        </p>
 
+        <div className="flex items-center space-x-2">
+          <span className="italic text-gray-400 font-semibold">{currentComment.createdBy.userName}: </span>
+          <span>{currentComment.content}</span>
+        </div>
+        
         <button onClick={toggleExpand} className="p-1 mt-2 rounded text-xs">
           {isExpanded ? '<< collapse' : 'expand >>'}
         </button>
       </div>
 
-      <div className="flex items-center space-x-2">
-        <button onClick={async () => { await createRating(1, currentComment.id ); }} className="bg-transparent"> ⬆️ </button>
-        <span>{currentComment.rating}</span>
-        <button onClick={async () => { await createRating(-1, currentComment.id); }} className="bg-transparent"> ⬇️ </button>
+      <div className="flex items-center justify-between mt-1">
+        <div className="flex items-center space-x-2">
+          <button onClick={async () => { await createRating(1, currentComment.id ); }} className="bg-transparent"> ⬆️ </button>
+          <span>{currentComment.rating}</span>
+          <button onClick={async () => { await createRating(-1, currentComment.id); }} className="bg-transparent"> ⬇️ </button>
+        </div>
+
+        <div className="mr-auto ml-4">
+          <Reports commentId={currentComment.id} />
+        </div>
       </div>
 
       {isExpanded && (
@@ -151,21 +160,23 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
             <CommentComponent key={reply.id} comment={reply} />
           ))}
 
-          <div className="flex justify-between mt-2">
-            <button
-              onClick={() => handlePageChange(page - 1)}
-              className="bg-transparent font-bold text-gray-400 py-1 px-2 rounded text-sm"
-              disabled={page === 1}>
-              Previous
-            </button>
+            {totalPages > 1 && (
+              <div className="flex justify-between">
+                <button
+                onClick={() => handlePageChange(page - 1)}
+                className="py-1 px-2 rounded text-xs cursor-pointer"
+                disabled={page === 1}>
+                Previous
+                </button>
 
-            <button
-              onClick={() => handlePageChange(page + 1)}
-              className="bg-transparent font-bold text-gray-400 py-1 px-2 rounded text-sm"
-              disabled={page === totalPages}>
-              Next
-            </button>
-          </div>
+                <button
+                onClick={() => handlePageChange(page + 1)}
+                className="py-1 px-2 rounded text-xs cursor-pointer"
+                disabled={page === totalPages}>
+                Next
+                </button>
+              </div>
+            )}
 
           <div className="mt-4 relative">
             <textarea

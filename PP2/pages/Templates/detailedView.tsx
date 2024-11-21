@@ -232,7 +232,7 @@ const DetailedTemplateView = () => {
             <button
               onClick={isEditing ? saveChanges : toggleEditMode}
               className="bg-transparent text-gray-400 border-2 border-gray-400 font-bold py-2 px-4 rounded">
-              {isEditing ? 'Save Changes' : 'Edit'}
+              {isEditing ? 'Save Changes' : 'Edit Template'}
             </button>
           </div>
         )}
