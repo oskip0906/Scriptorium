@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
-import { AppContext } from '@/pages/components/AppVars'
+import { AppContext } from '@/lib/AppVars';
 import Editor from '@monaco-editor/react';
 import { toast } from 'react-toastify';
 

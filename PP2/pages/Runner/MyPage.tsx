@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { useRouter } from 'next/router'
 import Terminal from '@/pages/components/Terminal'
-import { AppContext } from '@/pages/components/AppVars'
+import { AppContext } from '@/lib/AppVars';
 import { toast } from 'react-toastify'
 import TemplateCreator from '../Templates/createTemplate'
 const languages = ['python', 'javascript', 'java', 'c', 'cpp', 'ruby', 'rust', 'swift', 'r', 'php', 'go'];

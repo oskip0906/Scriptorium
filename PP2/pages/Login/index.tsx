@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { AppContext } from '@/pages/components/AppVars';
+import { AppContext } from '@/lib/AppVars';
 import { toast } from 'react-toastify';
 
 const LoginPage = () => {

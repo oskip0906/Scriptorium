@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState}  from 'react'
-import { AppContext } from '@/pages/components/AppVars'
+import { AppContext } from '@/lib/AppVars';
 import { useRouter } from 'next/router'
 import DetailedView from '@/pages/Blogs/detailedView'
 import { toast } from 'react-toastify'

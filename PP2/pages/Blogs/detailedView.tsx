@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import CommentComponent from '@/pages/components/Comment';
-import { AppContext } from '@/pages/components/AppVars';
+import { AppContext } from '@/lib/AppVars';
 import { toast } from 'react-toastify';
-import { BackgroundGradient } from '../components/BackgroundGradient';
+import BackgroundGradient from '../components/BackgroundGradient';
 import Reports from '../components/Reports';
 
 interface BlogPost {
