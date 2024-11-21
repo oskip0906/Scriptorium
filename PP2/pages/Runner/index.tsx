@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import Terminal from '@/pages/components/Terminal'
 import { AppContext } from '@/pages/components/AppVars'
 import { toast } from 'react-toastify'
-
+import TemplateCreator from '../Templates/createTemplate'
 const languages = ['python', 'javascript', 'java', 'c', 'cpp', 'ruby', 'rust', 'swift', 'r', 'php', 'go'];
 
 interface RequestBody {
@@ -23,6 +23,7 @@ const index = () => {
   const [error, setError] = useState('')
   const [input, setInput] = useState('')
   const [title, setTitle] = useState('Code Runner')
+  const [hideCreate, setHideCreate] = useState(false)
   let tags: Array<Object> = []
   let description = 'description'
   const router = useRouter()
@@ -137,7 +138,7 @@ const index = () => {
 
   return (
     <div className="p-4 mb-4">
-
+      {hideCreate ? <TemplateCreator terminalCode={code} setTerminalCode={setCode} myLanguage={language}/>: <> </>}
       <div className="border p-4">
         <div className="flex items-center justify-between ">
             <div className="text-xl font-semibold ">{title}</div>
@@ -157,7 +158,8 @@ const index = () => {
                 </button>
 
                 <button className="text-xl rounded px-4" onClick={() => {
-                  saveCode(id as string, code, language, 'title', tags, description)
+
+                  id ? saveCode(id as string, code, language, 'title', tags, description): setHideCreate(true)
                 }}>
                   <i className="fas fa-save"></i> 
                 </button>

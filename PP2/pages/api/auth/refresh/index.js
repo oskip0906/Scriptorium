@@ -28,7 +28,7 @@ export default async function refresh(req, res) {
     try {
         const refreshData = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
         const userData = await prisma.user.findFirst({
-            where: { id: refreshData.id }
+            where: { id: refreshData.data.id }
         })
         if(!userData){
             return null

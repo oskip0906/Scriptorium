@@ -4,11 +4,16 @@ import { AppContext } from '@/pages/components/AppVars'
 import Editor from '@monaco-editor/react';
 import { toast } from 'react-toastify';
 
-const TemplateCreator = () => {
+interface TemplateProps {
+    terminalCode?: string;
+    setTerminalCode?: React.Dispatch<React.SetStateAction<string>>;
+    myLanguage?: string;
+}
+
+const TemplateCreator = (props: TemplateProps) => {
 
     const context = useContext(AppContext);
     const router = useRouter();
-
     const [title, setTitle] = useState('');
     const [code, setCode] = useState('');
     const [explanation, setExplanation] = useState('');
@@ -20,7 +25,7 @@ const TemplateCreator = () => {
     const handleCreateTemplate = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!title || !code || !explanation || !language) {
+        if (!title || (!props.terminalCode && !code)|| !explanation || (!language && !props.myLanguage)) {
             toast.warning('Please fill in all fields!');
             return;
         }
@@ -33,9 +38,9 @@ const TemplateCreator = () => {
             },
             body: JSON.stringify({
                 title: title,
-                code: code,
+                code: props.terminalCode ? props.terminalCode : code,
                 explanation: explanation,
-                language,
+                language: props.myLanguage ? props.myLanguage : language,
                 tags,
             }),
         });
@@ -96,8 +101,13 @@ const TemplateCreator = () => {
                 </textarea>
 
                 <label className="block font-medium mt-4 mb-2">Language</label>
+                {props.myLanguage ? <>
+                {props.myLanguage}
+                <> (Select below)</>
+                </>
+                : 
                 <select
-                    value={language}
+                    value={props.myLanguage ? props.myLanguage :language}
                     onChange={(e) => setLanguage(e.target.value)}
                     className="w-full border rounded px-2 py-1 outline-none">
                     <option value="">Select language</option>
@@ -113,19 +123,19 @@ const TemplateCreator = () => {
                     <option value="r">R</option>
                     <option value="php">PHP</option>
                 </select>
-
+}
                 <label className="block font-medium mt-4 mb-2">Code</label>
                 <Editor
                     height="25vh"
-                    language={language}
-                    value={code}
+                    language={props.myLanguage ? props.myLanguage : language}
+                    value={props.terminalCode ? props.terminalCode : code ?? ''}
                     options={{
                         readOnly: false,
                         minimap: { enabled: false },
                         scrollbar: { vertical: 'auto', horizontal: 'auto' },
                         fontSize: 14,
                     }}
-                    onChange={(value) => setCode(value || '')}
+                    onChange={(value) => {setCode(value || ''); props.setTerminalCode ? props.setTerminalCode(value || '') : null}}
                     theme={context?.theme === 'light' ? 'vs-light' : 'vs-dark'}
                     className="border rounded outline-none"
                 />

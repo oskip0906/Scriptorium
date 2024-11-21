@@ -68,19 +68,23 @@ const Index: React.FC = () => {
             <div className="space-y-4">
               <ul className="space-y-4">
                 {blogs.map((blog) => (
-                  <li key={blog.blogPostId} className="border p-4 rounded-lg">
-                    <h3 className="text-lg font-medium">
-                      BlogID: {blog.blogPostId}, Reports: {blog.count}
-                    </h3>
-                    <button
-                      onClick={() =>
-                        router.push(`/Admin/detailedBlog?id=${blog.blogPostId}`)
-                      }
-                      className="mt-2 inline-block px-4 py-2 rounded-md border text-sm font-medium"
+                                      <li 
+                      key={blog.blogPostId} 
+                      className="border p-4 rounded-lg hover:shadow-lg transition-shadow"
                     >
-                      View Reports
-                    </button>
-                  </li>
+                      <h3 className="text-lg font-medium">
+                        BlogID: {blog.blogPostId}, Reports: {blog.count}
+                      </h3>
+                      <button
+                        onClick={() =>
+                          router.push(`/Admin/detailedBlog?id=${blog.blogPostId}`)
+                        }
+                        className="mt-2 inline-block px-4 py-2 rounded-md border text-sm font-medium bg-blue-500 text-white hover:bg-blue-600 focus:ring focus:ring-blue-300 transition"
+                      >
+                        View Reports
+                      </button>
+                    </li>
+
                 ))}
               </ul>
               <div className="flex justify-between">
@@ -107,23 +111,22 @@ const Index: React.FC = () => {
               <ul className="space-y-4">
                 {comments.map((comment) => (
                   <li
-                    key={comment.commentId}
-                    className="border p-4 rounded-lg"
-                  >
-                    <h3 className="text-lg font-medium">
-                      CommentID: {comment.commentId}, Reports: {comment.count}
-                    </h3>
-                    <button
-                      onClick={() =>
-                        router.push(
-                          `/Admin/detailedComment?id=${comment.commentId}`
-                        )
-                      }
-                      className="mt-2 inline-block px-4 py-2 rounded-md border text-sm font-medium"
+                      key={comment.commentId}
+                      className="border p-4 rounded-lg flex items-center justify-between"
                     >
-                      View Reports
-                    </button>
-                  </li>
+                      <h3 className="text-lg font-medium">
+                        CommentID: {comment.commentId}, Reports: {comment.count}
+                      </h3>
+                      <button
+                        onClick={() =>
+                          router.push(`/Admin/detailedComment?id=${comment.commentId}`)
+                        }
+                        className="px-4 py-2 rounded-md border text-sm font-medium"
+                      >
+                        View Reports
+                      </button>
+                    </li>
+
                 ))}
               </ul>
               <div className="flex justify-between">

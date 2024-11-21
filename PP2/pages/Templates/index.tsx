@@ -224,9 +224,7 @@ const CodeTemplatesList = () => {
           className="px-6 py-2 rounded">
           Clear
         </button>
-
       </div>
-
       <div className="overflow-y-auto h-[60vh] p-4 border">
         {templates.map((template) => (
           <div className="p-4 border-b rounded shadow" key={template.id}>

@@ -34,6 +34,9 @@ function detailedBlog() {
     }    
         })
         const response = await data.json();
+        if (!response || !response.reports) {
+            return 
+        }
         if (response.reports.length === 0) {
             setLoadedAll(true);
              return;

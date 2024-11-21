@@ -2,27 +2,18 @@ import React, { useContext, useEffect, useState}  from 'react'
 import { AppContext } from '@/pages/components/AppVars'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
+import { motion } from "framer-motion";
 
-function middleware() {
-    const context = useContext(AppContext);
 
-    if (context?.admin === 'False') {
-        return (
-            <div>
-                <h1>You are not an admin</h1>
-            </div>
-        )
-    }
-    else {
-        return detailedComment();
-    }
-}
 
 
 interface Comment {
     blogPostId: number;
     content: string;
     createdUserId: number;
+    createdBy: {
+      userName: string;
+    };
     id: number;
     inappropriate: boolean;
     rating: number;
@@ -48,6 +39,27 @@ function detailedComment() {
     const [username, setUsername] = useState('');
     const [reportCount, setReportCount] = useState(0);
     const [loadedAll, setLoadedAll] = useState(false);
+
+
+    useEffect(() => {
+        if (router.isReady) {
+            fetchComment(router.query.id ?? "0");
+        }
+    }, [router.isReady])
+
+    const fetchComment = async (id: string | string[]) => {
+        const data = await fetch(`/api/Comments?id=${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        const response = await data.json();
+        console.log(response);
+        setComment(response);
+
+      }
+
     const fetchAllReports = async (page: number) => {
         const data = await fetch(`/api/Admin/ReportedComments/GetReports?id=${commentId}&page=${page}`, {
             method: 'GET',
@@ -101,61 +113,91 @@ function detailedComment() {
     <div>
         
     {context?.admin === 'True' ? 
-    <div>
-        <div className="space-y-4">
-  <button
-    onClick={hideContent}
-    className="px-4 py-2 rounded-md border shadow hover:shadow-md active:shadow-sm transition"
-  >
-    Hide Content
-  </button>
+ <div className="flex flex-col items-center p-6 space-y-6 min-h-screen">
+ {/* Hide Content Button */}
+ <motion.button
+   onClick={hideContent}
+   className="px-6 py-3 rounded-md border shadow hover:shadow-lg active:shadow-sm transition"
+   whileHover={{ scale: 1.05 }}
+   whileTap={{ scale: 0.95 }}
+ >
+   Hide Content
+ </motion.button>
 
-  <ul className="space-y-4">
-    <div className="text-lg font-semibold">Reports</div>
+ {/* Comments and Reports Section */}
+ <div className="w-full max-w-2xl space-y-6">
+   {/* Comment Section */}
+   <div className="space-y-4">
+     <h2 className="text-xl font-bold text-center">Comment</h2>
+     <motion.div
+       className="p-6 border rounded-lg shadow-md"
+       initial={{ opacity: 0, y: 20 }}
+       animate={{ opacity: 1, y: 0 }}
+       transition={{ duration: 0.5 }}
+     >
+       <p className="text-sm">
+         <span className="font-medium">Comment ID:</span> {comment.id}
+       </p>
+       <p className="text-sm">
+         <span className="font-medium">Content:</span> {comment.content}
+       </p>
+       <p className="text-sm">
+         <span className="font-medium">Created By:</span> {comment.createdBy?.userName}
+       </p>
+     </motion.div>
+   </div>
 
-    <div className="p-4 border rounded-lg shadow-sm">
-      <p className="text-sm">
-        <span className="font-medium">Comment ID:</span> {comment.id}
-      </p>
-      <p className="text-sm">
-        <span className="font-medium">Content:</span> {comment.content}
-      </p>
-      <p className="text-sm">
-        <span className="font-medium">Created By:</span> {username}
-      </p>
-    </div>
+   {/* Reports Section */}
+   <div className="space-y-4">
+     <h2 className="text-xl font-bold text-center">Reports</h2>
+     <ul className="space-y-4">
+       {reports.map((report: reportsArray) => (
+         <motion.li
+           key={report.id}
+           className="p-6 border rounded-lg shadow-md"
+           initial={{ opacity: 0, y: 20 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.5, delay: 0.1 }}
+         >
+           <p className="text-sm">
+             <span className="font-medium">Report ID:</span> {report.id}
+           </p>
+           <p className="text-sm">
+             <span className="font-medium">Reason:</span> {report.reason}
+           </p>
+           <p className="text-sm">
+             <span className="font-medium">Created By:</span> {report.createdUserId}
+           </p>
+         </motion.li>
+       ))}
+     </ul>
+   </div>
+ </div>
 
-    {reports.map((report: reportsArray) => (
-      <li
-        key={report.id}
-        className="p-4 border rounded-lg shadow-sm"
-      >
-        <p className="text-sm">
-          <span className="font-medium">Report ID:</span> {report.id}
-        </p>
-        <p className="text-sm">
-          <span className="font-medium">Reason:</span> {report.reason}
-        </p>
-        <p className="text-sm">
-          <span className="font-medium">Created By:</span> {report.createdUserId}
-        </p>
-      </li>
-    ))}
-  </ul>
+ {/* Load More Button */}
+ {loadedAll ? (
+   <motion.div
+     className="text-center font-medium"
+     initial={{ opacity: 0 }}
+     animate={{ opacity: 1 }}
+     transition={{ duration: 0.3 }}
+   >
+     Loaded all reports
+   </motion.div>
+ ) : (
+   <motion.button
+     onClick={() => {
+       fetchAllReports(reportCount + 1);
+       setReportCount(reportCount + 1);
+     }}
+     className="px-6 py-3 rounded-md border shadow hover:shadow-lg active:shadow-sm transition"
+     whileHover={{ scale: 1.05 }}
+     whileTap={{ scale: 0.95 }}
+   >
+     Load More
+   </motion.button>
+ )}
 </div>
-
-{loadedAll ? <div>Loaded all reports</div> :
-                <button
-                onClick={() => { fetchAllReports(reportCount+1); setReportCount(reportCount+1)}}
-                className="px-4 py-2 rounded-md border shadow hover:shadow-md active:shadow-sm transition"
-                >
-                Load More
-                </button>
-                }
-            
-    </div>
-    
-    
     
     
     
@@ -176,4 +218,4 @@ function detailedComment() {
   )
 }
 
-export default middleware
+export default detailedComment 
