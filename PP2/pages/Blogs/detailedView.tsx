@@ -4,7 +4,7 @@ import CommentComponent from '@/pages/components/Comment';
 import { AppContext } from '@/pages/components/AppVars';
 import { toast } from 'react-toastify';
 import { BackgroundGradient } from '../components/BackgroundGradient';
-
+import Reports from '../components/Reports';
 interface BlogPost {
   id: number;
   title: string;
@@ -258,6 +258,7 @@ const DetailedPostView = () => {
             <h2 className="text-xl font-semibold">{post.title}</h2>
           )}
           <span className="ml-8 font-semibold">Created by: {post.createdBy.userName}</span>
+          <Reports blogPostId={post.id} />
         </div>
 
         <div className="mt-4">

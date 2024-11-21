@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { s } from 'framer-motion/client';
 import { BackgroundGradient } from '../components/BackgroundGradient';
 interface CodeTemplate {
   id: number;
@@ -230,7 +229,6 @@ const CodeTemplatesList = () => {
           <div className="p-4 border-b rounded shadow" key={template.id}>
             
             <BackgroundGradient className="p-4 rounded-2xl bg-cta-background" color="blue">
-
               <div className="p-4 rounded-2xl bg-cta-background">
                 <div className="flex justify-between items-center">
                   <h2 className="text-xl font-semibold">{template.title}</h2>
