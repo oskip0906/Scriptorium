@@ -57,6 +57,18 @@ if ! node --version >> log.txt; then
 fi
 echo "Node.js found";
 
+docker build -t pythonrunner ./python
+docker build -t javarunner ./java
+docker build -t crunner ./c
+docker build -t cpprunner ./cpp
+docker build -t gorunner ./go
+docker build -t phprunner ./php
+docker build -t rubyrunner ./ruby
+docker build -t javascriptrunner ./javascript
+docker build -t rrunner ./r
+docker build -t swiftrunner ./swift
+docker build -t rustrunner ./rust
+
 if ! node lib/Startup/addAdmin.mjs; then 
     echo "Failed to add admin";
     exit 1;

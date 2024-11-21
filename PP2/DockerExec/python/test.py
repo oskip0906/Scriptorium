@@ -1,3 +1,2 @@
-print("hello docker")
-data = input("what your name")
-print(data)
+while True:
+    data = 1

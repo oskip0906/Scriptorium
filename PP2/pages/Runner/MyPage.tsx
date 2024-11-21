@@ -10,6 +10,7 @@ interface RequestBody {
   language: string;
   code: string;
   input: string;
+  className: string;
 }
 
 interface MyPageProps {
@@ -25,6 +26,7 @@ const MyPage = (props: MyPageProps) => {
   const [error, setError] = useState('')
   const [input, setInput] = useState('')
   const [title, setTitle] = useState('Code Runner')
+  const [className, setClassName] = useState('Main')
   const [hideCreate, setHideCreate] = useState(false)
   let tags: Array<Object> = []
   let description = 'description'
@@ -71,7 +73,6 @@ const MyPage = (props: MyPageProps) => {
       return;
     }
 
-    console.log(data);
     toast.success('Code deleted successfully!');
 
     setTimeout(() => {
@@ -112,9 +113,11 @@ const MyPage = (props: MyPageProps) => {
   };
 
   const runCode = async () => {
+    setOutput('');
+    setError('');
     props.setError(3);
-    const req: RequestBody = { language: language ?? 'python', code: code ?? '#', input: input ?? '' };
-    console.log(req)
+    const req: RequestBody = { language: language ?? 'python', code: code ?? '#', input: input ?? '', className: className ?? 'Main' };
+
     const response = await fetch('/api/CodeRunner', {
       method: 'POST', 
       headers: {
@@ -169,7 +172,14 @@ const MyPage = (props: MyPageProps) => {
             </div> 
             : <> </>
             }
-            
+            <div className="flex items-center space-x-4">
+              <input
+                type="text"
+                placeholder="Set file name (optional)"
+                className="p-2 rounded-lg"
+                onChange={(e) => setClassName(e.target.value)}
+              />
+            </div>
             <div className="flex items-center space-x-4">
               <select 
                 value={language}
