@@ -19,22 +19,21 @@ interface MyPageProps {
 const MyPage = (props: MyPageProps) => {
 
   const context = useContext(AppContext);
+  let tags: Array<Object> = []
+  let description = 'description'
+  const router = useRouter()
+  const { id } = router.query
+
   const [language, setLanguage] = useState('python')
   const [code, setCode] = useState('# Type your code here')
   const [output , setOutput] = useState('Output')
   const [error, setError] = useState('')
   const [input, setInput] = useState('')
   const [title, setTitle] = useState('Code Runner')
+  const [user, setUser] = useState('')
   const [hideCreate, setHideCreate] = useState(false)
-  let tags: Array<Object> = []
-  let description = 'description'
-  const router = useRouter()
-  const { id } = router.query
-
 
   const saveCode = async (id: string, code: string, language: string, title: string, tags: Array<Object>, desc: string) => {
-    
-
 
     const response = await fetch(`/api/CodeTemplates/${id}`, {
       method: 'PUT',
@@ -136,6 +135,7 @@ const MyPage = (props: MyPageProps) => {
         tags = data.tags ?? []
         description = data.description ?? 'description'
         setTitle(data.title ?? 'Code Runner')
+        setUser(data.createdBy.userName ?? '')
        })
     }
   }, [id])
@@ -145,7 +145,11 @@ const MyPage = (props: MyPageProps) => {
       {hideCreate ? <TemplateCreator terminalCode={code} setTerminalCode={setCode} myLanguage={language}/>: <> </>}
       <div className="p-4">
         <div className="flex items-center justify-between ">
-            <div className="text-xl font-semibold ">{title}</div>
+
+            <div className="text-xl font-semibold">
+              <span className="font-bold">{title}</span> 
+              {user && <span className="italic text-gray-400"> - {user} </span>}
+            </div>
 
             { context?.userID ?
             <div className="flex space-x-4">

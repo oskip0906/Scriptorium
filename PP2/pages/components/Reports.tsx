@@ -1,4 +1,7 @@
 import React from 'react'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
 interface ReportProps {
     blogPostId?: number
     commentId?: number
@@ -11,7 +14,6 @@ interface Report {
 
 function Reports(props: ReportProps) {
 
-
     const createReport = async (report: Report) => {
         if (report.blogPostId){
             const data = await fetch(`/api/Report/Blog`, {
@@ -22,9 +24,15 @@ function Reports(props: ReportProps) {
                 },
                 body: JSON.stringify(report),
             });
-            const response = await data.json();
-            console.log(response);
+ 
+            if (!data.ok) {
+                toast.error("Report failed to be created!");
+                return;
+            }
+
+            toast.success("Report created successfully!");
         }
+
         else if (report.commentId){
             const data = await fetch(`/api/Report/Comment`, {
                 method: 'POST',
@@ -34,18 +42,59 @@ function Reports(props: ReportProps) {
                 },
                 body: JSON.stringify(report),
             });
-            const response = await data.json();
-            console.log(response);
-        }
 
+            if (!data.ok) {
+                toast.error("Report failed to be created!");
+                return;
+            }
+
+            toast.success("Report created successfully!");
+        }
     }
 
+    const customToast = () => (
+        <div className="flex flex-col space-y-4">
+            <p className="text-sm text-gray-500">Note: Your report will be reviewed by a Scriptorium admin.</p>
+            <p>Please enter report reason: </p>
 
-  return (
-    <div>
-        <button onClick={() => createReport({reason: "spam", blogPostId: props.blogPostId, commentId: props.commentId })}>Report Blog</button>
-    </div>
-  )
+            <input
+                type="text"
+                id="reasonInput"
+                className="border rounded p-2 w-full"
+                placeholder="Reason"
+            />
+
+            <button
+                className="rounded"
+                onClick={() => {
+                    const reason = (document.getElementById('reasonInput') as HTMLInputElement).value;
+                    if (reason.trim()) {
+                        toast.dismiss();
+                        createReport({ reason, blogPostId: props.blogPostId, commentId: props.commentId });
+                    } 
+                    else {
+                        toast.warning('Reason cannot be empty!');
+                    }
+                }}
+            >
+                Submit
+            </button>
+        </div>
+    );
+
+    const handleReportClick = () => {
+        toast(customToast, {autoClose: false});
+    };
+
+    return (
+        <div>
+            <button 
+                onClick={handleReportClick}
+                className="rounded-full px-2 py-1 border-none bg-transparent border text-gray-400 font-semibold text-xs cursor-pointer">
+                Report
+            </button>
+        </div>
+    )
 }
 
-export default Reports
+export default Reports;
