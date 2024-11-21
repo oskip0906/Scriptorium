@@ -266,10 +266,13 @@ const BlogPostsList = () => {
       </div>
 
   
-      <div className="overflow-y-auto h-[60vh] p-4 border">
+      <div className="overflow-y-auto h-[60vh] border">
         {blogPosts.map((post) => (
 
-          <div className="p-4 border-b border-gray-500" key={post.id}>
+            <div 
+            className="p-4 border-gray-500 hover:cursor-pointer" key={post.id} 
+            onClick={() => router.push(`Blogs/detailedView?id=${post.id}`)}
+            >
             <BackgroundGradient className="p-4 rounded-2xl bg-cta-background" color={post.rating >= 0 ? "green" : "red"}>
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">{post.title}</h2>
@@ -279,40 +282,38 @@ const BlogPostsList = () => {
             <p className="my-2">{post.description}</p>
 
             <div className="my-2 rounded-lg">
-                <p className="font-bold">⭐ Rating: {post.rating}</p>
+              <p className="font-bold">⭐ Rating: {post.rating}</p>
             </div>
 
             {post.tags && post.tags.length !== 0 && (
               <div className="flex space-x-2 mt-4">
-                {post.tags.map((tag) => (
-                  <span className="px-2 py-1 rounded" id="tag" key={tag.name}>
-                    {tag.name}
-                  </span>
-                ))}
+              {post.tags.map((tag) => (
+                <span className="px-2 py-1 rounded" id="tag" key={tag.name}>
+                {tag.name}
+                </span>
+              ))}
               </div>
             )}
 
             {post.codeTemplates && post.codeTemplates.length > 0 && (
               <div className="flex space-x-2 mt-4">
-                {post.codeTemplates.map((template) => (
-                  <span
-                    key={template.id}
-                    className="px-2 py-1 rounded cursor-pointer"
-                    id="template"
-                    onClick={() => router.push(`/Templates/detailedView?id=${template.id}`)}>
-                    {template.title}
-                  </span>
-                ))}
+              {post.codeTemplates.map((template) => (
+                <span
+                key={template.id}
+                className="px-2 py-1 rounded cursor-pointer"
+                id="template"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push(`/Templates/detailedView?id=${template.id}`);
+                }}>
+                {template.title}
+                </span>
+              ))}
               </div>
             )}
 
-            <button
-              onClick={() => router.push(`Blogs/detailedView?id=${post.id}`)}
-              className="mt-4 px-4 py-2 rounded">
-              Read More
-            </button>
             </BackgroundGradient>
-          </div>
+            </div>
         ))}
       </div>
 

@@ -225,13 +225,13 @@ const CodeTemplatesList = () => {
           Clear
         </button>
       </div>
-      <div className="overflow-y-auto h-[60vh] p-4 border">
+      <div className="overflow-y-auto h-[60vh] border">
         {templates.map((template) => (
-          <div className="p-4 border-b rounded shadow" key={template.id}>
+           <div className="p-4 border-gray-500" key={template.id}>
             
             <BackgroundGradient className="p-4 rounded-2xl bg-cta-background" color="blue">
 
-              <div className="p-4 rounded-2xl bg-cta-background">
+              <div className="rounded-2xl bg-cta-background">
                 <div className="flex justify-between items-center">
                   <h2 className="text-xl font-semibold">{template.title}</h2>
                   <span className="font-semibold">Created by: {template.createdBy.userName}</span>

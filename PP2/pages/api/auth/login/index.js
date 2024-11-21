@@ -18,7 +18,7 @@ export default async function handler(req, res) {
           ]
         },
       });
-      console.log(userResponse)
+
       const isCorrectPassword = await bcrypt.compare(
         password,
         userResponse.password

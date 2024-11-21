@@ -432,14 +432,14 @@ const DetailedPostView = () => {
           <div className="flex justify-between mt-1 px-1">
             <button
               onClick={() => handlePageChange(page - 1)}
-              className="py-1 px-2 rounded text-xs"
+              className="bg-transparent font-bold text-gray-400 py-1 px-2 rounded text-sm"
               disabled={page === 1}>
               Previous
             </button>
 
             <button
               onClick={() => handlePageChange(page + 1)}
-              className="py-1 px-2 rounded text-xs"
+              className="bg-transparent font-bold text-gray-400 py-1 px-2 rounded text-sm"
               disabled={page === totalPages}>
               Next
             </button>

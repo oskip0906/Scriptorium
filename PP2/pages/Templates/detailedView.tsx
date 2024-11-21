@@ -209,6 +209,7 @@ const DetailedTemplateView = () => {
               type="text"
               id="tagInput"
               value={tagInput}
+              placeholder='Add a tag...'
               onChange={(e) => setTagInput(e.target.value)}
               onKeyDown={handleAddTag}
               className="border-none outline-none flex-grow h-full p-1"

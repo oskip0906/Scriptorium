@@ -125,11 +125,12 @@ const ProfilePage = () => {
       body: JSON.stringify({ password: newPword }),
     });
 
-    if (response.ok) {
-      toast.success("Password updated!");
-    } else {
-      toast.error(`Error updating password!`);  
+    if (!response.ok) {
+      toast.error("Error updating password");
+      return;
     }
+
+    toast.success("Password updated!");
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -247,7 +248,7 @@ const ProfilePage = () => {
         </button>
       </form>
 
-      <form onSubmit={handleSavePassword} className="mt-10">
+      <form onSubmit={(e) => { e.preventDefault(); handleSavePassword(); }} className="mt-10">
         <h2 className="text-1xl font-bold mb-4">Change Password</h2>
 
         <div>

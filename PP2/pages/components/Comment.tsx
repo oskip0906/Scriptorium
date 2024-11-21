@@ -154,14 +154,14 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
           <div className="flex justify-between mt-2">
             <button
               onClick={() => handlePageChange(page - 1)}
-              className="py-1 px-2 rounded text-xs"
+              className="bg-transparent font-bold text-gray-400 py-1 px-2 rounded text-sm"
               disabled={page === 1}>
               Previous
             </button>
 
             <button
               onClick={() => handlePageChange(page + 1)}
-              className="py-1 px-2 rounded text-xs"
+              className="bg-transparent font-bold text-gray-400 py-1 px-2 rounded text-sm"
               disabled={page === totalPages}>
               Next
             </button>
@@ -172,7 +172,7 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
               value={newReplyContent}
               onChange={(e) => setNewReplyContent(e.target.value)}
               placeholder="Write a reply..."
-              className="w-full p-2 border rounded outline-none"
+              className="w-full p-2 border rounded outline-none focus:ring focus:border"
               rows={3}
             />
 
