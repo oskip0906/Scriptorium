@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { AppContext } from '@/pages/components/AppVars';
 import Editor from '@monaco-editor/react';
 import { toast } from 'react-toastify';
+import { BackgroundGradient } from '../components/BackgroundGradient';
 
 interface CodeTemplate {
   id: number;
@@ -127,10 +128,11 @@ const DetailedTemplateView = () => {
   }
 
   return (
-    <div className="container mx-auto p-4 mb-4">
-      <div className="border rounded p-4">
+    <div className="container mx-auto p-4">
 
-        <div className="flex justify-between mt-4">
+      <BackgroundGradient className="p-4 rounded-2xl bg-cta-background">
+
+        <div className="flex justify-between">
           {isEditing ? (
             <input
               value={updatedTitle}
@@ -249,7 +251,7 @@ const DetailedTemplateView = () => {
             </button>
           )}
         </div>
-      </div>
+      </BackgroundGradient>
     </div>
   );
 };
