@@ -137,16 +137,16 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
           <span>{currentComment.content}</span>
         </div>
         
-        <button onClick={toggleExpand} className="p-1 mt-2 rounded text-xs">
-          {isExpanded ? '<< collapse' : 'expand >>'}
+        <button onClick={toggleExpand} className="py-1 px-2 mt-2 rounded text-xs">
+          {isExpanded ? <i className="fas fa-chevron-up"></i> : <i className="fas fa-chevron-down"></i>}
         </button>
       </div>
 
       <div className="flex items-center justify-between mt-1">
         <div className="flex items-center space-x-2">
-          <button onClick={async () => { await createRating(1, currentComment.id ); }} className="bg-transparent"> ⬆️ </button>
-          <span>{currentComment.rating}</span>
-          <button onClick={async () => { await createRating(-1, currentComment.id); }} className="bg-transparent"> ⬇️ </button>
+          <button onClick={async () => { await createRating(1, currentComment.id ); }} className="bg-transparent px-1"> ⬆️ </button>
+          <span className='font-semibold'>{currentComment.rating}</span>
+          <button onClick={async () => { await createRating(-1, currentComment.id); }} className="bg-transparent px-1"> ⬇️ </button>
         </div>
 
         <div className="mr-auto ml-4">

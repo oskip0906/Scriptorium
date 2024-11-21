@@ -74,6 +74,14 @@ button:hover, #template:hover {
   transition: color var(--transition-speed), background-color var(--transition-speed);
 }
 
+#searchInput:hover {
+  transform: scale(1.02);
+}
+
+#tagSelect:hover {
+  transform: scale(1.02);
+}
+
 #tag {
   background-color: rgb(var(--cta-primary));
   color: rgb(var(--main-text));

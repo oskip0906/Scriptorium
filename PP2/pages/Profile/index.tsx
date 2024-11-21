@@ -219,7 +219,7 @@ const ProfilePage = () => {
 
         <button
           type="submit"
-          className="w-full py-2 px-4 rounded-md shadow outline-none"
+          className="py-2 px-4 rounded-md shadow outline-none"
         >
           Save Changes
         </button>
@@ -242,7 +242,7 @@ const ProfilePage = () => {
 
         <button
           type="submit"
-          className={`w-full py-2 px-4 rounded-md shadow outline-none mt-3`}
+          className={`py-2 px-4 rounded-md shadow outline-none mt-3`}
         >
           Upload
         </button>
@@ -277,7 +277,7 @@ const ProfilePage = () => {
 
         <button
           type="submit"
-          className={`w-full py-2 px-4 rounded-md shadow outline-none mt-3`}
+          className={`py-2 px-4 rounded-md shadow outline-none mt-3`}
         >
           Save Password
         </button>

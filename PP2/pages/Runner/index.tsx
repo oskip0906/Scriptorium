@@ -28,7 +28,7 @@ function index() {
   }, [error])
 
   return (
-    <div className="p-4 mb-4">
+    <div className="p-4 mb-4 mx-8">
         <BackgroundGradient className="bg-cta-background rounded-2xl" color={color}>
             <MyPage setError={setError} />
         </BackgroundGradient>

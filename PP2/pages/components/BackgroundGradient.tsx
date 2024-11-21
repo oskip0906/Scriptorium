@@ -13,7 +13,7 @@ export const BackgroundGradient = ({
   className?: string;
   containerClassName?: string;
   animate?: boolean;
-  color?: "green" | "red" | "blue" | "purple" | "other";
+  color?: "green" | "red" | "blue" | "purple" |"gray" | "other";
 }) => {
   const variants = {
     initial: {
@@ -34,6 +34,8 @@ export const BackgroundGradient = ({
         return "bg-[radial-gradient(circle_farthest-side_at_0_100%,#3399ff,transparent),radial-gradient(circle_farthest-side_at_100%_0,#3366ff,transparent),radial-gradient(circle_farthest-side_at_100%_100%,#3333ff,transparent),radial-gradient(circle_farthest-side_at_0_0,#0000ff,#0000cc)]";
       case "purple":
         return "bg-[radial-gradient(circle_farthest-side_at_0_100%,#ff00ff,transparent),radial-gradient(circle_farthest-side_at_100%_0,#cc00cc,transparent),radial-gradient(circle_farthest-side_at_100%_100%,#990099,transparent),radial-gradient(circle_farthest-side_at_0_0,#660066,#330033)]";
+      case "gray":
+        return "bg-[radial-gradient(circle_farthest-side_at_0_100%,rgba(255,255,255,0.2),transparent),radial-gradient(circle_farthest-side_at_100%_0,rgba(200,200,200,0.2),transparent),radial-gradient(circle_farthest-side_at_100%_100%,rgba(150,150,150,0.2),transparent),radial-gradient(circle_farthest-side_at_0_0,rgba(100,100,100,0.2),rgba(50,50,50,0.2))]";
       default:
         return "bg-[radial-gradient(circle_farthest-side_at_0_100%,#00ccb1,transparent),radial-gradient(circle_farthest-side_at_100%_0,#7b61ff,transparent),radial-gradient(circle_farthest-side_at_100%_100%,#ffc414,transparent),radial-gradient(circle_farthest-side_at_0_0,#1ca0fb,#141316)]";
     }

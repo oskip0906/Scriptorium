@@ -10,6 +10,14 @@ import { useRouter } from "next/router";
 import refresh from "@/lib/refresh";
 export default function App({ Component, pageProps }: AppProps) {
 
+  useEffect(() => {
+    document.title = "Scriptorium";
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.href = '/logo.jpg';
+    document.head.appendChild(link);
+  }, []);
+
   const router = useRouter();
 
   useEffect(() => {

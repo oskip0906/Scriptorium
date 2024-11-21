@@ -132,11 +132,13 @@ const CodeTemplatesList = () => {
     <div className="container mx-auto p-4 mb-4">
       <h1 className="text-2xl font-bold mb-4">All Code Templates</h1>
 
-      <div className="mb-4 flex flex-wrap gap-2 items-center justify-center bg-gray-500 bg-opacity-10 p-1">
+      <BackgroundGradient className="px-2 py-4 rounded-2xl bg-cta-background" color="gray">
+      <div className="mb-4 flex flex-wrap gap-2 items-center justify-center">
         <select 
           value={searchLanguage} 
           onChange={(e) => setSearchLanguage(e.target.value)} 
-          className="border p-2 rounded pr-8 outline-none h-10">
+          className="border p-2 rounded pr-8 outline-none h-10"
+          id="searchInput">
             <option value="">Select language</option>
             <option value="c">C</option>
             <option value="cpp">Cpp</option>
@@ -157,6 +159,7 @@ const CodeTemplatesList = () => {
           value={searchTitle} 
           onChange={(e) => setSearchTitle(e.target.value)} 
           className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-non h-10" 
+          id="searchInput"
         />
 
         <input 
@@ -165,6 +168,7 @@ const CodeTemplatesList = () => {
           value={searchExplanation} 
           onChange={(e) => setSearchExplanation(e.target.value)} 
           className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none h-10" 
+          id="searchInput"
         />
 
         <input 
@@ -173,6 +177,7 @@ const CodeTemplatesList = () => {
           value={searchCode} 
           onChange={(e) => setSearchCode(e.target.value)} 
           className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none h-10"
+          id="searchInput"
         />
 
         <input 
@@ -181,6 +186,7 @@ const CodeTemplatesList = () => {
           value={searchUser} 
           onChange={(e) => setSearchUser(e.target.value)} 
           className="p-2 rounded w-full md:w-1/3 lg:w-1/6 outline-none h-10"
+          id="searchInput"
         />
 
         <div className="flex items-center w-full md:w-1/2 lg:w-1/2 rounded h-10 p-1" id="tagSelect">
@@ -224,7 +230,10 @@ const CodeTemplatesList = () => {
           Clear
         </button>
       </div>
-      <div className="overflow-y-auto h-[60vh] border">
+      </BackgroundGradient>
+
+
+      <div className="mt-4 overflow-y-auto h-[60vh] border">
         {templates.map((template) => (
            <div className="p-4 hover:cursor-pointer" key={template.id}
            onClick={() => router.push(`Templates/detailedView?id=${template.id}`)}>

@@ -155,11 +155,13 @@ const BlogPostsList = () => {
 
       <h1 className="text-2xl font-bold mb-4 ">All Blog Posts</h1>
 
-      <div className="mb-4 flex flex-wrap gap-2 items-center justify-center bg-gray-500 bg-opacity-10 p-1">
+      <BackgroundGradient className="px-2 py-4 rounded-2xl bg-cta-background" color="gray">
+      <div className="mb-4 flex flex-wrap bg-cta-background gap-2 items-center justify-center">
         <select 
           value={order} 
           onChange={(e) => setOrder(e.target.value)} 
-          className="border p-2 pr-8 rounded outline-none">
+          className="border p-2 pr-8 rounded outline-none"
+          id="searchInput">
           <option value="">Most Recent</option>
           <option value="desc">Most Valued</option>
           <option value="asc">Most Controversial</option>
@@ -171,6 +173,7 @@ const BlogPostsList = () => {
           value={searchTitle} 
           onChange={(e) => setSearchTitle(e.target.value)} 
           className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none" 
+          id="searchInput"
         />
 
         <input 
@@ -179,6 +182,7 @@ const BlogPostsList = () => {
           value={searchDescription} 
           onChange={(e) => setSearchDescription(e.target.value)} 
           className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none" 
+          id="searchInput"
         />
 
         <input 
@@ -187,6 +191,7 @@ const BlogPostsList = () => {
           value={searchContent} 
           onChange={(e) => setSearchContent(e.target.value)} 
           className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none" 
+          id="searchInput"
         />
 
         <input 
@@ -195,9 +200,10 @@ const BlogPostsList = () => {
           value={searchUser} 
           onChange={(e) => setSearchUser(e.target.value)} 
           className="p-2 rounded w-full md:w-1/3 lg:w-1/6 outline-none"
+          id="searchInput"
         />
 
-        <div className="flex items-center w-full md:w-3/4 lg:w-1/3 rounded h-10" id="tagSelect">
+        <div className="flex items-center w-full md:w-3/4 lg:w-1/3 rounded h-10 p-1" id="tagSelect">
           {searchTags.filter((tag) => tag.trim() !== '').map((tag) => (
             <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={tag}>
               {tag}
@@ -224,7 +230,7 @@ const BlogPostsList = () => {
           />
         </div>
 
-        <div className="flex items-center w-full md:w-3/4 lg:w-1/3 rounded h-10" id="tagSelect">
+        <div className="flex items-center w-full md:w-3/4 lg:w-1/3 rounded h-10 p-1" id="tagSelect">
           {searchTemplates.filter((template) => template.trim() !== '').map((template) => (
             <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={template}>
               {template}
@@ -266,9 +272,9 @@ const BlogPostsList = () => {
           Clear
         </button>
       </div>
+      </BackgroundGradient>
 
-  
-      <div className="overflow-y-auto h-[60vh] border">
+      <div className="mt-4 overflow-y-auto h-[60vh] border">
         {blogPosts.map((post) => (
 
             <div 

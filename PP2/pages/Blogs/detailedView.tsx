@@ -355,7 +355,7 @@ const DetailedPostView = () => {
               placeholder="Search by title..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full border rounded px-2 py-1 outline-none"
+              className="w-full border rounded px-2 py-1 outline-none "
             />
 
           <div className="border rounded p-4 max-h-[40vh] mt-2 overflow-y-auto">
@@ -436,11 +436,11 @@ const DetailedPostView = () => {
 
         <div className="mt-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <button onClick={async () => { await createRating(1, post.id ); }} className="bg-transparent"> ⬆️ </button>
+            <button onClick={async () => { await createRating(1, post.id ); }} className="bg-transparent px-1"> ⬆️ </button>
             <div className="my-1 rounded-lg">
               <p className="font-bold">⭐ Rating: {post.rating}</p>
             </div>
-            <button onClick={async () => { await createRating(-1, post.id); }} className="bg-transparent"> ⬇️ </button>
+            <button onClick={async () => { await createRating(-1, post.id); }} className="bg-transparent px-1"> ⬇️ </button>
           </div>
 
           <div className="mr-auto ml-4">
