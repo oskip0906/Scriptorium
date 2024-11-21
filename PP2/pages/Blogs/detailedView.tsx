@@ -419,7 +419,7 @@ const DetailedPostView = () => {
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Write a comment..."
-              className="w-full p-2 border rounded outline-none"
+              className="w-full p-2 border rounded outline-none focus:ring focus:border"
               rows={3}
             />
 

@@ -18,7 +18,6 @@ interface MyPageProps {
 
 const MyPage = (props: MyPageProps) => {
 
-  
   const context = useContext(AppContext);
   const [language, setLanguage] = useState('python')
   const [code, setCode] = useState('# Type your code here')
@@ -142,9 +141,9 @@ const MyPage = (props: MyPageProps) => {
   }, [id])
 
   return (
-    <div className="p-4 mb-4">
+    <div>
       {hideCreate ? <TemplateCreator terminalCode={code} setTerminalCode={setCode} myLanguage={language}/>: <> </>}
-      <div className="border p-4">
+      <div className="p-4">
         <div className="flex items-center justify-between ">
             <div className="text-xl font-semibold ">{title}</div>
 
@@ -163,8 +162,7 @@ const MyPage = (props: MyPageProps) => {
                 </button>
 
                 <button className="text-xl rounded px-4" onClick={() => {
-
-                  id ? saveCode(id as string, code, language, 'title', tags, description): setHideCreate(true)
+                  id ? saveCode(id as string, code, language, title, tags, description) : setHideCreate(!hideCreate)
                 }}>
                   <i className="fas fa-save"></i> 
                 </button>
@@ -201,7 +199,7 @@ const MyPage = (props: MyPageProps) => {
             lang={language} code={code} setCode={setCode}
             />
 
-            <div className="flex flex-col w-screen h-screen px-4">
+            <div className="flex flex-col w-screen px-4">
                 <textarea
                   className="mb-4 p-2 border rounded-lg w-full h-1/2 outline-none"
                   placeholder="Type your input here separated by newlines..."

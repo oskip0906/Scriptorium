@@ -226,7 +226,8 @@ const CodeTemplatesList = () => {
       </div>
       <div className="overflow-y-auto h-[60vh] border">
         {templates.map((template) => (
-           <div className="p-4 border-gray-500" key={template.id}>
+           <div className="p-4 hover:cursor-pointer" key={template.id}
+           onClick={() => router.push(`Templates/detailedView?id=${template.id}`)}>
             
             <BackgroundGradient className="p-4 rounded-2xl bg-cta-background" color="blue">
 
@@ -252,11 +253,6 @@ const CodeTemplatesList = () => {
                   </div>
                 )}
 
-                <button
-                  onClick={() => router.push(`Templates/detailedView?id=${template.id}`)}
-                  className="mt-4 px-4 py-2 rounded">
-                  Read More
-                </button>
               </div>
             </BackgroundGradient>
           </div>

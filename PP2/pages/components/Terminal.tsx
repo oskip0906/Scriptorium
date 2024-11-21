@@ -27,7 +27,7 @@ const Terminal: React.FC<TerminalProps> = ({ lang, code, setCode}) => {
   return (
     <div>
         <Editor
-        height='90vh'
+        height='80vh'
         width = '50vw'  
         language={lang}
         defaultValue='#Type your code here'

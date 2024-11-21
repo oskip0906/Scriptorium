@@ -130,7 +130,7 @@ const TemplateCreator = (props: TemplateProps) => {
                     language={props.myLanguage ? props.myLanguage : language}
                     value={props.terminalCode ? props.terminalCode : code ?? ''}
                     options={{
-                        readOnly: false,
+                        readOnly: true,
                         minimap: { enabled: false },
                         scrollbar: { vertical: 'auto', horizontal: 'auto' },
                         fontSize: 14,

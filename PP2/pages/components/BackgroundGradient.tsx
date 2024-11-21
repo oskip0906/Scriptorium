@@ -13,7 +13,7 @@ export const BackgroundGradient = ({
   className?: string;
   containerClassName?: string;
   animate?: boolean;
-  color?: "green" | "red" | "blue" | "purple";
+  color?: "green" | "red" | "blue" | "purple" | "other";
 }) => {
   const variants = {
     initial: {
@@ -50,7 +50,7 @@ export const BackgroundGradient = ({
         transition={
           animate
             ? {
-                duration: 5,
+                duration: 10,
                 repeat: Infinity,
                 repeatType: "reverse",
               }
@@ -60,7 +60,7 @@ export const BackgroundGradient = ({
           backgroundSize: animate ? "400% 400%" : undefined,
         }}
         className={cn(
-          "absolute inset-0 rounded-xl z-[1] opacity-60 group-hover:opacity-100 blur-xl transition duration-500 will-change-transform",
+          "absolute inset-0 rounded-xl z-[1] opacity-40 group-hover:opacity-100 blur-xl transition duration-500 will-change-transform",
           gradientClass
         )}
       />
