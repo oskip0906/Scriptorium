@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import CommentComponent from '@/pages/components/Comment';
 import { AppContext } from '@/pages/components/AppVars';
 import { toast } from 'react-toastify';
+import { BackgroundGradient } from '../components/BackgroundGradient';
 
 interface BlogPost {
   id: number;
@@ -244,9 +245,9 @@ const DetailedPostView = () => {
   }
 
   return (
-    <div className="container mx-auto p-4 mb-4">
-      <div className="border rounded p-4">
-        <div className="flex justify-between mt-4">
+    <div className="container mx-auto p-4">
+      <BackgroundGradient className="p-4 rounded-2xl bg-cta-background">
+        <div className="flex justify-between">
           {isEditing ? (
             <input
               value={updatedTitle}
@@ -428,7 +429,7 @@ const DetailedPostView = () => {
             </button>
           </div>
 
-          <div className="flex justify-between mt-4 px-1">
+          <div className="flex justify-between mt-1 px-1">
             <button
               onClick={() => handlePageChange(page - 1)}
               className="py-1 px-2 rounded text-xs"
@@ -444,7 +445,7 @@ const DetailedPostView = () => {
             </button>
           </div>
         </div>
-      </div>
+      </BackgroundGradient>
     </div>
   );
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { BackgroundGradient } from '../components/BackgroundGradient';
+
 interface BlogPost {
   id: number;
   title: string;
@@ -264,11 +265,12 @@ const BlogPostsList = () => {
         </button>
       </div>
 
+  
       <div className="overflow-y-auto h-[60vh] p-4 border">
         {blogPosts.map((post) => (
+
           <div className="p-4 border-b border-gray-500" key={post.id}>
-            <BackgroundGradient>
-            <div className="p-4 rounded-2xl bg-cta-background">
+            <BackgroundGradient className="p-4 rounded-2xl bg-cta-background" color={post.rating >= 0 ? "green" : "red"}>
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">{post.title}</h2>
               <span className="font-semibold">Created by: {post.createdBy.userName}</span>
@@ -309,7 +311,6 @@ const BlogPostsList = () => {
               className="mt-4 px-4 py-2 rounded">
               Read More
             </button>
-            </div>
             </BackgroundGradient>
           </div>
         ))}
