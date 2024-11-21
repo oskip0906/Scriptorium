@@ -54,6 +54,7 @@ const BlogPostsList = () => {
     const handler = setTimeout(() => {
       const currentQuery = {
         page: String(page),
+        pageSize: String(pageSize), 
         createdUser: searchUser,
         title: searchTitle,
         description: searchDescription,
@@ -102,6 +103,7 @@ const BlogPostsList = () => {
     const response = await fetch(`/api/BlogPosts?${query}`);
 
     if (!response.ok) {
+      console.log(response);
       console.error('Error fetching blog posts');
       setBlogPosts([]);
       setTotalPages(1);
