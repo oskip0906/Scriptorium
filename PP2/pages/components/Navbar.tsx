@@ -44,19 +44,18 @@ function NavBar() {
       }
         
       const data = await response.json();
-      let avatarBase64 = '';
+      let avatar = '';
 
       if (data.avatar) {
         const avatarResponse = await fetch(data.avatar);
         if (avatarResponse.ok) {
-          const avatarJson = await avatarResponse.json();
-          avatarBase64 = Buffer.from(avatarJson.imageBuffer).toString('base64');
+          avatar = data.avatar;
         }
       }
 
       setProfile({
         userName: data.userName,
-        avatar: avatarBase64 ? `data:image/jpeg;base64,${avatarBase64}` : '',
+        avatar: data.avatar
       });
     };
 

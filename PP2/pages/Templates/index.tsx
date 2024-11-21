@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { BackgroundGradient } from '../components/BackgroundGradient';
+
 interface CodeTemplate {
   id: number;
   title: string;
@@ -158,7 +159,7 @@ const CodeTemplatesList = () => {
           placeholder="Search by title" 
           value={searchTitle} 
           onChange={(e) => setSearchTitle(e.target.value)} 
-          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-non h-10" 
+          className="p-2 rounded w-full md:w-1/3 lg:w-1/4 outline-none h-10" 
           id="searchInput"
         />
 

@@ -75,11 +75,13 @@ button:hover, #template:hover {
 }
 
 #searchInput:hover {
-  transform: scale(1.02);
+  transform: scale(1.01);
+  border-image: linear-gradient(135deg, rgba(255, 0, 0, 0.5), rgba(0, 0, 255, 0.5)) 1;
 }
 
 #tagSelect:hover {
-  transform: scale(1.02);
+  transform: scale(1.01);
+  border-image: linear-gradient(135deg, rgba(255, 0, 0, 0.5), rgba(0, 0, 255, 0.5)) 1;
 }
 
 #tag {

@@ -35,18 +35,11 @@ const ProfilePage = () => {
         const data = await response.json();
         console.log(data);
 
-        let avatarBase64 = '';
-
-        if (data.avatar) {
-          const avatarResponse = await fetch(data.avatar);
-          if (avatarResponse.ok) {
-            const avatarJson = await avatarResponse.json();
-            avatarBase64 = Buffer.from(avatarJson.imageBuffer).toString('base64');
-          }
+        if (!data.avatar) {
+          setAvatarDisplay('');
         }
 
-        setAvatarDisplay(avatarBase64 ? `data:image/jpeg;base64,${avatarBase64}` : '');
-
+        setAvatarDisplay(data.avatar);
         setUsername(data.userName);
         setFirstName(data.firstName);
         setLastName(data.lastName);

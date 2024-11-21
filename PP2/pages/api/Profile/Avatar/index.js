@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import verifyUser from "@/lib/verifyUser";
 import fs from "node:fs/promises";
 import path from "path";
+
 import {
   generateRandomId,
 } from "../../utils/utils";
@@ -32,7 +33,7 @@ async function modifyAvatar(req, res) {
         file.originalFilename.split(".")[
           file.originalFilename.split(".").length - 1
         ];
-      const uploadDir = path.join(__dirname, "avatars");
+      const uploadDir = path.join(process.cwd(), "public", "avatars");
       await fs.mkdir(uploadDir, { recursive: true });
       const newFilePath = `${uploadDir}/${fileId}.${fileExtension}`;
 
@@ -41,7 +42,7 @@ async function modifyAvatar(req, res) {
       const response = await prisma.user.update({
         where: { id: userId },
         data: {
-          avatar: `/api/Profile/Avatar/${fileId}.${fileExtension}`,
+          avatar: `/avatars/${fileId}.${fileExtension}`,
         },
       });
 

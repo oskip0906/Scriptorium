@@ -114,7 +114,10 @@ const MyPage = (props: MyPageProps) => {
         tags = data.tags ?? []
         description = data.description ?? 'description'
         setTitle(data.title ?? 'Code Runner')
-        setUser(data.createdBy.userName ?? '')
+        
+        if (data.createdBy) {
+          setUser(data.createdBy.userName ?? '');
+        }
        })
     }
   }, [id])
