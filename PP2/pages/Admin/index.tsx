@@ -79,7 +79,7 @@ const Index: React.FC = () => {
                         onClick={() =>
                           router.push(`/Admin/detailedBlog?id=${blog.blogPostId}`)
                         }
-                        className="mt-2 inline-block px-4 py-2 rounded-md border text-sm font-medium bg-blue-500 text-white hover:bg-blue-600 focus:ring focus:ring-blue-300 transition"
+                        className="mt-2 inline-block px-4 py-2 rounded-md border text-sm font-medium transition"
                       >
                         View Reports
                       </button>

@@ -9,7 +9,6 @@ export default function verifyUser(handler) {
         }
 
         const auth_header = req.headers.authorization;
-
         if (!auth_header) {
             return res.status(401).json({ error: 'Authorization header missing' });
         }
@@ -32,6 +31,7 @@ export default function verifyUser(handler) {
             return handler(req, res);
         } 
         catch (error) {
+            
             return res.status(403).json({ error: 'Invalid or expired token' });
         }
 

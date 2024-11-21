@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { s } from 'framer-motion/client';
 import { BackgroundGradient } from '../components/BackgroundGradient';
 interface CodeTemplate {
   id: number;
