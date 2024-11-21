@@ -12,13 +12,13 @@ function index() {
     if (error === 1) {
       setColor('green')
       setTimeout(() => {
-        setError(2)
-      }, 3000)
+        setError(2);
+      }, 2000)
     } else if (error === 0) {
       setColor('red')
       setTimeout(() => {
-        setError(2)
-      }, 3000)
+        setError(2);
+      }, 2000)
     } else if (error === 2) {
       setColor('purple')
     }

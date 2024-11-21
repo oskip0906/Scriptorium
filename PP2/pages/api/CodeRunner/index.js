@@ -13,7 +13,7 @@ export default function handler(req, res) {
   let { language, code, input, className } = req.body;
   
   if (!language || !code) {
-    return res.status(400).json({ error: 'Missing required parameters' });
+    return res.status(400).json({ error: 'Code or language is empty.' });
   }
   const defaults = {
     cwd: process.cwd()+`/DockerExec/${language}`,

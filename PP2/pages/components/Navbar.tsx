@@ -83,7 +83,7 @@ function NavBar() {
 
   return (
     <div>
-      <ToastContainer position="top-center" autoClose={2000} theme={context?.theme}/>
+      <ToastContainer position="top-center" autoClose={1500} theme={context?.theme}/>
 
       <div className="flex justify-between items-center p-4 shadow-lg mb-4" id="navbar">
         <div className="flex items-center space-x-8">

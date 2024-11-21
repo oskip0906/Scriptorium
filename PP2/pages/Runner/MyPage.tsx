@@ -56,30 +56,6 @@ const MyPage = (props: MyPageProps) => {
 
   }
 
-  const deleteCode = async (id: string) => {
-
-    const response = await fetch(`/api/CodeTemplates/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer ' + localStorage.getItem('accessToken')
-      }
-    });
-    const data = await response.json();
-
-    if (!response.ok) {
-      toast.error('Error deleting code');
-      return;
-    }
-
-    toast.success('Code deleted successfully!');
-
-    setTimeout(() => {
-      router.push('/Runner?id=0');
-    }, 500);
-
-  }
-
   const forkCode = async (id: string) => {
 
     const response = await fetch(`/api/CodeTemplates/Fork`, {
@@ -162,16 +138,16 @@ const MyPage = (props: MyPageProps) => {
                   <i className="fas fa-code-branch"></i> 
                 </button>
 
-                <button className="text-xl rounded px-4" onClick={() =>{
-                  deleteCode(id as string)
-                }}>
-                  <i className="fas fa-trash-alt"></i> 
-                </button>
-
                 <button className="text-xl rounded px-4" onClick={() => {
                   id ? saveCode(id as string, code, language, title, tags, description) : setHideCreate(!hideCreate)
                 }}>
                   <i className="fas fa-save"></i> 
+                </button>
+
+                <button className="text-xl rounded px-4" onClick={() =>{
+                  setCode('')
+                }}>
+                    <i className="fas fa-eraser"></i> 
                 </button>
             </div> 
             : <> </>
@@ -221,12 +197,12 @@ const MyPage = (props: MyPageProps) => {
                 />
 
                 <div className="p-2 border rounded-lg h-1/2 overflow-auto ">
-                  {output.split('\n').map((line, index) => (
+                    {output ? output.split('\n').map((line, index) => (
                     <div key={index}>{line}</div>
-                  ))}
-                    {error.split('\n').map((line, index) => (
+                    )) : <div></div>}
+                    {error ? error.split('\n').map((line, index) => (
                     <div key={index} style={{ color: 'red' }}>{line}</div>
-                    ))}
+                    )) : <div></div>}
                 </div>
             </div>
           </div>

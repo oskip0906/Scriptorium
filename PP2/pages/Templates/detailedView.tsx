@@ -78,6 +78,29 @@ const DetailedTemplateView = () => {
     return data;
   };
 
+  const deleteTemplate = async () => {
+
+    const response = await fetch(`/api/CodeTemplates/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer ' + localStorage.getItem('accessToken')
+      }
+    });
+
+    if (!response.ok) {
+      toast.error('Error deleting code');
+      return;
+    }
+
+    toast.success('Code deleted successfully!');
+
+    setTimeout(() => {
+      router.push('/');
+    }, 500);
+
+  }
+
   const saveChanges = async () => {
     const updatedTemplate = {
       title: updatedTitle,
@@ -124,7 +147,7 @@ const DetailedTemplateView = () => {
   };
 
   if (!template) {
-    return <p>Loading template...</p>;
+    return;
   }
 
   return (
@@ -228,11 +251,24 @@ const DetailedTemplateView = () => {
         )}
 
         {editable && (
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-4 space-x-2">
             <button
               onClick={isEditing ? saveChanges : toggleEditMode}
               className="bg-transparent text-gray-400 border-2 border-gray-400 font-bold py-2 px-4 rounded">
               {isEditing ? 'Save Changes' : 'Edit Template'}
+            </button>
+
+            <button
+              onClick={() => {
+                if (confirm('Are you sure you want to delete this template?')) {
+                  deleteTemplate();
+                } 
+                else {
+                  toast.info('Deletion cancelled!');
+                }
+              }}
+              className="bg-transparent text-red-500 border-2 border-red-500 font-bold py-2 px-4 rounded">
+              <i className="fas fa-trash"></i>
             </button>
           </div>
         )}

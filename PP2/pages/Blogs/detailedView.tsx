@@ -136,6 +136,27 @@ const DetailedPostView = () => {
     setTotalPages(data.totalPages);
   };
 
+  const deleteBlogPost = async () => {
+    const response = await fetch(`/api/BlogPosts/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    });
+
+    if (!response.ok) {
+      toast.error('Error deleting blog post!');
+      return;
+    }
+
+    toast.success('Blog post deleted successfully!');
+
+    setTimeout(() => {
+      router.push('/');
+    }, 500);
+  };
+
   const toggleTemplate = (template: any) => {
     if (selectedTemplates.some((t) => t.id === template.id)) {
         setSelectedTemplates(selectedTemplates.filter((t) => t.id !== template.id));
@@ -143,7 +164,7 @@ const DetailedPostView = () => {
     else {
         setSelectedTemplates([...selectedTemplates, template]);
     }
-};
+  };
 
   const saveChanges = async () => {
     const updatedPost = {
@@ -391,11 +412,24 @@ const DetailedPostView = () => {
         )}
 
         {editable && (
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-4 space-x-2">
             <button
               onClick={isEditing ? saveChanges : toggleEditMode}
               className="bg-transparent text-gray-400 border-2 border-gray-400 font-bold py-2 px-4 rounded">
               {isEditing ? 'Save Changes' : 'Edit Blog'}
+            </button>
+            
+            <button
+              onClick={() => {
+                if (confirm('Are you sure you want to delete this Post?')) {
+                  deleteBlogPost();
+                } 
+                else {
+                  toast.info('Deletion cancelled!');
+                }
+              }}
+              className="bg-transparent text-red-500 border-2 border-red-500 font-bold py-2 px-4 rounded">
+              <i className="fas fa-trash"></i>
             </button>
           </div>
         )}
