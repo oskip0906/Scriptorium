@@ -5,6 +5,8 @@ import Editor from '@monaco-editor/react';
 import { toast } from 'react-toastify';
 import BackgroundGradient from '../components/BackgroundGradient';
 import TagSelector from '../components/TagSelector';
+import Image from 'next/image';
+import getAvatar from '@/lib/getAvatar';
 
 interface CodeTemplate {
   id: number;
@@ -14,6 +16,7 @@ interface CodeTemplate {
   language: string;
   tags: { name: string }[];
   createdBy: { userName: string; id: number };
+  avatar: string;
   forkedFromID: number;
 }
 
@@ -63,6 +66,7 @@ const DetailedTemplateView = () => {
     }
 
     const data = await response.json();
+    data.avatar = await getAvatar(data.createdBy.id);
     setTemplate(data);
   };
 
@@ -156,7 +160,12 @@ const DetailedTemplateView = () => {
           ) : (
             <h2 className="text-xl font-semibold">{template.title}</h2>
           )}
-          <span className="ml-8 font-semibold">Created by: {template.createdBy.userName}</span>
+          {!isEditing &&
+          <div className="flex items-center space-x-2 border rounded-full p-2">
+            <Image src={template.avatar} alt="pfp" className="rounded-full object-cover h-10" width={40} height={40} />
+            <span className="font-semibold font-mono text-lg">{template.createdBy.userName}</span>
+          </div>
+    }
         </div>
 
         {originalTemplate && (

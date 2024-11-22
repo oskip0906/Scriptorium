@@ -7,6 +7,8 @@ import BackgroundGradient from '../components/BackgroundGradient';
 import Reports from '../components/Reports';
 import TagSelector from '../components/TagSelector';
 import TemplateSelector from '../components/TemplateSelector';
+import Image from 'next/image';
+import getAvatar from '@/lib/getAvatar';
 
 interface BlogPost {
   id: number;
@@ -16,6 +18,7 @@ interface BlogPost {
   tags: { name: string }[];
   codeTemplates: CodeTemplate[];
   createdBy: { id: number; userName: string };
+  avatar: string;
   rating: number;
 }
 
@@ -90,7 +93,9 @@ const DetailedPostView = () => {
       toast.info('This post has been reported as inappropriate and is currently under review.');
       return;
     }
-    
+
+    data.avatar = await getAvatar(data.createdBy.id);
+    console.log(data);  
     setPost(data);
   };
 
@@ -225,7 +230,7 @@ const DetailedPostView = () => {
   return (
     <div className="container mx-auto p-4 mb-4">
       <BackgroundGradient className="p-4 rounded-2xl bg-cta-background">
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between">
           {isEditing ? (
             <input
               value={updatedTitle}
@@ -235,7 +240,12 @@ const DetailedPostView = () => {
           ) : (
             <h2 className="text-xl font-semibold">{post.title}</h2>
           )}
-          <span className="ml-8 font-semibold">Created by: {post.createdBy.userName}</span>
+          {!isEditing &&
+          <div className="flex items-center space-x-2 border rounded-full p-2">
+            <Image src={post.avatar} alt="pfp" className="rounded-full object-cover h-10" width={40} height={40} />
+            <span className="font-semibold font-mono text-lg">{post.createdBy.userName}</span>
+          </div>
+    }   
         </div>
 
         <div className="mt-4">
@@ -284,7 +294,8 @@ const DetailedPostView = () => {
           post.codeTemplates && post.codeTemplates.length > 0 && (
             <div className="flex space-x-2 mt-6">
               {post.codeTemplates.map((template) => (
-                <span key={template.id} className="px-2 py-1 rounded border border-blue-500" id="template">
+                <span key={template.id} className="px-2 py-1 cursor-pointer rounded border" id="template"
+                onClick={() => router.push(`/Runner?id=${template.id}`)}>
                   {template.title}
                 </span>
               ))}

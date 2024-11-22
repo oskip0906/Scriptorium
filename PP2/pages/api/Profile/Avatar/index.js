@@ -2,11 +2,6 @@ import prisma from "@/lib/prisma";
 import verifyUser from "@/lib/verifyUser";
 import fs from "node:fs/promises";
 import path from "path";
-
-import {
-  generateRandomId,
-} from "../../utils/utils";
-
 import formidable from "formidable";
 
 export const config = {
@@ -19,7 +14,6 @@ async function modifyAvatar(req, res) {
   if (req.method === "POST") {
     try {
       const userId = req.user.id;
-      const fileId = `${userId}-${generateRandomId(12)}`;
 
       const form = formidable({ multiples: false });
       const data = await form.parse(req);
@@ -35,14 +29,14 @@ async function modifyAvatar(req, res) {
         ];
       const uploadDir = path.join(process.cwd(), "public", "avatars");
       await fs.mkdir(uploadDir, { recursive: true });
-      const newFilePath = `${uploadDir}/${fileId}.${fileExtension}`;
+      const newFilePath = `${uploadDir}/${userId}.${fileExtension}`;
 
       await fs.rename(file.filepath, newFilePath);
 
       const response = await prisma.user.update({
         where: { id: userId },
         data: {
-          avatar: `/avatars/${fileId}.${fileExtension}`,
+          avatar: `/avatars/${userId}.${fileExtension}`,
         },
       });
 
