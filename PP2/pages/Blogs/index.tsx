@@ -75,6 +75,7 @@ const BlogPostsList = () => {
       }
   
       fetchPosts();
+      setPage(1);
     }, 500); 
   
     return () => clearTimeout(handler);
@@ -203,7 +204,7 @@ const BlogPostsList = () => {
           id="searchInput"
         />
 
-        <div className="flex items-center w-full md:w-3/4 lg:w-1/3 rounded h-10 p-1" id="tagSelect">
+        <div className="flex items-center w-full md:w-3/4 lg:w-1/3 rounded h-10 p-1" id="tagSearch">
           {searchTags.filter((tag) => tag.trim() !== '').map((tag) => (
             <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={tag}>
               {tag}
@@ -230,7 +231,7 @@ const BlogPostsList = () => {
           />
         </div>
 
-        <div className="flex items-center w-full md:w-3/4 lg:w-1/3 rounded h-10 p-1" id="tagSelect">
+        <div className="flex items-center w-full md:w-3/4 lg:w-1/3 rounded h-10 p-1" id="tagSearch">
           {searchTemplates.filter((template) => template.trim() !== '').map((template) => (
             <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={template}>
               {template}

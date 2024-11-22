@@ -37,6 +37,11 @@ const MyPage = (props: MyPageProps) => {
 
   const saveCode = async (id: string, code: string, language: string, title: string, tags: Array<Object>, desc: string) => {
 
+    if (!code) {
+      toast.warning('Code cannot be empty!');
+      return;
+    }
+
     const response = await fetch(`/api/CodeTemplates/${id}`, {
       method: 'PUT',
       headers: {
@@ -45,7 +50,6 @@ const MyPage = (props: MyPageProps) => {
       },
       body: JSON.stringify({ code, language, title, tags, desc })
     });
-    const data = await response.json();
 
     if (!response.ok) {
       toast.error('Error saving code');
@@ -54,6 +58,11 @@ const MyPage = (props: MyPageProps) => {
 
     toast.success('Code saved successfully!');
 
+    if (id) {
+      setTimeout(() => {
+        router.push(`/Templates/detailedView?id=${id}`);
+      }, 500);
+    }
   }
 
   const forkCode = async (id: string) => {

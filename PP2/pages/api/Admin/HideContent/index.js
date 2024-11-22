@@ -1,7 +1,6 @@
 import verifyAdmin from '@/lib/Admin/verifyAdmin';
 import hideBlog from '@/lib/Admin/hideBlog';
 import hideComment from '@/lib/Admin/hideComment';
-import { parse } from 'path';
 
 async function handler(req, res){
 

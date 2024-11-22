@@ -4,6 +4,7 @@ import { AppContext } from '@/pages/components/AppVars';
 import Editor from '@monaco-editor/react';
 import { toast } from 'react-toastify';
 import { BackgroundGradient } from '../components/BackgroundGradient';
+import TagSelector from '../components/TagSelector';
 
 interface CodeTemplate {
   id: number;
@@ -28,7 +29,6 @@ const DetailedTemplateView = () => {
 
   const [updatedTitle, setUpdatedTitle] = useState('');
   const [updatedExplanation, setUpdatedExplanation] = useState('');
-  const [tagInput, setTagInput] = useState('');
   const [updatedTags, setUpdatedTags] = useState<string[]>([]);
 
   useEffect(() => {
@@ -108,6 +108,11 @@ const DetailedTemplateView = () => {
       tags: updatedTags
     };
 
+    if (!updatedTemplate.title || !updatedTemplate.explanation) {
+      toast.warning('Title and explanation are required');
+      return;
+    }
+
     console.log(updatedTemplate);
 
     const response = await fetch(`/api/CodeTemplates/${id}`, {
@@ -126,20 +131,6 @@ const DetailedTemplateView = () => {
     
     fetchTemplateDetails(); 
     setIsEditing(false);
-  };
-
-  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && tagInput.trim()) {
-      e.preventDefault();
-      if (!updatedTags.includes(tagInput.trim())) {
-        setUpdatedTags([...updatedTags, tagInput.trim()]);
-      }
-      setTagInput('');
-    }
-  };
-
-  const handleRemoveTag = (tag: string) => {
-    setUpdatedTags(updatedTags.filter((t) => t !== tag));
   };
 
   const toggleEditMode = () => {
@@ -209,35 +200,7 @@ const DetailedTemplateView = () => {
         </div>
         
         {isEditing ? (
-          <div className="flex flex-wrap items-center p-1 rounded w-full mt-4" id="tagSelect"
-            onClick={() => {
-              const inputElement = document.getElementById('tagInput') as HTMLInputElement;
-              inputElement?.focus();
-            }}
-          >
-            {updatedTags.map((tag) => (
-              <span className="flex items-center px-2 py-1 rounded mr-2" id="tag" key={tag}>
-                {tag}
-                {editable && (
-                  <button
-                    onClick={() => handleRemoveTag(tag)}
-                    className="ml-1 font-bold bg-transparent text-gray-500">
-                    &times;
-                  </button>
-                )}
-              </span>
-            ))}
-
-            <input
-              type="text"
-              id="tagInput"
-              value={tagInput}
-              placeholder='Add a tag...'
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyDown={handleAddTag}
-              className="border-none outline-none flex-grow h-full p-1"
-            />
-          </div>
+          <TagSelector tags={updatedTags} setTags={setUpdatedTags}></TagSelector>
         ) : (
           template.tags && template.tags.length > 0 && (
             <div className="flex space-x-2 mt-4">
@@ -251,7 +214,7 @@ const DetailedTemplateView = () => {
         )}
 
         {editable && (
-          <div className="flex justify-center mt-4 space-x-2">
+          <div className="flex justify-center mt-8 space-x-4">
             <button
               onClick={isEditing ? saveChanges : toggleEditMode}
               className="bg-transparent text-gray-400 border-2 border-gray-400 font-bold py-2 px-4 rounded">
@@ -273,11 +236,13 @@ const DetailedTemplateView = () => {
           </div>
         )}
 
-        <div className="flex justify-between mt-6">
+        {editable && isEditing && <p className="mt-2">Click on the "View Code" button below to edit code and language.</p>}
+
+        <div className="flex justify-between mt-6 mb-1">
           <button
             onClick={() => router.push(`/Runner?id=${template.id}`)}
             className="text-button-text py-2 px-4 rounded">
-            Try or Edit Code
+            View Code (Edit & Fork)
           </button>
 
           {template.forkedFromID && (

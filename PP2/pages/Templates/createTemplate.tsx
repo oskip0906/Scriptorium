@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { AppContext } from '@/pages/components/AppVars'
 import Editor from '@monaco-editor/react';
 import { toast } from 'react-toastify';
+import TagSelector from '../components/TagSelector';
 
 interface TemplateProps {
     terminalCode?: string;
@@ -19,14 +20,12 @@ const TemplateCreator = (props: TemplateProps) => {
     const [explanation, setExplanation] = useState('');
     const [language, setLanguage] = useState('');
     const [tags, setTags] = useState<string[]>([]);
-    const [tagInput, setTagInput] = useState('');
-    const [tagsPlaceHolder, setPlaceholder] = useState('Add tags (press Enter)');
 
     const handleCreateTemplate = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!title || (!props.terminalCode && !code)|| !explanation || (!language && !props.myLanguage)) {
-            toast.warning('Please fill in all fields!');
+            toast.warning('Title, code, explanation, and language cannot be empty!');
             return;
         }
 
@@ -63,20 +62,6 @@ const TemplateCreator = (props: TemplateProps) => {
         setTimeout(() => {
             router.push(`/Templates/detailedView?id=${newTemplate.id}`);
         }, 500);
-    };
-
-    const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && tagInput.trim()) {
-            e.preventDefault();
-            if (!tags.includes(tagInput.trim())) {
-                setTags([...tags, tagInput.trim()]);
-            }
-            setTagInput('');
-        }
-    };
-
-    const handleRemoveTag = (tag: string) => {
-        setTags(tags.filter((t) => t !== tag));
     };
 
     return (
@@ -140,34 +125,9 @@ const TemplateCreator = (props: TemplateProps) => {
                     className="border rounded outline-none"
                 />
 
-                <label className="block font-medium mt-4 mb-2">Tags</label>
+                <label className="block font-medium mt-4">Tags</label>
 
-                 <div className="flex items-center w-full rounded h-10" id="tagSelect">
-                    {tags.map((tag) => (
-                    <span className="flex items-center px-2 py-1 rounded mr-1" id="tag" key={tag}>
-                        {tag}
-                        <button
-                            onClick={() => {
-                            handleRemoveTag(tag);
-                            if (tags.length === 1) {
-                                setPlaceholder('Add tags (press Enter)');
-                            }
-                            }}
-                            className="ml-1 font-bold bg-transparent text-gray-500">
-                            &times;
-                        </button>
-                    </span>
-                    ))}
-
-                    <input
-                        type="text"
-                        placeholder={tagsPlaceHolder}
-                        value={tagInput}
-                        onChange={(e) => { setTagInput(e.target.value); setPlaceholder(''); }}
-                        onKeyDown={handleAddTag}
-                        className="border-none outline-none flex-grow h-full p-2"
-                    />
-                </div>
+                <TagSelector tags={tags} setTags={setTags} />
 
                 <div className="flex justify-center mt-6">
                     <button
