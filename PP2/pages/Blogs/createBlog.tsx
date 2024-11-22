@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import TagSelector from '../components/TagSelector';
 import TemplateSelector from '../components/TemplateSelector';
+import BackgroundGradient from '../components/BackgroundGradient';
 
 interface CodeTemplate {
     id: number;
@@ -61,7 +62,7 @@ const BlogCreator = () => {
 
     return (
         <div className="container mx-auto p-4 mb-4">
-            <div className="border rounded p-4">
+            <BackgroundGradient className="border rounded-2xl p-4 bg-cta-background">
                 <h1 className="text-xl font-bold">Create New Blog Post</h1>
 
                 <label className="block font-medium mt-4 mb-2">Title</label>
@@ -101,7 +102,7 @@ const BlogCreator = () => {
                         Create Blog
                     </button>
                 </div>
-            </div>
+            </BackgroundGradient>
         </div>
     );
 };

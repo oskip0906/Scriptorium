@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import BackgroundGradient from '../components/BackgroundGradient';
 
+const languages = ['python', 'javascript', 'java', 'c', 'cpp', 'ruby', 'rust', 'swift', 'r', 'php', 'go'];
+
 interface CodeTemplate {
   id: number;
   title: string;
@@ -140,18 +142,12 @@ const CodeTemplatesList = () => {
           onChange={(e) => setSearchLanguage(e.target.value)} 
           className="border p-2 rounded pr-8 outline-none h-10"
           id="searchInput">
-            <option value="">Select language</option>
-            <option value="c">C</option>
-            <option value="cpp">Cpp</option>
-            <option value="java">Java</option>
-            <option value="python">Python</option>
-            <option value="javascript">JavaScript</option>
-            <option value="csharp">Csharp</option>
-            <option value="rust">Rust</option>
-            <option value="swift">Swift</option>
-            <option value="go">Go</option>
-            <option value="r">R</option>
-            <option value="php">PHP</option>
+          <option value="">Select Language</option>
+          {languages.map((lang) => (
+            <option key={lang} value={lang}>
+              {lang}
+            </option>
+          ))}
         </select>
 
         <input 

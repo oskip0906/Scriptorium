@@ -50,9 +50,14 @@ const SignUpPage: React.FC = () => {
         },
         body: JSON.stringify(formData),
         });
-const response = await data.json();
-console.log(response);
+      const response = await data.json();
+      console.log(response);
+      
     if (!data.ok) {
+      if (response.error === "User with same username or email exists") {
+        toast.error('User with same username or email already exists!');
+        return;
+      }
       toast.error('Sign up failed!');
       return;
     }

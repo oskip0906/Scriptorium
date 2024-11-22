@@ -62,7 +62,7 @@ async function handler(req, res) {
     else if (req.method === "GET") {
 
         try {
-            const { id, title, description, content, tags, codeTemplates, createdUser, order, page, pageSize} = req.query;
+            const { id, title, description, content, tags, codeTemplates, createdUser, createdUserID, order, page, pageSize} = req.query;
 
             if (id) {
                 const blogPost = await prisma.BlogPost.findUnique({
@@ -135,6 +135,9 @@ async function handler(req, res) {
                     return res.status(404).json({ error: "User not found" });
                 }
                 searchFilters.push({ createdUserId: { in: users.map(user => user.id) } });
+            }
+            if (createdUserID) {
+                searchFilters.push({ createdUserId: parseInt(createdUserID) });
             }
 
             if (req.user && req.user.id) {

@@ -53,6 +53,10 @@ const SignUpPage: React.FC = () => {
     console.log(response);
 
     if (!data.ok) {
+      if (response.error === "User with same username or email exists") {
+        toast.error('User with same username or email already exists!');
+        return;
+      }
       toast.error('Sign up failed!');
       return;
     }

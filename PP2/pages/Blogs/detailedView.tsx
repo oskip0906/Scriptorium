@@ -223,7 +223,7 @@ const DetailedPostView = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 mb-4">
       <BackgroundGradient className="p-4 rounded-2xl bg-cta-background">
         <div className="flex justify-between">
           {isEditing ? (

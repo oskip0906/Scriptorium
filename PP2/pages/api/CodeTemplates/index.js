@@ -43,7 +43,7 @@ async function handler(req, res) {
     else if (req.method === "GET") {
 
         try {
-            const { id, title, explanation, language, code, tags, createdUser, page, pageSize } = req.query;
+            const { id, title, explanation, language, code, tags, createdUser, createdUserID, page, pageSize } = req.query;
 
             if (id) {
                 const codeTemplate = await prisma.CodeTemplate.findUnique({
@@ -102,6 +102,9 @@ async function handler(req, res) {
                     return res.status(404).json({ error: "User not found" });
                 }
                 searchFilters.push({ createdUserId: { in: users.map(user => user.id) } });
+            }
+            if (createdUserID) {
+                searchFilters.push({ createdUserId: parseInt(createdUserID) });
             }
 
             const codeTemplates = await prisma.CodeTemplate.findMany({

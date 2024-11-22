@@ -4,6 +4,8 @@ import Terminal from '@/pages/components/Terminal'
 import { AppContext } from '@/lib/AppVars';
 import { toast } from 'react-toastify'
 import TemplateCreator from '../Templates/createTemplate'
+import { animate } from "framer-motion";
+
 const languages = ['python', 'javascript', 'java', 'c', 'cpp', 'ruby', 'rust', 'swift', 'r', 'php', 'go'];
 
 interface RequestBody {
@@ -34,6 +36,18 @@ const MyPage = (props: MyPageProps) => {
   const [className, setClassName] = useState('Main')
   const [user, setUser] = useState('')
   const [hideCreate, setHideCreate] = useState(false)
+
+  useEffect(() => {
+    if (hideCreate) {
+      animate(window.scrollY, 0, {
+        duration: 0.5,
+        ease: "easeInOut",
+        onUpdate: (latest) => {
+          window.scrollTo(0, latest);
+        },
+      });
+    }
+  }, [hideCreate]);
 
   const saveCode = async (id: string, code: string, language: string, title: string, tags: Array<Object>, desc: string) => {
 
@@ -133,7 +147,10 @@ const MyPage = (props: MyPageProps) => {
 
   return (
     <div>
-      {hideCreate ? <TemplateCreator terminalCode={code} setTerminalCode={setCode} myLanguage={language}/>: <> </>}
+      {hideCreate ? 
+        <TemplateCreator terminalCode={code} setTerminalCode={setCode} myLanguage={language}/>: <> </>
+      }
+      
       <div className="p-4">
         <div className="flex items-center justify-between ">
 
