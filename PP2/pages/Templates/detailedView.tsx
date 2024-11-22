@@ -247,7 +247,10 @@ const DetailedTemplateView = () => {
 
           {template.forkedFromID && (
             <button
-              onClick={() => router.push(`/Templates/detailedView?id=${template.forkedFromID}`)}
+              onClick={() => {
+                setEditable(false);
+                router.push(`/Templates/detailedView?id=${template.forkedFromID}`);
+              }}
               className="bg-gray-400 text-button-text py-2 px-4 rounded">
               View Original Template
             </button>

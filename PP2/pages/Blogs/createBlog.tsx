@@ -70,7 +70,7 @@ const BlogCreator = () => {
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full border rounded px-2 py-1 outline-none"
+                    className="w-full border rounded px-2 py-1 outline-none focus:ring focus:border"
                 />
 
                 <label className="block font-medium mt-4 mb-2">Description</label>
@@ -84,7 +84,7 @@ const BlogCreator = () => {
                 <textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    className="w-full h-[25vh] border rounded px-2 py-1 outline-none"
+                    className="w-full h-[25vh] border rounded px-2 py-1 outline-none focus:ring focus:border"
                 />
 
                 <label className="block font-medium mt-4">Tags</label>
