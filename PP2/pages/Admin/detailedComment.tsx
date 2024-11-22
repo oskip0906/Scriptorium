@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState}  from 'react'
-import { AppContext } from '@/pages/components/AppVars'
+import { AppContext } from '@/lib/AppVars';
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { motion } from "framer-motion";

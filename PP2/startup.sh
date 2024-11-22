@@ -35,6 +35,8 @@ docker build -t rrunner ./r
 docker build -t swiftrunner ./swift
 docker build -t rustrunner ./rust
 
+cd ..
+
 if ! node lib/Startup/addAdmin.mjs; then 
     echo "Failed to add admin";
     exit 1;

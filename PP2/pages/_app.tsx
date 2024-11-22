@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import type { AppProps } from "next/app";
 import NavBar from "@/pages/components/Navbar";
-import { AppProvider } from "@/pages/components/AppVars";
+import { AppProvider } from "@/lib/AppVars";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from "next/router";

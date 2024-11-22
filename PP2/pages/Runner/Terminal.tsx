@@ -1,6 +1,6 @@
 import React, { useRef, useContext } from 'react'
 import Editor from '@monaco-editor/react';
-import { AppContext } from '@/pages/components/AppVars'
+import { AppContext } from '@/lib/AppVars';
 
 
 interface TerminalProps {

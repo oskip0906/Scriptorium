@@ -1,5 +1,5 @@
 import MyPage from "./MyPage";
-import { BackgroundGradient } from '../components/BackgroundGradient'
+import BackgroundGradient from '../components/BackgroundGradient'
 import React, { useEffect, useState } from 'react'
 
 function index() {

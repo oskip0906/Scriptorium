@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { AppContext } from '@/pages/components/AppVars';
+import { AppContext } from '@/lib/AppVars';
 import { useRouter } from 'next/router';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
