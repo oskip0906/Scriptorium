@@ -12,29 +12,32 @@ async function handler(req, res) {
       console.log(id);
       const { firstName, lastName, email, userName, phoneNumber, password } = req.body;
 
+      const updatedData = {
+        firstName,
+        lastName,
+        email,
+        userName,
+        phoneNumber,
+      };
+
       // Hash the password
-      const hashedPassword = await bcrypt.hash(password, 10);
+      if (password) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        updatedData.password = hashedPassword;
+      }
 
       const user = await prisma.user.update({
         where: {
           id: id,
         },
-        data: {
-          firstName,
-          lastName,
-          email,
-          userName,
-          phoneNumber,
-          password: hashedPassword,
-        },
+        data: updatedData
       });
       return res.status(200).json("User updated successfully");
     } 
     catch (error) {
-      console.log(error);
       return res.status(400).json({ error: "username or email already exists" });
     }
   }
 }
 
-export default verifyUser(handler);
+export default verifyUser(handler); 
