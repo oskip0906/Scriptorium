@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { AppContext } from '@/lib/AppVars';
 import Editor from '@monaco-editor/react';
 import { toast } from 'react-toastify';
-import { BackgroundGradient } from '../components/BackgroundGradient';
+import BackgroundGradient from '../components/BackgroundGradient';
 import TagSelector from '../components/TagSelector';
 
 interface CodeTemplate {
