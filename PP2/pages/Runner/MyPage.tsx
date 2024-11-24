@@ -95,7 +95,6 @@ const MyPage = (props: MyPageProps) => {
       return;
     }
 
-    console.log(data);
     toast.success('Code forked successfully!');
 
     setTimeout(() => {
@@ -106,7 +105,6 @@ const MyPage = (props: MyPageProps) => {
   const fetchCode = async (id: string) => {
     const response = await fetch(`/api/CodeTemplates?id=${id}`);
     const data = await response.json();    
-    console.log(data);
     return data;
   };
 
@@ -206,9 +204,7 @@ const MyPage = (props: MyPageProps) => {
 
               <button className=" font-bold py-2 px-4 rounded"
               onClick={() => {
-                console.log(code)
                 runCode()
-
               }
               }>
                 Run code

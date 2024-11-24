@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import CommentComponent from '@/pages/components/Comment';
+import RatingComponent from '@/pages/components/Rating';
 import { AppContext } from '@/lib/AppVars';
 import { toast } from 'react-toastify';
 import BackgroundGradient from '../components/BackgroundGradient';
-import Reports from '../components/Reports';
 import TagSelector from '../components/TagSelector';
 import TemplateSelector from '../components/TemplateSelector';
 import Image from 'next/image';
-import getAvatar from '@/lib/getAvatar';
 
 interface BlogPost {
   id: number;
@@ -17,8 +16,7 @@ interface BlogPost {
   content: string;
   tags: { name: string }[];
   codeTemplates: CodeTemplate[];
-  createdBy: { id: number; userName: string };
-  avatar: string;
+  createdBy: { id: number; userName: string, avatar: string };
   rating: number;
 }
 
@@ -47,7 +45,6 @@ const DetailedPostView = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [newComment, setNewComment] = useState('');
-  const [ratingChange, setRatingChange] = useState(false);
   const [editable, setEditable] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -72,7 +69,7 @@ const DetailedPostView = () => {
     if (id) {
       fetchBlogPostDetails();
     }
-  }, [id, ratingChange]);
+  }, [id]);
 
   useEffect(() => {
     if (post) {
@@ -105,8 +102,6 @@ const DetailedPostView = () => {
       return;
     }
 
-    data.avatar = await getAvatar(data.createdBy.id);
-    console.log(data);  
     data.inappropriate ? setInappropriate(true) : null;
     setPost(data);
   };
@@ -180,24 +175,6 @@ const DetailedPostView = () => {
     setIsEditing(false);
   };
 
-  const createRating = async (value: number, id: number) => {
-    const response = await fetch('/api/Ratings/Blog', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-      },
-      body: JSON.stringify({ value: value, id: id }),
-    });
-
-    if (!response.ok) {
-      toast.error('Error creating rating!');
-      return;
-    }
-
-    setRatingChange(!ratingChange);
-  };
-
   const handleCommentSubmit = async () => {
     if (newComment.trim() === '') {
       toast.warning('Comment cannot be empty.');
@@ -218,7 +195,6 @@ const DetailedPostView = () => {
       return;
     }
 
-    console.log(response);
     toast.success('Comment submitted successfully!');
 
     setNewComment('');
@@ -255,8 +231,12 @@ const DetailedPostView = () => {
           )}
           {!isEditing &&
           <div className="flex items-center space-x-2 border rounded-full p-2">
-            <Image src={post.avatar} alt="pfp" className="rounded-full object-cover h-10" width={40} height={40} />
-            <span className="font-semibold font-mono text-lg">{post.createdBy.userName}</span>
+            {post.createdBy.avatar && post.createdBy.avatar.startsWith('/') ? (
+                  <Image src={post.createdBy.avatar} alt="avatar" width={30} height={30} className="rounded-full" />
+                ) : (
+                  <Image src="/logo.jpg" alt="avatar" width={30} height={30} className="rounded-full" />
+                )}
+            <span className="font-semibold font-mono text-md">{post.createdBy.userName}</span>
           </div>
     }   
         </div>
@@ -308,7 +288,7 @@ const DetailedPostView = () => {
             <div className="flex space-x-2 mt-6">
               {post.codeTemplates.map((template) => (
                 <span key={template.id} className="px-2 py-1 cursor-pointer rounded border" id="template"
-                onClick={() => router.push(`/Runner?id=${template.id}`)}>
+                onClick={() => router.push(`/Templates/detailedView?id=${template.id}`)}>
                   {template.title}
                 </span>
               ))}
@@ -318,7 +298,8 @@ const DetailedPostView = () => {
 
         {editable && (
           <div className="flex justify-center mt-8 space-x-4">
-            { inappropriate ?             <button
+            { inappropriate ?             
+            <button
               className="bg-transparent text-red-500 border-2 border-red-500 font-bold py-2 px-4 rounded">
               Inappropriate Content
             </button> : 
@@ -343,18 +324,8 @@ const DetailedPostView = () => {
           </div>
         )}
 
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <button onClick={async () => { await createRating(1, post.id ); }} className="bg-transparent px-1"> ⬆️ </button>
-            <div className="my-1 rounded-lg">
-              <p className="font-bold">⭐ Rating: {post.rating}</p>
-            </div>
-            <button onClick={async () => { await createRating(-1, post.id); }} className="bg-transparent px-1"> ⬇️ </button>
-          </div>
-
-          <div className="mr-auto ml-4">
-            <Reports blogPostId={post.id} />
-          </div>
+        <div className="mt-6">
+          <RatingComponent blogPostId={post.id} rating={post.rating}/>
         </div>
 
         <div className="mt-6">

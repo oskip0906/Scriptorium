@@ -51,8 +51,6 @@ const TemplateCreator = (props: TemplateProps) => {
 
         const newTemplate = await response.json();
 
-        console.log(newTemplate);
-
         if (!newTemplate || !newTemplate.id) {
             toast.error('Error creating template!');
             return;

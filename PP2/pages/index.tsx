@@ -91,6 +91,7 @@ const HomePage = () => {
     }
 
     const data = await response.json();
+    console.log(data);
     setBlogs([...myBlogs, ...data.posts]);
     setTotalPages(data.totalPages);
   };
@@ -102,6 +103,8 @@ const HomePage = () => {
       pageSize: String(pageSize),
       createdUserID: String(context?.userID),
     }).toString();
+
+    console.log(query);
 
     const response = await fetch(`/api/CodeTemplates?${query}`);
 

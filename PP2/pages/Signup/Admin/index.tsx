@@ -42,7 +42,7 @@ const SignUpPage: React.FC = () => {
       toast.warning('Please fill in all fields!');
       return;
     }
-    console.log(formData);
+
     const data = await fetch('/api/auth/signup/admin', {
         method: 'POST',
         headers: {
@@ -51,7 +51,6 @@ const SignUpPage: React.FC = () => {
         body: JSON.stringify(formData),
         });
       const response = await data.json();
-      console.log(response);
       
     if (!data.ok) {
       if (response.error === "User with same username or email exists") {

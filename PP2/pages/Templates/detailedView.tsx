@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import BackgroundGradient from '../components/BackgroundGradient';
 import TagSelector from '../components/TagSelector';
 import Image from 'next/image';
-import getAvatar from '@/lib/getAvatar';
 
 interface CodeTemplate {
   id: number;
@@ -15,8 +14,7 @@ interface CodeTemplate {
   explanation: string;
   language: string;
   tags: { name: string }[];
-  createdBy: { userName: string; id: number };
-  avatar: string;
+  createdBy: { userName: string; id: number, avatar: string };
   forkedFromID: number;
 }
 
@@ -66,7 +64,7 @@ const DetailedTemplateView = () => {
     }
 
     const data = await response.json();
-    data.avatar = await getAvatar(data.createdBy.id);
+
     setTemplate(data);
   };
 
@@ -117,8 +115,6 @@ const DetailedTemplateView = () => {
       return;
     }
 
-    console.log(updatedTemplate);
-
     const response = await fetch(`/api/CodeTemplates/${id}`, {
       method: 'PUT',
       headers: {
@@ -162,8 +158,12 @@ const DetailedTemplateView = () => {
           )}
           {!isEditing &&
           <div className="flex items-center space-x-2 border rounded-full p-2">
-            <Image src={template.avatar} alt="pfp" className="rounded-full object-cover h-10" width={40} height={40} />
-            <span className="font-semibold font-mono text-lg">{template.createdBy.userName}</span>
+            {template.createdBy.avatar && template.createdBy.avatar.startsWith('/') ? (
+              <Image src={template.createdBy.avatar} alt="avatar" width={30} height={30} className="rounded-full" />
+                ) : (
+                  <Image src="/logo.jpg" alt="avatar" width={30} height={30} className="rounded-full" />
+                )}
+            <span className="font-semibold font-mono text-md">{template.createdBy.userName}</span>
           </div>
     }
         </div>
@@ -258,6 +258,7 @@ const DetailedTemplateView = () => {
             <button
               onClick={() => {
                 setEditable(false);
+                setOriginalTemplate(undefined);
                 router.push(`/Templates/detailedView?id=${template.forkedFromID}`);
               }}
               className="bg-gray-400 text-button-text py-2 px-4 rounded">

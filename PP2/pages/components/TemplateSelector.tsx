@@ -53,8 +53,6 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
 
         const data = await response.json();
 
-        console.log(data);
-
         setCodeTemplates(data.codeTemplates);
         setTotalPages(data.totalPages);
     };

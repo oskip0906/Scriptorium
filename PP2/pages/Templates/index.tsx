@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import BackgroundGradient from '../components/BackgroundGradient';
+import Image from 'next/image';
 
 const languages = ['python', 'javascript', 'java', 'c', 'cpp', 'ruby', 'rust', 'swift', 'r', 'php', 'go'];
 
@@ -8,9 +9,9 @@ interface CodeTemplate {
   id: number;
   title: string;
   language: string;
-  tags: { name: string }[],
+  tags: { name: string }[];
   code: string;
-  createdBy: { userName: string };
+  createdBy: { id: number, userName: string, avatar: string };
   forkedFromID: number;
 }
 
@@ -92,8 +93,6 @@ const CodeTemplatesList = () => {
       tags: searchTags.join(','),
     }).toString();
 
-    console.log(query);
-
     const response = await fetch(`/api/CodeTemplates?${query}`);
 
     if (!response.ok) {
@@ -104,8 +103,6 @@ const CodeTemplatesList = () => {
     }
 
     const data = await response.json();
-
-    console.log(data);
 
     setTemplates(data.codeTemplates);
     setTotalPages(data.totalPages);
@@ -240,7 +237,15 @@ const CodeTemplatesList = () => {
               <div className="rounded-2xl bg-cta-background">
                 <div className="flex justify-between items-center">
                   <h2 className="text-xl font-semibold">{template.title}</h2>
-                  <span className="font-semibold">Created by: {template.createdBy.userName}</span>
+
+                  <div className="flex items-center space-x-2 border rounded-full p-2">
+                  {template.createdBy.avatar && template.createdBy.avatar.startsWith('/') ? (
+                  <Image src={template.createdBy.avatar} alt="avatar" width={20} height={20} className="rounded-full" />
+                    ) : (
+                      <Image src="/logo.jpg" alt="avatar" width={20} height={20} className="rounded-full" />
+                    )}
+                    <span className="font-semibold font-mono text-sm">{template.createdBy.userName}</span>
+                  </div>
                 </div>
 
                 {template.forkedFromID && (

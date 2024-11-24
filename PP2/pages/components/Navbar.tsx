@@ -39,12 +39,11 @@ function NavBar() {
       const response = await fetch(`/api/Profile/${context.userID}`);
 
       if (!response.ok) {
-        console.log('Error fetching profile');
         return;
       }
         
       const data = await response.json();
-      let avatar = '';
+      let avatar = '/logo.jpg';
 
       if (data.avatar) {
         const avatarResponse = await fetch(data.avatar);
@@ -69,7 +68,6 @@ function NavBar() {
       });
 
       if (!response.ok) {
-        console.log('Error verifying admin token');
         return;
       }
 
@@ -104,10 +102,12 @@ function NavBar() {
 
           {profile.userName && (
             <div className="flex items-center space-x-2 border py-2 px-4 rounded-full">
-              <img
-                src={profile.avatar}
-                alt="avatar"
-                className="w-8 h-8 rounded-full"
+              <Image
+              src={profile.avatar}
+              alt="avatar"
+              className="w-8 h-8 rounded-full"
+              width={32}
+              height={32}
               />
 
               <span className="cta-primary text-xl font-semibold font-mono">{profile.userName}</span>

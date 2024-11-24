@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import BackgroundGradient from '../components/BackgroundGradient';
+import Image from 'next/image';
 
 interface BlogPost {
   id: number;
   title: string;
   description: string;
   tags: { name: string }[];
-  codeTemplates: { id: number; title: string }[],
-  rating: number,
-  createdBy: { userName: string };
+  codeTemplates: { id: number; title: string }[];
+  rating: number;
+  createdBy: { id: number, userName: string, avatar: string };
 }
 
 const BlogPostsList = () => {
@@ -99,12 +100,9 @@ const BlogPostsList = () => {
       codeTemplates: searchTemplates.join(','),
     }).toString();
 
-    console.log(query);
-
     const response = await fetch(`/api/BlogPosts?${query}`);
 
     if (!response.ok) {
-      console.log(response);
       console.error('Error fetching blog posts');
       setBlogPosts([]);
       setTotalPages(1);
@@ -113,11 +111,8 @@ const BlogPostsList = () => {
 
     const data = await response.json();
 
-    console.log(data);
-
     setBlogPosts(data.posts);
     setTotalPages(data.totalPages);
-
   };
 
   const handlePageChange = (newPage: number) => {
@@ -285,7 +280,15 @@ const BlogPostsList = () => {
             <BackgroundGradient className="p-4 rounded-2xl bg-cta-background" color={post.rating >= 0 ? "green" : "red"}>
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">{post.title}</h2>
-              <span className="font-semibold">Created by: {post.createdBy.userName}</span>
+
+              <div className="flex items-center space-x-2 border rounded-full p-2">
+                {post.createdBy.avatar && post.createdBy.avatar.startsWith('/') ? (
+                  <Image src={post.createdBy.avatar} alt="avatar" width={20} height={20} className="rounded-full" />
+                ) : (
+                  <Image src="/logo.jpg" alt="avatar" width={20} height={20} className="rounded-full" />
+                )}
+                <span className="font-semibold font-mono text-sm">{post.createdBy.userName}</span>
+            </div>
             </div>
 
             <p className="my-2">{post.description}</p>

@@ -52,8 +52,6 @@ const BlogCreator = () => {
 
         const newBlog = await response.json();
 
-        console.log(newBlog);
-
         toast.success('Blog created successfully!');
         setTimeout(() => {
             router.push(`/Blogs/detailedView?id=${newBlog.id}`);

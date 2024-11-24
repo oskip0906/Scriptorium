@@ -25,7 +25,6 @@ const CodeControls: React.FC<CodeControlsProps> = ({id}) => {
       body: JSON.stringify({ code: 'code', language: 'python' })
     });
     const data = await response.json();
-    console.log(data);
   }
   
   const deleteCode = async () => {
@@ -37,7 +36,6 @@ const CodeControls: React.FC<CodeControlsProps> = ({id}) => {
         }
     });
     const data = await response.json();
-    console.log(data);
     }
 
   const forkCode = async () => {
@@ -50,7 +48,6 @@ const CodeControls: React.FC<CodeControlsProps> = ({id}) => {
         body: JSON.stringify({ code: 'code', language: 'python' })
     });
     const data = await response.json();
-    console.log(data);
     }
   return (
     <div className="flex space-x-4">

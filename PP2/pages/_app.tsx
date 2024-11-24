@@ -28,7 +28,7 @@ export default function App({ Component, pageProps }: AppProps) {
     refresh();
   }, []);
 
-  const baseFolder = router.pathname.substring(router.pathname.lastIndexOf("/") + 1) || "";
+  const baseFolder = router.pathname.substring(router.pathname.lastIndexOf("?") + 1) || "";
 
   return (
     <AppProvider>

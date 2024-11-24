@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import Reports from '../components/Reports';
+import RatingComponent from '@/pages/components/Rating';
 
 interface Comment {
   id: number;
@@ -17,7 +17,6 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [replies, setReplies] = useState<Comment[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [ratingChange, setRatingChange] = useState(false);
   const [currentComment, setCurrentComment] = useState<Comment>(comment);
   const [newReplyContent, setNewReplyContent] = useState('');
 
@@ -27,7 +26,7 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
 
   useEffect(() => {
     fetchComment();
-  }, [ratingChange]);
+  }, []);
 
   const fetchComment = async () => {
     const response = await fetch(`/api/Comments?id=${comment.id}`);
@@ -54,26 +53,6 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
 
     setReplies((prevReplies) => (page === 1 ? data.comments : [...prevReplies, ...data.comments]));
     setTotalPages(data.totalPages);
-  };
-
-  const createRating = async (value: number, id: number) => {
-
-    const response = await fetch(`/api/Ratings/Comment`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-      },
-      body: JSON.stringify({ value: value, id: id }),
-    });
-  
-    if (!response.ok) {
-      toast.error('Error creating rating!');
-      return;
-    }
-
-    setRatingChange(!ratingChange);
-
   };
 
   const toggleExpand = () => {
@@ -116,11 +95,9 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
       return;
     }
 
-    console.log(response);
     toast.success('Comment submitted successfully!');
 
     setNewReplyContent('');
-    setRatingChange(!ratingChange);
     fetchReplies(1);
   };
 
@@ -142,17 +119,7 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
         </button>
       </div>
 
-      <div className="flex items-center justify-between mt-1">
-        <div className="flex items-center space-x-2">
-          <button onClick={async () => { await createRating(1, currentComment.id ); }} className="bg-transparent px-1"> ⬆️ </button>
-          <span className='font-semibold'>{currentComment.rating}</span>
-          <button onClick={async () => { await createRating(-1, currentComment.id); }} className="bg-transparent px-1"> ⬇️ </button>
-        </div>
-
-        <div className="mr-auto ml-4">
-          <Reports commentId={currentComment.id} />
-        </div>
-      </div>
+      <RatingComponent commentId={currentComment.id} rating={currentComment.rating} />
 
       {isExpanded && (
         <div className="ml-2 mt-2">

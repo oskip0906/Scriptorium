@@ -112,7 +112,7 @@ async function handler(req, res) {
                 include: { 
                     tags: true, 
                     createdBy: {
-                        select: { id: true, userName: true }
+                        select: { id: true, userName: true, avatar: true}
                     }
                 },
                 skip: (parseInt(page) - 1) * parseInt(pageSize),
