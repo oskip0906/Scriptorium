@@ -24,6 +24,8 @@ const Index: React.FC = () => {
   const [commentPage, setCommentPage] = useState(0);
   const [blogs, setBlogs] = useState<blogsArray[]>([]);
   const [comments, setComments] = useState<commentsArray[]>([]);
+  const [searchBlogId, setSearchBlogId] = useState(0);
+  const [searchCommentId, setSearchCommentId] = useState(0);
 
   const fetchReportedBlogs = async () => {
     const data = await fetch(`/api/Admin/ReportedBlogs?page=${blogPage}`, {
@@ -103,6 +105,23 @@ const Index: React.FC = () => {
                 </button>
               </div>
             </div>
+            <div className="mt-8">
+              <h2 className="text-2xl font-semibold mb-4">Search for Blogs by ID</h2>
+              <div className="flex space-x-4">
+                <input
+                  type="number"
+                  placeholder="Enter Blog ID"
+                  className="px-4 py-2 border rounded-md"
+                  onChange={(e) => setSearchBlogId(Number(e.target.value))}
+                />
+                <button
+                  onClick={() => router.push(`/Admin/detailedBlog?id=${searchBlogId}`)}
+                  className="px-4 py-2 rounded-md border text-sm font-medium"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
           </div>
 
           <div>
@@ -142,6 +161,23 @@ const Index: React.FC = () => {
                   className="px-4 py-2 rounded-md border text-sm font-medium"
                 >
                   Next Page
+                </button>
+              </div>
+            </div>
+            <div className="mt-8">
+              <h2 className="text-2xl font-semibold mb-4">Search for Comments by ID</h2>
+              <div className="flex space-x-4">
+                <input
+                  type="number"
+                  placeholder="Enter Blog ID"
+                  className="px-4 py-2 border rounded-md"
+                  onChange={(e) => setSearchBlogId(Number(e.target.value))}
+                />
+                <button
+                  onClick={() => router.push(`/Admin/detailedComment?id=${searchCommentId}`)}
+                  className="px-4 py-2 rounded-md border text-sm font-medium"
+                >
+                  Search
                 </button>
               </div>
             </div>

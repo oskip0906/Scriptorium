@@ -152,7 +152,7 @@ const MyPage = (props: MyPageProps) => {
       }
       
       <div className="p-4">
-        <div className="flex items-center justify-between ">
+        <div className="flex flex-col lg:flex-row md:flex-row gap-2 items-center justify-between ">
 
             <div className="text-xl font-semibold">
               <span className="font-bold">{title}</span> 
@@ -187,12 +187,15 @@ const MyPage = (props: MyPageProps) => {
                 placeholder="Set file name (optional)"
                 className="p-2 rounded-lg"
                 onChange={(e) => setClassName(e.target.value)}
+                value={className}
               />
             </div>
             <div className="flex items-center space-x-4">
               <select 
                 value={language}
-                onChange={(e) => setLanguage(e.target.value)}
+                onChange={(e) => {setLanguage(e.target.value);
+                  e.target.value === 'java' ? setClassName('Main') : null
+                }}
                 className="p-2 rounded-lg">
                 {languages.map((lang) => (
                   <option key={lang} value={lang} className="">

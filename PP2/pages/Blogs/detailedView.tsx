@@ -41,7 +41,7 @@ const DetailedPostView = () => {
   const context = useContext(AppContext);
   const { id } = router.query;
   const pageSize = 5;
-
+  const [inappropriate, setInappropriate] = useState(false);
   const [post, setPost] = useState<BlogPost>();
   const [comments, setComments] = useState<Comment[]>([]);
   const [page, setPage] = useState(1);
@@ -57,6 +57,16 @@ const DetailedPostView = () => {
   
   const [updatedTags, setUpdatedTags] = useState<string[]>([]);
   const [selectedTemplates, setSelectedTemplates] = useState<CodeTemplate[]>([]);
+
+
+  const ownerOrAdmin = () => {
+    try {
+    return context?.admin === "false" || String(context?.userID) === String(post?.createdBy.id);
+    }
+    catch {
+      return false;
+    }
+  }
 
   useEffect(() => {
     if (id) {
@@ -89,6 +99,7 @@ const DetailedPostView = () => {
 
     const data = await response.json();
 
+
     if (!context?.admin && data.inappropriate && String(context?.userID) === String(data.createdBy.id)) {
       toast.info('This post has been reported as inappropriate and is currently under review.');
       return;
@@ -96,6 +107,7 @@ const DetailedPostView = () => {
 
     data.avatar = await getAvatar(data.createdBy.id);
     console.log(data);  
+    data.inappropriate ? setInappropriate(true) : null;
     setPost(data);
   };
 
@@ -229,6 +241,7 @@ const DetailedPostView = () => {
 
   return (
     <div className="container mx-auto p-4 mb-4">
+      { inappropriate && (!ownerOrAdmin()) ? <></> :
       <BackgroundGradient className="p-4 rounded-2xl bg-cta-background">
         <div className="flex items-center justify-between">
           {isEditing ? (
@@ -305,12 +318,16 @@ const DetailedPostView = () => {
 
         {editable && (
           <div className="flex justify-center mt-8 space-x-4">
+            { inappropriate ?             <button
+              className="bg-transparent text-red-500 border-2 border-red-500 font-bold py-2 px-4 rounded">
+              Inappropriate Content
+            </button> : 
             <button
               onClick={isEditing ? saveChanges : toggleEditMode}
               className="bg-transparent text-gray-400 border-2 border-gray-400 font-bold py-2 px-4 rounded">
               {isEditing ? 'Save Changes' : 'Edit Blog'}
             </button>
-            
+            }
             <button
               onClick={() => {
                 if (confirm('Are you sure you want to delete this Post?')) {
@@ -383,6 +400,7 @@ const DetailedPostView = () => {
 
         </div>
       </BackgroundGradient>
+}
     </div>
   );
 

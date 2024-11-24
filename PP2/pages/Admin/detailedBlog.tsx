@@ -75,16 +75,19 @@ function detailedBlog() {
     <div>
         {context?.admin === "True" ? 
         <div>
-            <button 
-            onClick={hideContent} 
-            className="px-4 py-2 rounded-md shadow"
-            >
-            Hide Content
-            </button>
+<div className="flex justify-center">
+  <button 
+    onClick={hideContent} 
+    className="px-4 py-2 rounded-md shadow"
+  >
+    Hide Content
+  </button>
+</div>
+
 
             <DetailedView />
             <ul className="space-y-4">
-                <div className="text-lg font-semibold mb-2">Reports</div>
+                <div className="text-lg font-semibold mb-2 text-center">Reports</div>
                 {reports.map((report: reportsArray) => (
                     <li
                     key={report.id}
@@ -104,12 +107,14 @@ function detailedBlog() {
 </ul>
 
                 {loadedAll ? <div>Loaded all reports</div> :
-                <button
-                onClick={() => { fetchAllReports(reportCount+1); setReportCount(reportCount+1)}}
-                className="px-4 py-2 rounded-md border shadow hover:shadow-md active:shadow-sm transition"
-                >
-                Load More
-                </button>
+                <div className="flex justify-center">
+                    <button
+                        onClick={() => { fetchAllReports(reportCount + 1); setReportCount(reportCount + 1) }}
+                        className="px-4 py-2 mt-4 rounded-md border shadow hover:shadow-md active:shadow-sm transition"
+                    >
+                        Load More
+                    </button>
+                </div>
                 }
         </div> 
 
