@@ -170,14 +170,6 @@ function NavBar() {
               className={router.pathname.startsWith('/Templates') ? 'active' : ''}>
               <i className="fas fa-code"></i>
             </button>
-
-            <button
-              onClick={handleLogout}
-              id="navButton"
-              className={(router.pathname.startsWith('/Logout') || router.pathname.startsWith('/Login')) ? 'active' : ''}>
-              <i className={`fas ${context?.userID ? 'fa-sign-out-alt' : 'fa-sign-in-alt'}`}></i>
-            </button>
-
             {context?.admin === 'True' && (
             <button
               onClick={() => { router.push('/Admin'); setMenuOpen(false); }}
@@ -186,6 +178,13 @@ function NavBar() {
               <i className="fas fa-user-shield"></i>
             </button>
             )}
+            <button
+              onClick={handleLogout}
+              id="navButton"
+              className={(router.pathname.startsWith('/Logout') || router.pathname.startsWith('/Login')) ? 'active' : ''}>
+              <i className={`fas ${context?.userID ? 'fa-sign-out-alt' : 'fa-sign-in-alt'}`}></i>
+            </button>
+
         </nav>
       </div>
 
