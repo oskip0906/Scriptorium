@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Image from 'next/image';
-
+import refresh from '@/lib/refresh';
 function NavBar() {
   const router = useRouter();
   const context = useContext(AppContext);
@@ -34,6 +34,13 @@ function NavBar() {
     if (!context?.userID) {
       return;
     }
+
+
+    refresh().then((res) => { if (!res) { 
+      setTimeout(() => {
+      handleLogout();
+      }, 500);
+    } });  
 
     const fetchProfile = async () => {
       const response = await fetch(`/api/Profile/${context.userID}`);

@@ -19,7 +19,7 @@ export default function verifyAdminToken(req, res) {
 
 
 } catch (error) {
-    return res.status(401).json({ error: 'Something went wrong' });
+    return res.status(401).json({ "error": "Token expired" });
 }
 }
 

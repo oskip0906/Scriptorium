@@ -12,7 +12,7 @@ function checkAccess(accessToken){
 }
 
 export default async function refresh(req, res) {
-
+    try {
     const { accessToken, refreshToken } = req.body;
     var newAccessToken = null
     if (!refreshToken) {
@@ -25,7 +25,7 @@ export default async function refresh(req, res) {
         return res.status(200).json({ token: newAccessToken });
     }
 
-    try {
+
         const refreshData = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
         const userData = await prisma.user.findFirst({
             where: { id: refreshData.data.id }
@@ -50,7 +50,7 @@ export default async function refresh(req, res) {
         return res.status(200).json({ token: newAccessToken });
     }
     catch (error){
-        return res.status(500).json({ error: error.message });
+        return res.status(400).json({ "error": "Token expired" });
     } 
 
 }

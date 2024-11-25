@@ -7,7 +7,6 @@ import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 
-import refresh from "@/lib/refresh";
 
 export default function App({ Component, pageProps }: AppProps) {
   
@@ -25,7 +24,6 @@ export default function App({ Component, pageProps }: AppProps) {
     const theme = localStorage.getItem("theme") ?? "light";
     document.body.classList.remove("light", "dark");
     document.body.classList.add(theme);
-    refresh();
   }, []);
 
   const baseFolder = router.pathname.substring(router.pathname.lastIndexOf("?") + 1) || "";
