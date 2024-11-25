@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import TemplateCreator from '../Templates/createTemplate'
 import { animate } from "framer-motion";
 
-const languages = ['python', 'javascript', 'java', 'c', 'cpp', 'ruby', 'rust', 'swift', 'r', 'php', 'go'];
+const languages = ['python', 'javascript', 'java', 'c', 'cpp', 'ruby', 'rust', 'swift', 'r', 'dart', 'go', 'php'];
 
 interface RequestBody {
   language: string;
@@ -123,8 +123,10 @@ const MyPage = (props: MyPageProps) => {
     });
     const data = await response.json();
     
-    data.output !== '' ? (setOutput(data.output), props.setError(1)) : setOutput('');
     data.error !== '' ? (setError(data.error), props.setError(0)) : setError('');
+    
+    data.output !== '' ? (setOutput(data.output), props.setError(1)) : setOutput('');
+    data.error === '' && data.output === '' ? props.setError(1) : null;
   }
 
   useEffect(() => {

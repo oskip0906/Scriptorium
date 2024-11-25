@@ -1,9 +1,5 @@
 const { spawnSync } = require('child_process');
 
-
-
-
-
 export default function handler(req, res) {
   
   if (req.method !== 'POST') {
@@ -17,19 +13,17 @@ export default function handler(req, res) {
   }
   const defaults = {
     cwd: process.cwd()+`/DockerExec/${language}`,
-
   }
   !className && (className = 'main');
   !input && (input = '');
   if (language === 'c'){}
-  let parsed_code = code.replace(/"/g, '\\"').replace(/\\n/g, '\\\\\\n').replace(/\n/g, '\\n');
+  let parsed_code = code.replace(/"/g, '\\"').replace(/\\n/g, '\\\\\\n').replace(/\n/g, '\\n').replace(/\$/g, '\\$').replace(/`/g, '\\`');
+  console.log(parsed_code);
   
   let parsed_input = input.replace(/"/g, '\\"').replace(/\n/g, '\\n');
-  console.log(parsed_code);
   const args = `-e FILE_CONTENT="${parsed_code}" -e FILE_INPUT="${parsed_input}" -e FILE_NAME="${className}"`;
-  
-  const runner = spawnSync('bash',['-c', `docker run ${args} ${language}runner`], defaults);
-  console.log(runner)
+  const cmd = `docker run --rm ${args} ${language}runner`;
+  const runner = spawnSync('bash',['-c', cmd], defaults);
   if (runner.status === 124) {
     return res.status(400).json({ output: "", error: 'Timeout Error' });
   }
@@ -37,7 +31,6 @@ export default function handler(req, res) {
     return res.status(400).json({ output: "", error: 'Memory Limit/Stdout Buffer Exceeded' });
     }
 
-  
   const output = runner.stdout ? runner.stdout.toString() : '';
   const error = runner.stderr ? runner.stderr.toString() : '';
   return res.status(200).json({ output, error });
