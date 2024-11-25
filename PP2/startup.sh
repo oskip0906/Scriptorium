@@ -34,6 +34,7 @@ docker build -t javascriptrunner ./javascript
 docker build -t rrunner ./r
 docker build -t swiftrunner ./swift
 docker build -t rustrunner ./rust
+docker build -t dartrunner ./dart
 
 cd ..
 
