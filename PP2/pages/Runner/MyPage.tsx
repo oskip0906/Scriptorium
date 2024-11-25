@@ -224,7 +224,7 @@ const MyPage = (props: MyPageProps) => {
                   onChange={(e) => setInput(e.target.value)}
                 />
 
-                <div className="p-2 border rounded-lg h-1/2 overflow-auto ">
+                <div className="p-2 border rounded-lg h-1/2 max-h-[50vh] overflow-auto ">
                     {output ? output.split('\n').map((line, index) => (
                     <div key={index}>{line}</div>
                     )) : <div></div>}
