@@ -1,5 +1,4 @@
-import React, { useState, useContext } from 'react'
-import { AppContext } from '@/lib/AppVars'
+import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -16,7 +15,6 @@ interface Report {
 function Reports(props: ReportProps) {
 
     const [inProgress, setInProgress] = useState(false);
-    const context = useContext(AppContext);
 
     const createReport = async (report: Report) => {
         if (report.blogPostId){
@@ -88,11 +86,7 @@ function Reports(props: ReportProps) {
     );
 
     const handleReportClick = () => {
-        if (!inProgress && !context?.toast) {
-            context?.setToast(true);
-            setInProgress(true);
-            toast(customToast, { autoClose: false });
-        }
+        toast(customToast);
     };
 
     return (

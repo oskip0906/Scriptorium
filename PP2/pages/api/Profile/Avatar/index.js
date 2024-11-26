@@ -44,7 +44,6 @@ async function modifyAvatar(req, res) {
         { status: 200 }
       );
     } catch (err) {
-      console.log(err)
       return res.json({ error: err.message }, { status: 500 });
     }
   } else {

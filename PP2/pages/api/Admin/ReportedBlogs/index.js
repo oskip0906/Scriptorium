@@ -50,7 +50,7 @@ async function handler(req, res) {
                 }
             })
         })
-        console.log(reportedBlogs)
+
         return res.status(200).json({ reportedBlogs });
     }
     catch (error) {

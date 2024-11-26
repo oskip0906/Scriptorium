@@ -45,8 +45,7 @@ const Index: React.FC = () => {
       },
     });
     const response: blogResponse = await data.json();
-    console.log(response.reportedBlogs);
-    if (response.reportedBlogs.length === 0) {
+    if (response.reportedBlogs && response.reportedBlogs.length === 0) {
       setHideNextBlog(true);
       
       return;
@@ -65,7 +64,7 @@ const Index: React.FC = () => {
     });
     const response: commentResponse = await data.json();
 
-    if (response.reportedComments.length === 0) {
+    if (response.reportedComments && response.reportedComments.length === 0) {
       setHideNextComment(true);
       return;
     }
@@ -185,7 +184,7 @@ const Index: React.FC = () => {
           </div>
         </div>
       ) : (
-        <h1 className="text-center text-xl font-semibold mt-12">
+        <h1 className="text-center text-4xl font-bold mt-12">
           You are not an admin
         </h1>
       )}

@@ -9,7 +9,7 @@ async function handler(req, res) {
       const token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const id = decoded.data.id;
-      console.log(id);
+
       const { firstName, lastName, email, userName, phoneNumber, password } = req.body;
 
       const updatedData = {

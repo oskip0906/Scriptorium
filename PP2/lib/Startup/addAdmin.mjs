@@ -29,7 +29,6 @@ async function addAdmin() {
                 role: "admin",
             },
         });
-        console.log("Admin created: ",data.userName, adminData.password)
     }
     catch (err) {
         console.error(err)

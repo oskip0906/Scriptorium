@@ -55,7 +55,6 @@ function detailedComment() {
             }
         })
         const response = await data.json();
-        console.log(response);
         setComment(response);
 
       }
@@ -198,22 +197,13 @@ function detailedComment() {
    </motion.button>
  )}
 </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    : <h1>Not Admin</h1>}
+  
+    : 
+    <div>
+      <h1 className="text-center text-4xl font-bold mt-12">
+      You are not an admin
+      </h1>
+    </div>}
     </div>
   )
 }

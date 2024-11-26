@@ -25,9 +25,6 @@ async function handler(req, res) {
             take: 5
         });
 
-        console.log(reports);
-
-
         res.status(200).json({ reports });
     }
 

@@ -82,7 +82,7 @@ const ProfilePage = () => {
 
   const handleUploadAvatar = async () => {
     if (avatarFile) {
-      console.log("hi")
+
       const formData = new FormData();
       formData.append("file", avatarFile, avatarFile.name);
 

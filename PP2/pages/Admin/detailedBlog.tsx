@@ -118,7 +118,13 @@ function detailedBlog() {
                 }
         </div> 
 
-        : <div>Not Admin</div>}
+        : 
+        
+        <div>
+            <h1 className="text-center text-4xl font-bold mt-12">
+            You are not an admin
+            </h1>
+        </div>}
 
     </div>
   )

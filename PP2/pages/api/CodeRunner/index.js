@@ -18,7 +18,6 @@ export default function handler(req, res) {
   !input && (input = '');
   if (language === 'c'){}
   let parsed_code = code.replace(/"/g, '\\"').replace(/\\n/g, '\\\\\\n').replace(/\n/g, '\\n').replace(/\$/g, '\\$').replace(/`/g, '\\`');
-  console.log(parsed_code);
   
   let parsed_input = input.replace(/"/g, '\\"').replace(/\n/g, '\\n');
   const args = `-e FILE_CONTENT="${parsed_code}" -e FILE_INPUT="${parsed_input}" -e FILE_NAME="${className}"`;
