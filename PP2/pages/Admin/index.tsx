@@ -84,7 +84,7 @@ const Index: React.FC = () => {
     <div className="max-w-4xl mx-auto p-6">
       {context?.admin === "True" ? (
         <div>
-          <h1 className="text-3xl font-bold text-center mb-8">Welcome Admin</h1>
+          <h1 className="text-3xl font-bold text-center mb-8">Admin Panel</h1>
 
           <div className="mb-12">
             <h2 className="text-2xl font-semibold mb-4">Reported Blogs</h2>
@@ -98,12 +98,7 @@ const Index: React.FC = () => {
                         <h3 className="text-lg font-medium">
                         Title: {blog.title}
                         </h3>
-                        <p>
-                        Reports: {blog.count}
-                        </p>
-                        <p>
-                        BlogID: {blog.blogPostId}
-                        </p>
+                        <p>Reports: {blog.count} | BlogID: {blog.blogPostId}</p>
                       <button
                         onClick={() =>
                           router.push(`/Admin/detailedBlog?id=${blog.blogPostId}`)
