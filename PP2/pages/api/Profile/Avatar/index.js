@@ -14,15 +14,12 @@ async function modifyAvatar(req, res) {
   if (req.method === "POST") {
     try {
       const userId = req.user.id;
-
       const form = formidable({ multiples: false });
       const data = await form.parse(req);
       const file = data[1].file[0];
-
       if (!file) {
         return res.json({ error: "Bad request" }, { status: 400 });
       }
-
       const fileExtension =
         file.originalFilename.split(".")[
           file.originalFilename.split(".").length - 1
@@ -39,7 +36,6 @@ async function modifyAvatar(req, res) {
           avatar: `/avatars/${userId}.${fileExtension}`,
         },
       });
-
       return res.json(
         {
           success: true,
@@ -48,6 +44,7 @@ async function modifyAvatar(req, res) {
         { status: 200 }
       );
     } catch (err) {
+      console.log(err)
       return res.json({ error: err.message }, { status: 500 });
     }
   } else {

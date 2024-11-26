@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState, useContext } from 'react'
+import { AppContext } from '@/lib/AppVars'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -13,6 +14,9 @@ interface Report {
 }
 
 function Reports(props: ReportProps) {
+
+    const [inProgress, setInProgress] = useState(false);
+    const context = useContext(AppContext);
 
     const createReport = async (report: Report) => {
         if (report.blogPostId){
@@ -71,6 +75,7 @@ function Reports(props: ReportProps) {
                     if (reason.trim()) {
                         toast.dismiss();
                         createReport({ reason, blogPostId: props.blogPostId, commentId: props.commentId });
+                        setInProgress(false);
                     } 
                     else {
                         toast.warning('Reason cannot be empty!');
@@ -83,7 +88,11 @@ function Reports(props: ReportProps) {
     );
 
     const handleReportClick = () => {
-        toast(customToast, {autoClose: false});
+        if (!inProgress && !context?.toast) {
+            context?.setToast(true);
+            setInProgress(true);
+            toast(customToast, { autoClose: false });
+        }
     };
 
     return (

@@ -8,6 +8,8 @@ interface GlobalContextType {
   setUserID: React.Dispatch<React.SetStateAction<string | null>>;
   admin: string | null;
   setAdmin: React.Dispatch<React.SetStateAction<string | null>>
+  toast: boolean;
+  setToast: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AppContext = createContext<GlobalContextType | undefined>(undefined);
@@ -16,7 +18,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [theme, setTheme] = useState('light');
   const [userID, setUserID] = useState<string | null>(null);
   const [admin, setAdmin] = useState<string | null>("none");
-
+  const [toast, setToast] = useState<boolean>(false);
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') ?? 'light';
     document.body.classList.remove('light', 'dark');
@@ -30,7 +32,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   }, []);
 
   return (
-    <AppContext.Provider value={{ theme, setTheme, userID, setUserID, admin, setAdmin }}>
+    <AppContext.Provider value={{ theme, setTheme, userID, setUserID, admin, setAdmin, toast, setToast }}>
       {children}
     </AppContext.Provider>
   );

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from '@/lib/AppVars';
 import { useRouter } from "next/router";
 interface blogsArray {
+  title: string;
   blogPostId: number;
   count: number;
 }
@@ -95,9 +96,15 @@ const Index: React.FC = () => {
                       key={blog.blogPostId} 
                       className="border p-4 rounded-lg hover:shadow-lg transition-shadow"
                     >
-                      <h3 className="text-lg font-medium">
-                        BlogID: {blog.blogPostId}, Reports: {blog.count}
-                      </h3>
+                        <h3 className="text-lg font-medium">
+                        Title: {blog.title}
+                        </h3>
+                        <p>
+                        Reports: {blog.count}
+                        </p>
+                        <p>
+                        BlogID: {blog.blogPostId}
+                        </p>
                       <button
                         onClick={() =>
                           router.push(`/Admin/detailedBlog?id=${blog.blogPostId}`)

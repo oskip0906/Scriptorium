@@ -30,9 +30,27 @@ async function handler(req, res) {
 
         });
         const reportedBlogs = []
+        const reportIds = []
         topReportedBlogs.map(blog => {
+            reportIds.push(blog.blogPostId)
             reportedBlogs.push({ blogPostId: blog.blogPostId, count: blog._count.blogPostId })
         })
+        const blogs = await prisma.blogPost.findMany({
+            where: {
+                id: {
+                    in: reportIds
+                }
+            }
+        })
+
+        reportedBlogs.map((blog) => {
+            blogs.map(b => {
+                if (blog.blogPostId === b.id) {
+                    blog.title = b.title
+                }
+            })
+        })
+        console.log(reportedBlogs)
         return res.status(200).json({ reportedBlogs });
     }
     catch (error) {
