@@ -72,23 +72,25 @@ async function handler(req, res) {
                             select: { name: true }
                         },
                         codeTemplates: {
-                            select: { 
-                                id: true, 
-                                title: true,
-                                forkedFromID: true,
-                                createdBy: { 
-                                    select: { userName: true } 
-                                } 
-                            }
+                            select: { id: true, title: true }
                         },
                         createdBy: {
-                            select: { id: true, userName: true }
+                            select: { id: true, userName: true, avatar: true}
                         }
-                    },
+                    }
                 });
 
                 if (!blogPost) {
                     return res.status(404).json({ error: "Blog post not found" });
+                }
+
+                if (blogPost.inappropriate) {
+                    if (!req.user) {
+                        return res.status(404).json({ error: "Blog post not found" });
+                    }
+                    if (req.user.role !== 'admin' && blogPost.createdUserId !== req.user.id) {
+                        return res.status(404).json({ error: "Blog post not found" });
+                    }
                 }
 
                 return res.status(200).json(blogPost);
@@ -140,17 +142,19 @@ async function handler(req, res) {
                 searchFilters.push({ createdUserId: parseInt(createdUserID) });
             }
 
-            if (req.user && req.user.id) {
-                searchFilters.push({
-                    OR: [
-                        { inappropriate: false },
-                        { AND: [{ inappropriate: true }, { createdUserId: req.user.id }] }
-                    ]
-                });
+            if (req.user) { 
+                if (req.user.role !== 'admin') {
+                    searchFilters.push({ 
+                        OR: [
+                            { createdUserId: req.user.id },
+                            { inappropriate: false }
+                        ]
+                    });
+                }
             }
             else {
                 searchFilters.push({ inappropriate: false });
-            }
+            }   
 
             const blogPosts = await prisma.BlogPost.findMany({
                 where: { AND: searchFilters },
@@ -191,7 +195,7 @@ async function handler(req, res) {
         }
 
         catch (error) {
-            console.log(error);
+            console.log( error)
             return res.status(500).json({ error: error.message });
         }
 

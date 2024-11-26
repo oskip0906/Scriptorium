@@ -75,8 +75,13 @@ async function handler(req, res) {
                     }
                 });
 
-                if (!comment) {
-                    return res.status(404).json({ error: "Comment not found" });
+                if (comment.inappropriate) {
+                    if (!req.user) {
+                        return res.status(404).json({ error: "Comment not found" });
+                    }
+                    if (req.user.role !== 'admin' && comment.createdUserId !== req.user.id) {
+                        return res.status(404).json({ error: "Comment not found" });
+                    }
                 }
 
                 return res.status(200).json(comment);
@@ -105,17 +110,19 @@ async function handler(req, res) {
                 searchFilters.push({ createdUserId: parseInt(createdUserId) });
             }
             
-            if (req.user && req.user.id) {
-                searchFilters.push({
-                    OR: [
-                        { inappropriate: false },
-                        { AND: [{ inappropriate: true }, { createdUserId: req.user.id }] }
-                    ]
-                });
+            if (req.user) { 
+                if (req.user.role !== 'admin') {
+                    searchFilters.push({ 
+                        OR: [
+                            { createdUserId: req.user.id },
+                            { inappropriate: false }
+                        ]
+                    });
+                }
             }
             else {
                 searchFilters.push({ inappropriate: false });
-            }
+            }   
 
             const comments = await prisma.Comment.findMany({
                 where: { AND: searchFilters },  

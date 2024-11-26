@@ -3,19 +3,22 @@ import jwt from 'jsonwebtoken';
 export default function verifyUser(handler) {
 
     return async function(req, res) {
-        
-        if (req.method === 'GET') {
-            return handler(req, res);
-        }
 
         const auth_header = req.headers.authorization;
+        
         if (!auth_header) {
+            if (req.method === 'GET') {
+                return handler(req, res);
+            }
             return res.status(401).json({ error: 'Authorization header missing' });
         }
 
         const token = auth_header.split(' ')[1];
 
         if (!token) {
+            if (req.method === 'GET') {
+                return handler(req, res);
+            }
             return res.status(401).json({ error: 'Token missing' });
         }
 
@@ -31,7 +34,6 @@ export default function verifyUser(handler) {
             return handler(req, res);
         } 
         catch (error) {
- 
             return res.status(403).json({ error: 'Invalid or expired token' });
         }
 

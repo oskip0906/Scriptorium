@@ -100,7 +100,11 @@ const BlogPostsList = () => {
       codeTemplates: searchTemplates.join(','),
     }).toString();
 
-    const response = await fetch(`/api/BlogPosts?${query}`);
+    const response = await fetch(`/api/BlogPosts?${query}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken') || ''}`
+      }
+    });
 
     if (!response.ok) {
       console.error('Error fetching blog posts');

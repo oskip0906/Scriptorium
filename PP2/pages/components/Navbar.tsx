@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Image from 'next/image';
 import refresh from '@/lib/refresh';
+
 function NavBar() {
   const router = useRouter();
   const context = useContext(AppContext);
@@ -109,13 +110,23 @@ function NavBar() {
 
           {profile.userName && (
             <div className="flex items-center space-x-2 border py-2 px-4 rounded-full">
+              {profile.avatar ? (
               <Image
               src={profile.avatar}
               alt="avatar"
               className="w-8 h-8 rounded-full"
               width={32}
               height={32}
-              />
+              /> 
+            ) : (
+                <Image
+                src="/logo.jpg"
+                alt="avatar"
+                className="w-8 h-8 rounded-full"
+                width={32}
+                height={32}
+                />
+              )}
 
               <span className="cta-primary text-xl font-semibold font-mono">{profile.userName}</span>
             </div>

@@ -28,7 +28,6 @@ export default async function hideBlog(blogPostId) {
 
     }
     catch (error) {
-        console.log(error)
         return null;
     }
 }

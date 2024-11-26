@@ -36,7 +36,6 @@ export default function verifyUser(handler) {
             return handler(req, res);
         } 
         catch (error) {
-            console.log(error)
             return res.status(401).json({ error: 'Invalid or expired token' });
         }
 

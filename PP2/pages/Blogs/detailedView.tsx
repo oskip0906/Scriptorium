@@ -55,16 +55,6 @@ const DetailedPostView = () => {
   const [updatedTags, setUpdatedTags] = useState<string[]>([]);
   const [selectedTemplates, setSelectedTemplates] = useState<CodeTemplate[]>([]);
 
-
-  const ownerOrAdmin = () => {
-    try {
-    return context?.admin === "false" || String(context?.userID) === String(post?.createdBy.id);
-    }
-    catch {
-      return false;
-    }
-  }
-
   useEffect(() => {
     if (id) {
       fetchBlogPostDetails();
@@ -87,7 +77,11 @@ const DetailedPostView = () => {
   }, [post, page]);
 
   const fetchBlogPostDetails = async () => {
-    const response = await fetch(`/api/BlogPosts?id=${id}`);
+    const response = await fetch(`/api/BlogPosts?id=${id}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken') || ''}`
+      }
+    });
 
     if (!response.ok) {
       console.error('Error fetching blog post details');
@@ -95,12 +89,6 @@ const DetailedPostView = () => {
     }
 
     const data = await response.json();
-
-
-    if (!context?.admin && data.inappropriate && String(context?.userID) === String(data.createdBy.id)) {
-      toast.info('This post has been reported as inappropriate and is currently under review.');
-      return;
-    }
 
     data.inappropriate ? setInappropriate(true) : null;
     setPost(data);
@@ -217,7 +205,7 @@ const DetailedPostView = () => {
 
   return (
     <div className="container mx-auto p-4 mb-4">
-      { inappropriate && (!ownerOrAdmin()) ? <></> :
+      { 
       <BackgroundGradient className="p-4 rounded-2xl bg-cta-background">
         <div className="flex items-center justify-between">
           {isEditing ? (
