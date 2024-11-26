@@ -8,7 +8,7 @@ async function handler(req, res) {
     
     let { page, amount } = req.query;
     !page || page < 0 ? page = 0 : page = page;
-    !amount ? amount = 10 : amount = amount;
+    !amount ? amount = 5 : amount = amount;
     try {
         const topReportedBlogs = await prisma.report.groupBy({
             by: ["blogPostId"],
