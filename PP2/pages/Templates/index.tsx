@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import BackgroundGradient from '../components/BackgroundGradient';
-import Image from 'next/image';
 
 const languages = ['python', 'javascript', 'java', 'c', 'cpp', 'ruby', 'rust', 'swift', 'r', 'php', 'go'];
 
@@ -239,11 +238,7 @@ const CodeTemplatesList = () => {
                   <h2 className="text-xl font-semibold">{template.title}</h2>
 
                   <div className="flex items-center space-x-2 border rounded-full p-2">
-                  {template.createdBy.avatar && template.createdBy.avatar.startsWith('/') ? (
-                  <Image src={template.createdBy.avatar} alt="avatar" width={20} height={20} className="rounded-full" />
-                    ) : (
-                      <Image src="/logo.jpg" alt="avatar" width={20} height={20} className="rounded-full" />
-                    )}
+                    <img src={template.createdBy.avatar} alt="avatar" className="w-8 h-8 rounded-full" width={32} height={32}/>
                     <span className="font-semibold font-mono text-sm">{template.createdBy.userName}</span>
                   </div>
                 </div>

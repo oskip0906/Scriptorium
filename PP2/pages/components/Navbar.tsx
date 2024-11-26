@@ -3,7 +3,6 @@ import { AppContext } from '@/lib/AppVars';
 import { useRouter } from 'next/router';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Image from 'next/image';
 import refresh from '@/lib/refresh';
 
 function NavBar() {
@@ -97,9 +96,9 @@ function NavBar() {
           <div className="flex items-center space-x-4">
             <button onClick={setTheme} className="bg-transparent">
             {context?.theme === 'light' ? (
-              <Image src="/moon.gif" alt="moon icon" width={50} height={50} />
+              <img src="/moon.gif" alt="moon icon" width={50} height={50} />
             ) : (
-              <Image src="/sun.gif" alt="sun icon" width={50} height={50} />
+              <img src="/sun.gif" alt="sun icon" width={50} height={50} />
             )}
             </button>
 
@@ -111,7 +110,7 @@ function NavBar() {
           {profile.userName && (
             <div className="flex items-center space-x-2 border py-2 px-4 rounded-full">
               {profile.avatar ? (
-              <Image
+              <img
               src={profile.avatar}
               alt="avatar"
               className="w-8 h-8 rounded-full"
@@ -119,13 +118,13 @@ function NavBar() {
               height={32}
               /> 
             ) : (
-                <Image
-                src="/logo.jpg"
-                alt="avatar"
-                className="w-8 h-8 rounded-full"
-                width={32}
-                height={32}
-                />
+              <img
+              src="/logo.jpg"
+              alt="avatar"
+              className="w-8 h-8 rounded-full"
+              width={32}
+              height={32}
+              />
               )}
 
               <span className="cta-primary text-xl font-semibold font-mono">{profile.userName}</span>

@@ -5,7 +5,6 @@ import Editor from '@monaco-editor/react';
 import { toast } from 'react-toastify';
 import BackgroundGradient from '../components/BackgroundGradient';
 import TagSelector from '../components/TagSelector';
-import Image from 'next/image';
 
 interface CodeTemplate {
   id: number;
@@ -157,12 +156,8 @@ const DetailedTemplateView = () => {
             <h2 className="text-xl font-semibold">{template.title}</h2>
           )}
           {!isEditing &&
-          <div className="flex items-center space-x-2 border rounded-full p-2">
-            {template.createdBy.avatar && template.createdBy.avatar.startsWith('/') ? (
-              <Image src={template.createdBy.avatar} alt="avatar" width={30} height={30} className="rounded-full" />
-                ) : (
-                  <Image src="/logo.jpg" alt="avatar" width={30} height={30} className="rounded-full" />
-                )}
+            <div className="flex items-center space-x-2 border rounded-full p-2">
+            <img src={template.createdBy.avatar} alt="avatar" className="w-8 h-8 rounded-full" width={32} height={32}/>
             <span className="font-semibold font-mono text-md">{template.createdBy.userName}</span>
           </div>
     }
