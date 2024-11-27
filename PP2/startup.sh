@@ -21,6 +21,8 @@ echo "JWT_REFRESH_SECRET=\"edit me\"" >> .env
 echo "ADMIN_KEY=\"123\"" >> .env
 echo ".env file created successfully";
 
+sudo chmod 666 /var/run/docker.sock
+
 cd DockerExec
 
 docker build -t pythonrunner ./python

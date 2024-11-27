@@ -7,7 +7,6 @@ import { toast } from 'react-toastify';
 import BackgroundGradient from '../components/BackgroundGradient';
 import TagSelector from '../components/TagSelector';
 import TemplateSelector from '../components/TemplateSelector';
-import Image from 'next/image';
 
 interface BlogPost {
   id: number;
@@ -220,11 +219,7 @@ const DetailedPostView = () => {
           )}
           {!isEditing &&
           <div className="flex items-center space-x-2 border rounded-full p-2">
-            {post.createdBy.avatar && post.createdBy.avatar.startsWith('/') ? (
-                  <Image src={post.createdBy.avatar} alt="avatar" width={30} height={30} className="rounded-full" />
-                ) : (
-                  <Image src="/logo.jpg" alt="avatar" width={30} height={30} className="rounded-full" />
-                )}
+            <img src={post.createdBy.avatar} alt="avatar" className="w-8 h-8 rounded-full" width={32} height={32}/>
             <span className="font-semibold font-mono text-md">{post.createdBy.userName}</span>
           </div>
     }   

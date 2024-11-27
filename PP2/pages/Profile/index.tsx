@@ -35,7 +35,7 @@ const ProfilePage = () => {
         const data = await response.json();
 
         if (!data.avatar) {
-          setAvatarDisplay('/logo.jpg');
+          setAvatarDisplay('');
         }
 
         setAvatarDisplay(data.avatar);
@@ -96,6 +96,9 @@ const ProfilePage = () => {
 
       if (response.ok) {
         toast.success("Avatar updated!");
+        setTimeout(() => {
+          router.reload();
+        }, 1500);
       } 
       else {
         toast.error(`Error updating avatar`);
@@ -218,7 +221,7 @@ const ProfilePage = () => {
         </button>
       </form>
 
-      <form onSubmit={(e) => handleUploadAvatar()} className="mt-10">
+      <form onSubmit={(e) => { e.preventDefault(); handleUploadAvatar()}} className="mt-10">
         <h2 className="text-1xl font-bold mb-4">Change Avatar</h2>
 
         <div className="mt-3">

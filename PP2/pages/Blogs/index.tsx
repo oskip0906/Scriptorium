@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import BackgroundGradient from '../components/BackgroundGradient';
-import Image from 'next/image';
 
 interface BlogPost {
   id: number;
@@ -286,11 +285,7 @@ const BlogPostsList = () => {
               <h2 className="text-xl font-semibold">{post.title}</h2>
 
               <div className="flex items-center space-x-2 border rounded-full p-2">
-                {post.createdBy.avatar && post.createdBy.avatar.startsWith('/') ? (
-                  <Image src={post.createdBy.avatar} alt="avatar" width={20} height={20} className="rounded-full" />
-                ) : (
-                  <Image src="/logo.jpg" alt="avatar" width={20} height={20} className="rounded-full" />
-                )}
+                <img src={post.createdBy.avatar} alt="avatar" className="w-8 h-8 rounded-full" width={32} height={32}/>
                 <span className="font-semibold font-mono text-sm">{post.createdBy.userName}</span>
             </div>
             </div>
