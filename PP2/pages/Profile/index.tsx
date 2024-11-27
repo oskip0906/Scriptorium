@@ -35,7 +35,7 @@ const ProfilePage = () => {
         const data = await response.json();
 
         if (!data.avatar) {
-          setAvatarDisplay('/logo.jpg');
+          setAvatarDisplay('');
         }
 
         setAvatarDisplay(data.avatar);
