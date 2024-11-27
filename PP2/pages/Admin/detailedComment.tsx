@@ -2,6 +2,9 @@ import React, { useContext, useEffect, useState}  from 'react'
 import { AppContext } from '@/lib/AppVars';
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
+import DetailedView from '@/pages/Blogs/detailedView'
+
+
 
 interface Comment {
     blogPostId: number;
@@ -29,16 +32,16 @@ function detailedComment() {
 
     const context = useContext(AppContext);
     const router = useRouter();
-    const commentId = router.query.id;
+    const commentId = router.query.commentId;
     const [reports, setReports] = useState<reportsArray[]>([]);
     const [comment, setComment] = useState<Comment>({} as Comment);
     const [reportCount, setReportCount] = useState(0);
     const [loadedAll, setLoadedAll] = useState(false);
-
+    const [blogPostId, setBlogPostId] = useState(0);
 
     useEffect(() => {
         if (router.isReady) {
-            fetchComment(router.query.id ?? "0");
+            fetchComment(router.query.commentId ?? "0");
         }
     }, [router.isReady])
 
@@ -108,16 +111,15 @@ function detailedComment() {
     <div>
     {context?.admin === 'True' ? 
  <div className="flex flex-col items-center p-6 space-y-6 min-h-screen">
+      <DetailedView/>
 
- <button
+      <button
    onClick={hideContent}
    className="px-6 py-3 rounded-md border"
  >
    Hide Content
- </button>
-
+ </button> 
  <div className="w-full max-w-2xl space-y-6">
-
    <div className="space-y-4">
      <h2 className="text-xl font-bold text-center">Comment</h2>
      <div
