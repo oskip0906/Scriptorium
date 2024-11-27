@@ -206,8 +206,10 @@ const ProfilePage = () => {
             Phone Number
           </label>
           <input
-            type="text"
+            type="tel"
             value={phoneNumber}
+            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" 
+            placeholder="123-456-7890"
             onChange={(e) => setPhoneNumber(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm outline-none focus:ring focus:border sm:text-sm"
           />

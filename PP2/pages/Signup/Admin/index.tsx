@@ -126,7 +126,9 @@ const SignUpPage: React.FC = () => {
         <div className="mb-4">
           <label htmlFor="phoneNumber" className="block text-sm font-medium">Phone Number</label>
           <input
-            type="text"
+            type="tel"
+            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" 
+            placeholder="123-456-7890"
             id="phoneNumber"
             value={formData.phoneNumber}
             onChange={handleChange}
