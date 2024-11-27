@@ -1,6 +1,17 @@
 import prisma from '@/lib/prisma';
 import verifyAdmin from '@/lib/Admin/verifyAdmin';
 
+
+async function findBlogId(commentId){
+    const data = await prisma.Comment.findUnique({
+        where: {
+            id: commentId
+        }
+    })
+    return data.blogPostId ? data.blogPostId : findBlogId(data.repliedToId)
+}
+
+
 async function handler(req, res) {
     if (req.method !== 'GET') {
         return res.status(405).json({ error: "Method not allowed" });
@@ -49,17 +60,27 @@ async function handler(req, res) {
             }
         })
 
-        corrBlog.map((corr) => {
-            reportedComments.map((comm) => {
-                if (corr.id === comm.commentId){
-                    comm.blogPostId = corr.blogPostId
-                }
+        await Promise.all(
+            corrBlog.map(async (corr) => {
+                await Promise.all(
+                    reportedComments.map(async (comm) => {
+                        if (corr.id === comm.commentId) {
+                            if (corr.blogPostId === null) {
+                                const data = await findBlogId(corr.id);
+                                comm.blogPostId = data;
+                            } else {
+                                comm.blogPostId = corr.blogPostId;
+                            }
+                        }
+                    })
+                );
             })
-        })
+        );
         console.log(reportedComments)
         return res.status(200).json({ reportedComments });
     }
     catch (error) {
+        console.log(error)
         return res.status(500).json({ error: error.message });
     }
 }
