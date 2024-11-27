@@ -150,7 +150,7 @@ const Index: React.FC = () => {
                       className="border p-4 rounded-lg flex items-center justify-between"
                     >
                       <h3 className="text-lg font-medium">
-                        CommentID: {comment.commentId}, Reports: {comment.count}
+                        BlogId: {comment.blogPostId} CommentID: {comment.commentId}, Reports: {comment.count}
                       </h3>
                       <button
                         onClick={() =>
