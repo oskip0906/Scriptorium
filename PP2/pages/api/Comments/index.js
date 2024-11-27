@@ -117,12 +117,12 @@ async function handler(req, res) {
                             { createdUserId: req.user.id },
                             { inappropriate: false }
                         ]
-                    });
+                    }); 
                 }
             }
             else {
                 searchFilters.push({ inappropriate: false });
-            }   
+            }  
 
             const comments = await prisma.Comment.findMany({
                 where: { AND: searchFilters },  

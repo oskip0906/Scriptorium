@@ -7,6 +7,7 @@ interface Comment {
   content: string;
   rating: number;
   createdBy: { userName: string };
+  inappropriate: boolean;
 }
 
 const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
@@ -46,7 +47,12 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
   };
 
   const fetchReplies = async (page: number) => {
-    const response = await fetch(`/api/Comments?repliedToId=${comment.id}&page=${page}&pageSize=${pageSize}&order=desc`);
+    const response = await fetch(`/api/Comments?repliedToId=${comment.id}&page=${page}&pageSize=${pageSize}&order=desc`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')} || ''`,
+      },
+    });
 
     if (!response.ok) {
       console.error(`Error fetching replies for comment ${comment.id}`);
@@ -117,6 +123,9 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
         <div className="flex items-center space-x-2">
           <span className="italic text-gray-400 font-semibold">{currentComment.createdBy.userName}: </span>
           <span>{currentComment.content}</span>
+          {currentComment.inappropriate &&
+            <span className="text-red-500"> - Inappropriate</span>
+          }
         </div>
         
         <button onClick={toggleExpand} className="py-1 px-2 mt-2 rounded text-xs">
