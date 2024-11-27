@@ -24,6 +24,7 @@ interface Comment {
   content: string;
   rating: number;
   createdBy: { userName: string };
+  inappropriate: boolean;
 }
 
 interface CodeTemplate {
