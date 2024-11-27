@@ -76,11 +76,9 @@ async function handler(req, res) {
                 );
             })
         );
-        console.log(reportedComments)
         return res.status(200).json({ reportedComments });
     }
     catch (error) {
-        console.log(error)
         return res.status(500).json({ error: error.message });
     }
 }
