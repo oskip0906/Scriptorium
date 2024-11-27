@@ -286,7 +286,13 @@ const BlogPostsList = () => {
               <h2 className="text-xl font-semibold">{post.title}</h2>
 
               <div className="flex items-center space-x-2 border rounded-full p-2">
-                <img src={post.createdBy.avatar} alt="" className="w-8 h-8 rounded-full" width={32} height={32}/>
+              <img
+                src={`data:image/jpeg;base64,${post.createdBy.avatar}`}
+                alt=""
+                className="w-8 h-8 rounded-full"
+                width={32}
+                height={32}
+              />
                 <span className="font-semibold font-mono text-sm">{post.createdBy.userName}</span>
             </div>
             </div>

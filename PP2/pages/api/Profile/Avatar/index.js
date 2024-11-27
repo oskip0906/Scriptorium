@@ -20,22 +20,16 @@ async function modifyAvatar(req, res) {
       if (!file) {
         return res.json({ error: "Bad request" }, { status: 400 });
       }
-      const fileExtension =
-        file.originalFilename.split(".")[
-          file.originalFilename.split(".").length - 1
-        ];
-      const uploadDir = path.join(process.cwd(), "public", "avatars");
-      await fs.mkdir(uploadDir, { recursive: true });
-      const newFilePath = `${uploadDir}/${userId}.${fileExtension}`;
 
-      await fs.rename(file.filepath, newFilePath);
+      const fileBuffer = await fs.readFile(file.filepath);
+        const base64Image = fileBuffer.toString("base64");
 
-      const response = await prisma.user.update({
-        where: { id: userId },
-        data: {
-          avatar: `/avatars/${userId}.${fileExtension}`,
-        },
-      });
+        const response = await prisma.user.update({
+          where: { id: userId },
+          data: {
+            avatar: base64Image,
+          },
+        });
       return res.json(
         {
           success: true,

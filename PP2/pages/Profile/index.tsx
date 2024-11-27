@@ -34,10 +34,6 @@ const ProfilePage = () => {
 
         const data = await response.json();
 
-        if (!data.avatar) {
-          setAvatarDisplay('');
-        }
-
         setAvatarDisplay(data.avatar);
         setUsername(data.userName);
         setFirstName(data.firstName);
@@ -139,7 +135,7 @@ const ProfilePage = () => {
     <div className="container mx-auto p-4 mb-4">
       {avatarDisplay && (
         <img
-          src={avatarDisplay}
+          src={`data:image/jpeg;base64,${avatarDisplay}`}
           alt={"avatar"}
           className="w-20 h-20 rounded-full m-auto mb-3"
         />

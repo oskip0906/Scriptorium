@@ -11,7 +11,7 @@ interface CodeTemplate {
   tags: { name: string }[];
   code: string;
   createdBy: { id: number, userName: string, avatar: string };
-  forkedFromID: number;
+  forkedFromID: number; 
 }
 
 const CodeTemplatesList = () => {
@@ -238,7 +238,13 @@ const CodeTemplatesList = () => {
                   <h2 className="text-xl font-semibold">{template.title}</h2>
 
                   <div className="flex items-center space-x-2 border rounded-full p-2">
-                    <img src={template.createdBy.avatar} alt="" className="w-8 h-8 rounded-full" width={32} height={32}/>
+                  <img
+                    src={`data:image/jpeg;base64,${template.createdBy.avatar}`}
+                    alt=""
+                    className="w-8 h-8 rounded-full"
+                    width={32}
+                    height={32}
+                  />
                     <span className="font-semibold font-mono text-sm">{template.createdBy.userName}</span>
                   </div>
                 </div>

@@ -29,8 +29,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-router-dom": "^6.28.0",
-    "tailwind-merge": "^2.5.4",
-    "react-toastify": "^10.0.6"
+    "react-toastify": "^10.0.6",
+    "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
     "@types/node": "^20.17.6",

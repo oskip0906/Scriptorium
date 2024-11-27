@@ -50,14 +50,6 @@ function NavBar() {
       }
         
       const data = await response.json();
-      let avatar = '';
-
-      if (data.avatar) {
-        const avatarResponse = await fetch(data.avatar);
-        if (avatarResponse.ok) {
-          avatar = data.avatar;
-        }
-      }
 
       setProfile({
         userName: data.userName,
@@ -110,7 +102,7 @@ function NavBar() {
           {profile.userName && (
             <div className="flex items-center space-x-2 border py-2 px-4 rounded-full">
               <img
-              src={profile.avatar}
+              src={`data:image/jpeg;base64,${profile.avatar}`}
               alt=""
               className="w-8 h-8 rounded-full"
               width={32}
