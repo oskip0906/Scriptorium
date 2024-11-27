@@ -56,6 +56,7 @@ const DetailedPostView = () => {
   const [selectedTemplates, setSelectedTemplates] = useState<CodeTemplate[]>([]);
 
   useEffect(() => {
+    console.log(id)
     if (id) {
       fetchBlogPostDetails();
     }

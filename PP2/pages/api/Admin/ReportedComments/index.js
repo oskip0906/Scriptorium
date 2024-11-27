@@ -31,10 +31,32 @@ async function handler(req, res) {
         });
 
         const reportedComments = []
-
+        const commentIds = []
         topReportedComments.map(comment => {
             reportedComments.push({ commentId: comment.commentId, count: comment._count.commentId })
+            commentIds.push(comment.commentId)
         })
+
+        const corrBlog = await prisma.Comment.findMany({
+            where: {
+                id: {
+                    in: commentIds
+                }
+            },
+            select: {
+                blogPostId: true,
+                id: true
+            }
+        })
+
+        corrBlog.map((corr) => {
+            reportedComments.map((comm) => {
+                if (corr.id === comm.commentId){
+                    comm.blogPostId = corr.blogPostId
+                }
+            })
+        })
+        console.log(reportedComments)
         return res.status(200).json({ reportedComments });
     }
     catch (error) {

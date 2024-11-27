@@ -10,11 +10,13 @@ interface blogsArray {
 interface commentsArray {
   commentId: number;
   count: number;
+  blogPostId: number
 }
 
 interface blogResponse {
   reportedBlogs: blogsArray[];
 }
+
 
 interface commentResponse {
   reportedComments: commentsArray[];
@@ -64,12 +66,14 @@ const Index: React.FC = () => {
     });
     const response: commentResponse = await data.json();
 
+
     if (response.reportedComments && response.reportedComments.length === 0) {
       setHideNextComment(true);
       return;
     }
     setHideNextComment(false);
      setComments(response.reportedComments);
+
   };
 
   useEffect(() => {
@@ -153,7 +157,7 @@ const Index: React.FC = () => {
                       </h3>
                       <button
                         onClick={() =>
-                          router.push(`/Admin/detailedComment?id=${comment.commentId}`)
+                          router.push(`/Admin/detailedComment?commentId=${comment.commentId}&id=${comment.blogPostId}`)
                         }
                         className="px-4 py-2 rounded-md border text-sm font-medium"
                       >
