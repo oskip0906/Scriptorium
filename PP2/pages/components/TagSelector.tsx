@@ -34,7 +34,7 @@ const TagSelector: React.FC<TagSelectorProps> = ({ tags, setTags }) => {
       />
 
         <div className="flex space-x-2 mt-2 p-1">
-        {tags.map((tag) => (
+        {tags && tags.map((tag) => (
           <span className="px-2 py-1 rounded" id="tag" key={tag}>
             {tag}
             <button
