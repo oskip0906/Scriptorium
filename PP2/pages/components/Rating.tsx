@@ -121,7 +121,7 @@ function RatingComponent({ blogPostId, commentId, rating }: RatingComponentProps
             </div>
 
             <div className="mr-auto ml-4">
-                <Reports commentId={Number(commentId)} />
+                <Reports blogPostId={Number(blogPostId)} commentId={Number(commentId)} />
             </div>
         </div>
     );

@@ -68,17 +68,21 @@ function detailedBlog() {
         }
 
         toast.success('Content hidden successfully!');
+
+        setTimeout(() => {
+            router.push('/Admin');
+          }, 1500);
     }
 
   return (
 
-    <div>
+    <div className="mb-8">
         {context?.admin === "True" ? 
         <div>
-<div className="flex justify-center">
+<div className="flex justify-center mt-8 mb-4">
   <button 
     onClick={hideContent} 
-    className="px-4 py-2 rounded-md shadow"
+    className="px-4 py-2 rounded-md"
   >
     Hide Content
   </button>
@@ -87,11 +91,11 @@ function detailedBlog() {
 
             <DetailedView />
             <ul className="space-y-4">
-                <div className="text-lg font-semibold mb-2 text-center">Reports</div>
+                <div className="text-2xl font-semibold mb-2 text-center">Reports</div>
                 {reports.map((report: reportsArray) => (
                     <li
                     key={report.id}
-                    className="p-4 border rounded-lg shadow-sm"
+                    className="p-4 mx-48 border rounded-lg"
                     >
                     <p className="text-sm">
                         <span className="font-medium">Report ID:</span> {report.id}
@@ -106,11 +110,11 @@ function detailedBlog() {
                 ))}
 </ul>
 
-                {loadedAll ? <div>Loaded all reports</div> :
+                {loadedAll ? <div className="flex justify-center my-4">Loaded all reports</div> :
                 <div className="flex justify-center">
                     <button
                         onClick={() => { fetchAllReports(reportCount + 1); setReportCount(reportCount + 1) }}
-                        className="px-4 py-2 mt-4 rounded-md border shadow hover:shadow-md active:shadow-sm transition"
+                        className="px-4 py-2 mt-4 rounded-md border"
                     >
                         Load More
                     </button>

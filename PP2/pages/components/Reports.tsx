@@ -14,9 +14,8 @@ interface Report {
 
 function Reports(props: ReportProps) {
 
-    const [inProgress, setInProgress] = useState(false);
-
     const createReport = async (report: Report) => {
+
         if (report.blogPostId){
             const data = await fetch(`/api/Report/Blog`, {
                 method: 'POST',
@@ -73,7 +72,6 @@ function Reports(props: ReportProps) {
                     if (reason.trim()) {
                         toast.dismiss();
                         createReport({ reason, blogPostId: props.blogPostId, commentId: props.commentId });
-                        setInProgress(false);
                     } 
                     else {
                         toast.warning('Reason cannot be empty!');

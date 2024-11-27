@@ -89,11 +89,11 @@ const Index: React.FC = () => {
           <div className="mb-12">
             <h2 className="text-2xl font-semibold mb-4">Reported Blogs</h2>
             <div className="space-y-4">
-              <ul className="space-y-4">
+              <ul className="space-y-2">
                 {blogs.map((blog) => (
                                       <li 
                       key={blog.blogPostId} 
-                      className="border p-4 rounded-lg hover:shadow-lg transition-shadow"
+                      className="border p-4 rounded-lg"
                     >
                         <h3 className="text-lg font-medium">
                         Title: {blog.title}
@@ -134,10 +134,12 @@ const Index: React.FC = () => {
             </div>
           </div>
 
+          <hr className="my-12 border-t-1 border-gray-500" />
+
           <div>
             <h2 className="text-2xl font-semibold mb-4">Reported Comments</h2>
             <div className="space-y-4">
-              <ul className="space-y-4">
+              <ul className="space-y-2">
                 {comments.map((comment) => (
                   <li
                       key={comment.commentId}

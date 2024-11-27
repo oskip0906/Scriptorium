@@ -111,7 +111,7 @@ function NavBar() {
             <div className="flex items-center space-x-2 border py-2 px-4 rounded-full">
               <img
               src={profile.avatar}
-              alt="avatar"
+              alt=""
               className="w-8 h-8 rounded-full"
               width={32}
               height={32}

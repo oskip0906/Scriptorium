@@ -60,6 +60,9 @@ const SignUpPage: React.FC = () => {
       return;
     }
     toast.success('Sign up successful!');
+    setTimeout(() => {
+      router.push('/Login');
+    }, 1500);
   };
 
   return (

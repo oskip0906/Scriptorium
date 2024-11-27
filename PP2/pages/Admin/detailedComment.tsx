@@ -2,10 +2,6 @@ import React, { useContext, useEffect, useState}  from 'react'
 import { AppContext } from '@/lib/AppVars';
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { motion } from "framer-motion";
-
-
-
 
 interface Comment {
     blogPostId: number;
@@ -36,7 +32,6 @@ function detailedComment() {
     const commentId = router.query.id;
     const [reports, setReports] = useState<reportsArray[]>([]);
     const [comment, setComment] = useState<Comment>({} as Comment);
-    const [username, setUsername] = useState('');
     const [reportCount, setReportCount] = useState(0);
     const [loadedAll, setLoadedAll] = useState(false);
 
@@ -95,8 +90,11 @@ function detailedComment() {
             return;
         }
 
-        toast.success('Content hidden successfully!');
+        toast.success('Content hidden successfully!');  
 
+        setTimeout(() => {
+          router.push('/Admin');
+        }, 1500);
     }
 
     useEffect(() => {
@@ -106,34 +104,24 @@ function detailedComment() {
     }, [router.isReady])
 
 
-
-
   return (
     <div>
-        
     {context?.admin === 'True' ? 
  <div className="flex flex-col items-center p-6 space-y-6 min-h-screen">
- {/* Hide Content Button */}
- <motion.button
+
+ <button
    onClick={hideContent}
-   className="px-6 py-3 rounded-md border shadow hover:shadow-lg active:shadow-sm transition"
-   whileHover={{ scale: 1.05 }}
-   whileTap={{ scale: 0.95 }}
+   className="px-6 py-3 rounded-md border"
  >
    Hide Content
- </motion.button>
+ </button>
 
- {/* Comments and Reports Section */}
  <div className="w-full max-w-2xl space-y-6">
-   {/* Comment Section */}
+
    <div className="space-y-4">
      <h2 className="text-xl font-bold text-center">Comment</h2>
-     <motion.div
-       className="p-6 border rounded-lg shadow-md"
-       initial={{ opacity: 0, y: 20 }}
-       animate={{ opacity: 1, y: 0 }}
-       transition={{ duration: 0.5 }}
-     >
+     <div
+       className="p-6 border rounded-lg">
        <p className="text-sm">
          <span className="font-medium">Comment ID:</span> {comment.id}
        </p>
@@ -143,20 +131,16 @@ function detailedComment() {
        <p className="text-sm">
          <span className="font-medium">Created By:</span> {comment.createdBy?.userName}
        </p>
-     </motion.div>
+     </div>
    </div>
 
-   {/* Reports Section */}
    <div className="space-y-4">
      <h2 className="text-xl font-bold text-center">Reports</h2>
      <ul className="space-y-4">
        {reports.map((report: reportsArray) => (
-         <motion.li
+         <div
            key={report.id}
-           className="p-6 border rounded-lg shadow-md"
-           initial={{ opacity: 0, y: 20 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ duration: 0.5, delay: 0.1 }}
+           className="p-6 border rounded-lg"
          >
            <p className="text-sm">
              <span className="font-medium">Report ID:</span> {report.id}
@@ -167,34 +151,25 @@ function detailedComment() {
            <p className="text-sm">
              <span className="font-medium">Created By:</span> {report.createdUserId}
            </p>
-         </motion.li>
+         </div>
        ))}
      </ul>
    </div>
  </div>
 
- {/* Load More Button */}
+
  {loadedAll ? (
-   <motion.div
-     className="text-center font-medium"
-     initial={{ opacity: 0 }}
-     animate={{ opacity: 1 }}
-     transition={{ duration: 0.3 }}
-   >
-     Loaded all reports
-   </motion.div>
+   <div className="flex justify-center my-4">Loaded all reports</div>
  ) : (
-   <motion.button
+   <button
+    className="px-4 py-2 rounded border"
      onClick={() => {
        fetchAllReports(reportCount + 1);
        setReportCount(reportCount + 1);
      }}
-     className="px-6 py-3 rounded-md border shadow hover:shadow-lg active:shadow-sm transition"
-     whileHover={{ scale: 1.05 }}
-     whileTap={{ scale: 0.95 }}
-   >
+     >
      Load More
-   </motion.button>
+   </button>
  )}
 </div>
   

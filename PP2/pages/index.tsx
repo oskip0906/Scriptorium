@@ -82,7 +82,12 @@ const HomePage = () => {
       createdUserID: String(context?.userID),
     }).toString();
 
-    const response = await fetch(`/api/BlogPosts?${query}`);
+    const response = await fetch(`/api/BlogPosts?${query}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')} || ''`,
+      },
+    });
 
     if (!response.ok) {
       setBlogs([]);

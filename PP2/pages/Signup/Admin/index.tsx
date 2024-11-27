@@ -1,5 +1,6 @@
 import React, { useState, FormEvent } from 'react';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 interface AdminSignUpFormData {
   email: string;
@@ -13,6 +14,9 @@ interface AdminSignUpFormData {
 }
 
 const SignUpPage: React.FC = () => {
+
+  const router = useRouter();
+
   const [formData, setFormData] = useState<AdminSignUpFormData>({
     email: '',
     userName: '',
@@ -61,6 +65,10 @@ const SignUpPage: React.FC = () => {
       return;
     }
     toast.success('Sign up successful!');
+
+    setTimeout(() => {
+      router.push('/login'),
+    1500});
   };
 
   return (

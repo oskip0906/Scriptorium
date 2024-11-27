@@ -22,11 +22,11 @@ interface MyPageProps {
 const MyPage = (props: MyPageProps) => {
 
   const context = useContext(AppContext);
-  let tags: Array<Object> = []
-  let description = 'description'
   const router = useRouter()
   const { id } = router.query
 
+  const [tags, setTags] = useState<Array<String>>([])
+  const [description, setDescription] = useState('description')
   const [language, setLanguage] = useState('python')
   const [code, setCode] = useState('# Type your code here')
   const [output , setOutput] = useState('Output')
@@ -55,7 +55,7 @@ const MyPage = (props: MyPageProps) => {
       toast.warning('Code cannot be empty!');
       return;
     }
-
+    
     const response = await fetch(`/api/CodeTemplates/${id}`, {
       method: 'PUT',
       headers: {
@@ -134,8 +134,8 @@ const MyPage = (props: MyPageProps) => {
       fetchCode(id as string).then((data) => {
         setCode(data.code ?? '# Type your code here')
         setLanguage(data.language ?? 'python')
-        tags = data.tags ?? []
-        description = data.description ?? 'description'
+        setTags(data.tags?.map((tag: any) => tag.name) ?? [])
+        setDescription(data.description ?? 'description')
         setTitle(data.title ?? 'Code Runner')
         
         if (data.createdBy) {

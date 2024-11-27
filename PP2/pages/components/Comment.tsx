@@ -29,7 +29,12 @@ const CommentComponent: React.FC<{ comment: Comment }> = ({ comment }) => {
   }, []);
 
   const fetchComment = async () => {
-    const response = await fetch(`/api/Comments?id=${comment.id}`);
+    const response = await fetch(`/api/Comments?id=${comment.id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')} || ''`,
+      },
+    });
 
     if (!response.ok) {
       console.error(`Error fetching comment ${comment.id}`);
