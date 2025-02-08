@@ -1,7 +1,8 @@
 ## 💻 Scriptorium 💻
 
 ### An interactive web app that allows users to:
-- write, execute, and save code in various programming languages 
+- write, execute, and save code in various programming languages
+  - Supported Languages: ```c, cpp, dart, go, java, javascript, php, python, r, ruby, rust, swift```
 - create and comment on blog posts based on these code templates
 - search through code templates or blog posts
 - mark posts as inappropriate based on number of user reports (if user is an admin)
