@@ -13,6 +13,6 @@ Built using React, Next.js, and Docker with a fully functional frontend and back
 
 ### The process has been optimized to be very simple:
 1. Download and open the project in your desired IDE.
-2. Navigate to the terminal and type ```cd PP2```
+2. Navigate to the terminal and type ```cd main-app```
 3. Then, type ```sh startup.sh``` and wait for all dependencies and dockerfiles to install.
 4. Finally, type ```sh run.sh``` to start the website. 
